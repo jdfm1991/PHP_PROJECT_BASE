@@ -1,0 +1,178 @@
+<!-- Modal Nuevo Departamento -->
+<div class="modal fade" id="formNewDepartModal" tabindex="-1" aria-labelledby="NewDepartModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="NewDepartModalLabel">Nuevo Departamento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        <form id="formNewDepart">
+          <input type="hidden" name="id" id="idDepart">
+          <div class="form-group">
+            <label for="nameNewDepart">Nombre del Departamento</label>
+            <input type="text" class="form-control" id="nameNewDepart" aria-describedby="nameNewHelp" required>
+            <small id="nameNewHelp" class="form-text text-muted">Escriba el Nombre del Departamento</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Cargar Informacion</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Modulo -->
+<div class="modal fade" id="newModuleModal" tabindex="-1" aria-labelledby="NewModuleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assingModuleModalLabel">Nuevo Modulo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        <form id="formNewModule">
+          <div class="form-group">
+            <label for="nameNewModule">Nombre del Modulo</label>
+            <input type="text" class="form-control" id="nameNewModule" aria-describedby="nameNewHelp" required>
+            <small id="nameNewHelp" class="form-text text-muted">Escriba el Nombre que tendra la carpeta dentro de
+              sistema</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary closemodal" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Crear Modulo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Listado de Modulos -->
+<div class="modal fade" id="listModuleModal" tabindex="-1" aria-labelledby="listModuleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="listModuleModalLabel">Lista de Modulo Existentes</h5>
+        <button type="button" class="close closemodal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="container-sm !justify !spacing">
+        <div class="form-group">
+          <label for="nameNewDepart">Nombre del Modulo</label>
+          <input type="text" class="form-control" id="nameNewModule2" aria-describedby="nameNewModule2Help" required>
+          <small id="nameNewModule2Help" class="form-text text-muted">Escriba el Nombre del Modulo que Desea
+            Crear</small>
+        </div>
+      </div>
+      <div id="alert_container" class="container-sm !justify !spacing">
+        <div class="alert alert-danger" role="alert">
+          <p id="text_alert"></p>
+        </div>
+      </div>
+
+      <div class="modal-body" id="list_modal_body">
+        <!-- Conteni SE Carga A traves de Ajax -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Modulo -->
+<div class="modal fade" id="assignModuleModal" tabindex="-1" aria-labelledby="assingModuleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assingModuleModalLabel">Assingnacion de Modulo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        <form id="formAssignModule">
+          <input type="hidden" name="id" id="idModuleByAssign">
+          <div class="form-row">
+            <div class="col-md-6">
+              <label for="validationCustom03">Modulo</label>
+              <input type="text" class="form-control" id="nameModuleByAssign" required disabled>
+            </div>
+            <div class="col-md-6">
+              <label for="validationCustom04">Departamentos</label>
+              <select class="custom-select" id="nameDepartAssign" required>
+                <option value="">Choose...</option>
+                <option>...</option>
+              </select>
+            </div>
+            <small id="nameNewHelp" class="form-text text-muted text-center">Escriba el Nombre que tendra la carpeta
+              dentro de
+              sistema</small>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary closemodal" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Crear Modulo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Usuario -->
+<div class="modal fade" id="newUserModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newUserModalLabel">Nuevo Usuario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        <form id="formUser">
+          <div class="modal-body form-row">
+            <input type="hidden" name="id" id="userId">
+            <div class="form-group col-md-6">
+              <label for="userName" class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" id="userName" placeholder="Nombre y Apellido" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="userEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="userEmail" placeholder="Correo Electronico" required>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="userLogin" class="form-label">Login</label>
+              <input type="text" class="form-control" id="userLogin" placeholder="Para Iniciar Sesion" required>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="pass" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="userpassword" placeholder="Para Iniciar Sesion" required>
+            </div>
+            <div class="form-group col-lg-4">
+              <label for="usertypes" class="form-label">Tipo de Usuario</label>
+              <select class="form-control" id="usertypes">
+                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUserTypes" -->
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger btn-light" data-bs-dismiss="modal"
+              aria-label="Close">Cancelar</button>
+            <button type="submit" class="btn btn-outline-primary btn-light">Registar</button>
+          </div>
+          <div id="messegecont" class="alert alert-warning d-none" role="alert">
+            <p id="messegetext" class="mb-0">Alert Description</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
