@@ -1,3 +1,3 @@
 <?php
-session_name('ICB-SYSTEM');
+session_name('PROJECT_BASE');
 session_start();

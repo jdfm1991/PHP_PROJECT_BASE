@@ -3,19 +3,19 @@ require_once("../../config/conexion.php");
 
 class Development extends Conectar
 {
-  function createDepartmentDB($id, $depart)
+  function createDepartmentDB($id, $depart, $tagdepart)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO department_data_table(id, nameDepartment) VALUES (?,?)");
-    $stmt->execute([$id, $depart]);
+    $stmt = $conectar->prepare("INSERT INTO department_data_table(id, nameDepartment, tagDepartment) VALUES (?,?,?)");
+    $stmt->execute([$id, $depart, $tagdepart]);
     return $stmt;
   }
   function getListDepartmentDB()
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->query("SELECT id, nameDepartment, statusDepartment FROM department_data_table WHERE availableDepartment=1");
+    $stmt = $conectar->query("SELECT id, nameDepartment, tagDepartment, statusDepartment FROM department_data_table WHERE availableDepartment=1");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   public function getAvailabilityDepartmenttDB($id)
@@ -57,11 +57,11 @@ class Development extends Conectar
     $stmt->execute(['id' => $id]);
     return $stmt->fetchColumn();
   }
-  public function updateDepartmentDB($id, $depart)
+  public function updateDepartmentDB($id, $depart, $tagdepart)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE department_data_table SET nameDepartment = ? WHERE id = ?");
-    $stmt->execute([$depart, $id]);
+    $stmt = $conectar->prepare("UPDATE department_data_table SET nameDepartment = ?, tagDepartment = ? WHERE id = ?");
+    $stmt->execute([$depart, $tagdepart, $id]);
     return $stmt->rowCount();
   }
   function createModuleDB($id, $module, $namelist)

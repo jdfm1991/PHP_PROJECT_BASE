@@ -196,4 +196,7 @@ $(document).ready(function () {
   })
 
   LoadDataTableUsers();
+
+  console.log(localStorage.getItem('login'));
+  
 });

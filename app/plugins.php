@@ -24,6 +24,6 @@
 <script src="<?php echo  URL_APP; ?>/index.js"></script>
 
 <?php
-require_once(PATH_ASSETS . '/components/modal.html');
+require_once(PATH_ASSETS . '/components/modal.php');
 
 ?>

@@ -6,41 +6,38 @@ require_once("dev_module.php");
 $dev = new Development();
 
 $id = (isset($_POST['id'])) ? $_POST['id'] : '';
-$module = (isset($_POST['module'])) ? $_POST['module'] : 'hgjh';
-$namelist = (isset($_POST['namelist'])) ? $_POST['namelist'] : 'jhgjhbh';
-$copy = (isset($_POST['copy'])) ? $_POST['copy'] : '';
-$depart = (isset($_POST['depart'])) ? $_POST['depart'] : '684f225aeae76';
+$module = (isset($_POST['module'])) ? $_POST['module'] : '';
+$namelist = (isset($_POST['namelist'])) ? $_POST['namelist'] : '';
+$copy = (isset($_POST['copy'])) ? $_POST['copy'] : 'manager';
+$depart = (isset($_POST['depart'])) ? $_POST['depart'] : '';
 
 
 switch ($_GET["op"]) {
   case 'new_depart':
     $dato = array();
+    $arraydepart = explode(" ", $depart);
+    $tagdepart = end($arraydepart);
     if (empty($id)) {
       $id = uniqid();
-      $data = $dev->createDepartmentDB($id, $depart);
+      $data = $dev->createDepartmentDB($id, $depart, $tagdepart);
       if ($data) {
-        $dato['id'] = $id;
         $dato['status'] = true;
         $dato['message'] = "El Departamento " . $depart . " Fue Creado Satisfactoriamente \n";
-        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       } else {
         $dato['status'] = false;
         $dato['message'] = "Error Al Crear Departamento" . $depart . ", Por Favor Intente Nuevamente \n";
-        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       }
     } else {
-      $data = $dev->updateDepartmentDB($id, $depart);
+      $data = $dev->updateDepartmentDB($id, $depart, $tagdepart);
       if ($data) {
-        $dato['id'] = $id;
         $dato['status'] = true;
         $dato['message'] = "El Departamento " . $depart . " Fue Actualizado Satisfactoriamente \n";
-        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       } else {
         $dato['status'] = false;
         $dato['message'] = "Error Al Actualizar Departamento" . $depart . ", Por Favor Intente Nuevamente \n";
-        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       }
     }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
   case 'list_depart':
     $dato = array();
@@ -88,12 +85,11 @@ switch ($_GET["op"]) {
     if ($data) {
       $dato['status'] = true;
       $dato['message'] = "El Departamento Se Actualizo Satisfactoriamente \n";
-      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     } else {
       $dato['status'] = false;
       $dato['message'] = "Error Al Actualizar Departamento, Por Favor Intente Nuevamente \n";
-      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
   case 'get_name_depart':
     $dato = array();
@@ -155,11 +151,10 @@ switch ($_GET["op"]) {
         $sub_array['folder'] = $row;
         $dato[] = $sub_array;
       }
-      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     } else {
       echo "El directorio especificado no existe.";
     }
-    //echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
 
   case 'new_module':
@@ -170,13 +165,12 @@ switch ($_GET["op"]) {
       if ($data) {
         $dato['status'] = true;
         $dato['message'] = "El Modulo " . $namelist . " Fue Creado Satisfactoriamente \n";
-        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       } else {
         $dato['status'] = false;
         $dato['message'] = "Error Al Crear Modulo" . $namelist . ", Por Favor Intente Nuevamente \n";
-        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       }
-    } 
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
   case 'copy_module':
     $root = PATH_APP . '/' . $module;
@@ -224,8 +218,6 @@ switch ($_GET["op"]) {
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-
-    # code...
     break;
   default:
     header("Location:" . URL_APP);

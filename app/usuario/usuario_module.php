@@ -82,4 +82,13 @@ class Usuario extends Conectar
     $stmt->execute(['status' => 0, 'id' => $id]);
     return $stmt->rowCount();
   }
+
+   public function getDataUserLogin($login)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT * FROM user_data_table WHERE loginuser = :login");
+    $stmt->execute(['login' => $login]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }

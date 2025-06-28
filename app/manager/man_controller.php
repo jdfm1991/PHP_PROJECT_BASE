@@ -53,6 +53,7 @@ switch ($_GET["op"]) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
       $sub_array['name'] = $row['nameDepartment'];
+      $sub_array['tag'] = $row['tagDepartment'];
       $modules = $man->getModuleByDepartmentDB($row['id']);
       $sub_array['modules'] = $modules;
       $dato[] = $sub_array;

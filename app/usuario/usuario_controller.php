@@ -1,4 +1,5 @@
 <?php
+require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
 require_once("usuario_module.php");
 
@@ -7,8 +8,8 @@ $usuario = new Usuario();
 $id = (isset($_POST['id'])) ? $_POST['id'] : '';
 $name = (isset($_POST['name'])) ? $_POST['name'] : '';
 $email = (isset($_POST['email'])) ? $_POST['email'] : '';
-$login = (isset($_POST['login'])) ? $_POST['login'] : '';
-$password = (isset($_POST['password'])) ? $_POST['password'] : '';
+$login = (isset($_POST['login'])) ? $_POST['login'] : 'jfranco';
+$password = (isset($_POST['password'])) ? $_POST['password'] : '20975144';
 $type = (isset($_POST['type'])) ? $_POST['type'] : 0;
 
 switch ($_GET["op"]) {
@@ -112,6 +113,30 @@ switch ($_GET["op"]) {
       $dato['login'] = $row['loginuser'];
       $dato['password'] = $row['passworduser'];
       $dato['type'] = $row['leveluser'];
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'login':
+    $dato = array();
+    $data = $usuario->getDataUserLogin($login);
+    if (is_array($data) and count($data) > 0) {
+      foreach ($data as $data) {
+        if (password_verify($password, $data['passworduser'])) {
+          //sesion
+          $_SESSION['id'] = $data['id'];
+          //para js
+          $dato['id'] = $data['id'];
+          $dato['status']  = true;
+          $dato['name'] = $data['nameuser'];
+          $dato['message'] = 'Ingreso de Manera Exitosa, Sea Bienvenido!';
+        } else {
+          $dato['status']  = false;
+          $dato['message'] = 'La Contraseña es incorrecto';
+        }
+      }
+    } else {
+      $dato['status']  = false;
+      $dato['message'] = 'El Usuario es incorrecto';
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;

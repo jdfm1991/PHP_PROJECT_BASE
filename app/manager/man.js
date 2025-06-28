@@ -8,7 +8,7 @@ $(document).ready(function () {
       container.innerHTML = '';
       data.forEach((opt, idx) => {
         const button = document.createElement('button');
-        button.style.width = '100px';
+        button.style.width = '220px';
         button.style.margin = '10px';
         button.classList.add('btn');
         button.classList.add('btn-outline-info');
@@ -48,6 +48,7 @@ $(document).ready(function () {
     $('#nameModuleByAssign').val(value); //Cargamos el nombre
     $('#idModuleByAssign').val(module); //Cargamos el id
     loadSelectDepartmentsAvailableDB(); //cargamos los departamentos
+    loadSidebarMenu();
     $('#assignModuleModal').modal('show') //mostramos el modal
   })
   $('#formAssignModule').submit(function (e) {
@@ -113,7 +114,7 @@ $(document).ready(function () {
         DivBody.setAttribute('data-parent', '#accordionDepartment');
         opt.modules.forEach((mod, idx) => {
           const button = document.createElement('button');
-          button.style.width = '100px';
+          button.style.width = '220px';
           button.style.margin = '10px';
           button.classList.add('btn');
           button.classList.add('btn-outline-info');
@@ -135,7 +136,6 @@ $(document).ready(function () {
   $(document).on('click', '#b_unassign_module', function () {
     var module = $(this).data('value');
     var id = $(this).attr('value');
-    
     Swal.fire({
       title: 'Estas seguro de desasignar el modulo?',
       icon: 'warning',
@@ -160,6 +160,7 @@ $(document).ready(function () {
               });
               loadListModulesAvailableDB();
               loadListDepartmentsAvailableDB();
+              loadSidebarMenu();
             } else {
               Swal.fire({
                 icon: "error",

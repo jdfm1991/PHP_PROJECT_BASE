@@ -176,3 +176,54 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Nuevo Usuario -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card o-hidden border-0 shadow-lg">
+          <div class="row">
+            <div class="col-lg-6 d-none d-lg-block bg-login-image">
+              <div class="text-center">
+                <img class="img-fluid mt-5 mb-5 ml-5" style="width: 25rem;"
+                  src="<?php echo  URL_ASSETS; ?>/img/undraw_posting_photo.svg" alt="...">
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="p-5">
+                <div class="text-center">
+                  <h1 class="h4 text-gray-900 mb-4">¡Bienvenido de nuevo!</h1>
+                </div>
+                <form class="user" id="formLogin">
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-user" id="sessionlogin"
+                      aria-describedby="emailHelp" placeholder="Ingrese su Login...">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control form-control-user" id="sessionpassword"
+                      placeholder="Ingrese su Contraseña...">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger btn-light" data-bs-dismiss="modal"
+                      aria-label="Close">Cancelar</button>
+                    <button type="submit" class="btn btn-outline-primary btn-light">Iniciar Sesion</button>
+                  </div>
+                  <div id="m_login_cont" class="alert alert-warning d-none" role="alert">
+                    <p id="m_login_text" class="mb-0">Alert Description</p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
