@@ -86,6 +86,14 @@ class Development extends Conectar
     $stmt = $conectar->query("SELECT * FROM module_data_table WHERE availableModule=1");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+
+  function getListModulesDB2()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->query("SELECT * FROM module_data_table WHERE statusModule=1");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
   
   function getValitedDepartmentDB($id)
   {

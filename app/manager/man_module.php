@@ -14,14 +14,14 @@ class Manager extends Conectar
   public function availabilityModuleOffDB($id)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE module_data_table SET availableModule = :available WHERE id = :id");
+    $stmt = $conectar->prepare("UPDATE module_data_table SET statusModule = :available WHERE id = :id");
     $stmt->execute(['available' => 0, 'id' => $id]);
     return $stmt->rowCount();
   }
   public function availabilityModuleOnDB($id)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE module_data_table SET availableModule = :available WHERE id = :id");
+    $stmt = $conectar->prepare("UPDATE module_data_table SET statusModule = :available WHERE id = :id");
     $stmt->execute(['available' => 1, 'id' => $id]);
     return $stmt->rowCount();
   }

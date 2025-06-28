@@ -22,6 +22,17 @@ switch ($_GET["op"]) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
+  case 'get_name_module2':
+    $dato = array();
+    $data = $dev->getListModulesDB2();
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['name'] = $row['nameListModule'];
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
   case 'get_name_depart':
     $dato = array();
     $data = $dev->getListDepartmentDB();

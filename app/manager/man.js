@@ -2,7 +2,7 @@ $(document).ready(function () {
   /* Funcion para listar todos los modulos existentes en la base de datos */
   const loadListModulesAvailableDB = async () => {
     try {
-      const response = await fetch('man_controller.php?op=get_name_module');
+      const response = await fetch('man_controller.php?op=get_name_module2');
       const data = await response.json();
       const container = document.getElementById('modulescontainer');
       container.innerHTML = '';

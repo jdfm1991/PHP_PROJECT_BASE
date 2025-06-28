@@ -42,7 +42,7 @@ const loadSidebarMenu = async () => {
         opt.modules.forEach((mod, idx) => {
             const a = document.createElement('a');
             a.classList.add('collapse-item');
-            a.setAttribute('href', mod.nameModule);
+            a.setAttribute('href', URI + mod.nameModule);
             a.innerHTML = `${mod.nameListModule}`;
             divContainerInner.appendChild(a);
         })

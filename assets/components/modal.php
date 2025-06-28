@@ -177,7 +177,7 @@
   </div>
 </div>
 
-<!-- Modal Nuevo Usuario -->
+<!-- Modal para Iniciar Sesion -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -223,6 +223,56 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Cliente -->
+<div class="modal fade" id="newClientModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newUserModalLabel">Nuevo Cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_body">
+        <form id="formClient">
+          <div class="modal-body form-row">
+            <input type="hidden" name="id" id="clientId">
+            <div class="form-group col-md-6">
+              <label for="clientName" class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" id="clientName" placeholder="Nombre y Apellido" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="clientDni" class="form-label">N° DNI // Cedula</label>
+              <input type="text" class="form-control" id="clientDni" placeholder="N° DNI // Cedula de Identidad" maxlength="20">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="clientPhone" class="form-label">N° Telefonico Principal</label>
+              <input type="text" class="form-control" id="clientPhone" name="clientPhone" placeholder="N° Telefonico" required maxlength="11">
+              <small id="clientPhoneHelp" class="form-text text-muted">Escriba Codigo de Area Sin el Primer 0 + N° Telefonico</small>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="clientPhoneAlt" class="form-label">N° Telefonico Alternativo</label>
+              <input type="text" class="form-control" id="clientPhoneAlt" placeholder="N° Telefonico" required maxlength="20">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="clientEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="clientEmail" placeholder="Correo Electronico" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger btn-light" data-bs-dismiss="modal"
+              aria-label="Close">Cancelar</button>
+            <button type="submit" class="btn btn-outline-primary btn-light">Registar</button>
+          </div>
+          <div id="m_client_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_client_text" class="mb-0">Alert Description</p>
+          </div>
+        </form>
       </div>
     </div>
   </div>
