@@ -20,8 +20,6 @@
             </div>
           </form>
           -->
-
-          <?php var_dump($_SESSION)  ?>
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
 

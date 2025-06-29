@@ -1,31 +1,40 @@
 <?php
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
-require_once("clientes_module.php");
+require_once("tasacambiaria_module.php");
 
-$cliente = new Clientes();
+$exchange = new Exchange();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '685ffa345a725';
-$name = (isset($_POST['name'])) ? $_POST['name'] : 'jo';
-$dni = (isset($_POST['dni'])) ? $_POST['dni'] : '';
-$phone = (isset($_POST['phone'])) ? $_POST['phone'] : '';
-$phonealt = (isset($_POST['phonealt'])) ? $_POST['phonealt'] : '';
-$email = (isset($_POST['email'])) ? $_POST['email'] : '';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '';
+$date = (isset($_POST['date'])) ? $_POST['date'] : '';
+$rate = (isset($_POST['rate'])) ? $_POST['rate'] : '';
+$type = (isset($_POST['type'])) ? $_POST['type'] : '';
 
 switch ($_GET["op"]) {
-  case 'new_client':
+  case 'get_exchange_rate_types':
+    $dato = array();
+    $data = $exchange->getExchangeRateTypesDB();
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['type'] = $row['exchangeratetypes'];
+      $sub_array['acr'] = $row['acronym'];
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'new_rate':
     $dato = array();
     if (empty($id)) {
-      $id = uniqid();
-      $data = $cliente->createNewClientDB($id, $name, $dni, $phone, $phonealt, $email);
+      $data = $exchange->createNewRateExchangeDB($id, $date, $rate, $type);
       if ($data) {
         $dato['status'] = true;
         $dato['error'] = '200';
-        $dato['message'] = "El Usuario " . $name . " Fue Creado Satisfactoriamente \n";
+        $dato['message'] = "La Tasa Cambiaria del Dia " . $date . " Fue Creada Satisfactoriamente \n";
       } else {
         $dato['status'] = false;
         $dato['error'] = '500';
-        $dato['message'] = "Error Al Crear El Usuario" . $name . ", Por Favor Intente Nuevamente \n";
+        $dato['message'] = "Error Al Registrar La Tasa Cambiaria del Dia " . $date . ", Por Favor Intente Nuevamente \n";
       }
     } else {
       $data = $cliente->updateDataClientDB($id, $name, $dni, $phone, $phonealt, $email);
@@ -41,17 +50,15 @@ switch ($_GET["op"]) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-  case 'get_list_clients':
+  case 'get_list_rates':
     $dato = array();
-    $data = $cliente->getListClientsDB();
+    $data = $exchange->getListExchangeRatesDB();
     foreach ($data as $row) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
-      $sub_array['name'] = $row['nameClient'];
-      $sub_array['dni'] = $row['dniClient'];
-      $sub_array['email'] = $row['emailClient'];
-      $sub_array['phone'] = $row['phoneClient'];
-      $sub_array['phonealt'] = $row['phoneClientAlt'];
+      $sub_array['date'] = $row['dateRate'];
+      $sub_array['exchange'] = $row['exchRate'];
+      $sub_array['type'] = $row['typeRate'];
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

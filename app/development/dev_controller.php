@@ -6,9 +6,9 @@ require_once("dev_module.php");
 $dev = new Development();
 
 $id = (isset($_POST['id'])) ? $_POST['id'] : '';
-$module = (isset($_POST['module'])) ? $_POST['module'] : '';
+$module = (isset($_POST['module'])) ? $_POST['module'] : 'cosas';
 $namelist = (isset($_POST['namelist'])) ? $_POST['namelist'] : '';
-$copy = (isset($_POST['copy'])) ? $_POST['copy'] : 'manager';
+$copy = (isset($_POST['copy'])) ? $_POST['copy'] : 'clientes';
 $depart = (isset($_POST['depart'])) ? $_POST['depart'] : '';
 
 
@@ -184,10 +184,11 @@ switch ($_GET["op"]) {
       $dir = opendir($from);
       //Recorro el directorio para leer los archivos que tiene
       while (($file = readdir($dir)) !== false) {
+        $new_file = str_replace($copy, $module, $file);
         //Leo todos los archivos excepto . y ..
         if (strpos($file, '.') !== 0) {
           //Copio el archivo manteniendo el mismo nombre en la nueva carpeta
-          copy($from . '/' . $file, $to . '/' . $file);
+          copy($from . '/' . $file, $to . '/' . $new_file);
         }
       }
       closedir($dir);

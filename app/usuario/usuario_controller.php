@@ -141,6 +141,6 @@ switch ($_GET["op"]) {
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
   default:
-    # code...
+    header("Location:" . URL_APP);
     break;
 }

@@ -1,14 +1,22 @@
 <?php
 require_once("../../config/conexion.php");
 
-class Clientes extends Conectar
+class Exchange extends Conectar
 {
-  public function createNewClientDB($id, $name, $dni, $phone, $phonealt, $email)
+   public function getExchangeRateTypesDB()
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO client_data_table(id, nameClient, dniClient, emailClient, phoneClient, phoneClientAlt) VALUES (?,?,?,?,?,?)");
-    $stmt->execute([$id, $name, $dni, $email, $phone, $phonealt]);
+    $stmt = $conectar->prepare("SELECT * FROM exchange_rate_types_data_table");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+  public function createNewRateExchangeDB($id, $date, $rate, $type)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("INSERT INTO exch_rate_data_table(id, dateRate, exchRate, typeRate) VALUES ('','2025-12-2', '12', '1')");
+    //$stmt->execute([$id, $date, $rate, $type]);
     return $stmt;
   }
   public function updateDataClientDB($id, $name, $dni, $phone, $phonealt, $email)
@@ -18,11 +26,11 @@ class Clientes extends Conectar
     $stmt->execute(['name' => $name, 'dni' => $dni, 'email' => $email, 'phone' => $phone, 'phonealt' => $phonealt, 'id' => $id]);
     return $stmt->rowCount();
   }
-  public function getListClientsDB()
+  public function getListExchangeRatesDB()
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM client_data_table WHERE statusClient = 1");
+    $stmt = $conectar->prepare("SELECT * FROM exch_rate_data_table");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }

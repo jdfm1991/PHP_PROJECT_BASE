@@ -1,17 +1,34 @@
 $(document).ready(function () {
   /* Funcion para Ingresar Solo los Numeros en el Input de Telefono */
   $(function () {
-    $("input[name='clientPhone']").on("input", function (e) {
+    $("input[name='exchangeRate']").on("input", function (e) {
       $(this).val(
         $(this)
           .val()
-          .replace(/[^0-9]/g, "")
+          .replace(/[^0-9.]/g, "")
       );
     });
   });
-  /* Arrow Function Que se Encarga de Cargar los Datos del Cliente en la Tabla */
-  const loadDataTableClients = async () => {
-    const table = $('#client_table').DataTable({
+  /* Funcion para Cargar Select de los Tipos de Cambio */
+  const loadSelectExchangeRatesDB = async () => {
+    try {
+      const response = await fetch('tasacambiaria_controller.php?op=get_exchange_rate_types');
+      const data = await response.json();
+      const container = document.getElementById('exchange_rate');
+      container.innerHTML = '';
+      data.forEach((opt, idx) => {
+        const option = document.createElement('option');
+        option.setAttribute('value', opt.id);
+        option.innerHTML = `${opt.acr}`;
+        container.appendChild(option);
+      })
+    } catch (error) {
+      console.log('Error', error);
+    }
+  };
+  /* Arrow Function Que se Encarga de Cargar los Datos de todas las Tasas en la Tabla */
+  const loadDataTableRates = async () => {
+    const table = $('#rate_table').DataTable({
       responsive: true,
       scrollX: true,
       autoWidth: false,
@@ -40,17 +57,15 @@ $(document).ready(function () {
         processing: "Procesando..."
       },
       ajax: {
-        url: "clientes_controller.php?op=get_list_clients",
+        url: "tasacambiaria_controller.php?op=get_list_rates",
         type: "GET",
         dataType: "json",
         dataSrc: "",
       },
       columns: [
-        { data: "name" },
-        { data: "dni" },
-        { data: "email" },
-        { data: "phone" },
-        { data: "phonealt" },
+        { data: "date" },
+        { data: "exchange" },
+        { data: "type" },
         {
           data: "id", render: (data, _, __, meta) =>
             `<button id="b_edit_client" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
@@ -60,49 +75,24 @@ $(document).ready(function () {
     });
 
   }
-  /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
-  $('#formClient').submit(function (e) {
+  $('#newRate').click(function (e) {
     e.preventDefault();
-    sfdni = $('#clientDni').val(); // Numero de DNI Sin Formatear
-    sfphone = $('#clientPhone').val(); // Numero de Telefono Sin Formatear
-    fc = sfdni.charAt(0); // Primer Caracter del DNI
-    if (!fc.match(/[a-zA-Z]/)) { // Si el Primer Caracter del DNI no es una Letra Arroja Mensaje de Error
-      $('#m_client_cont').removeClass('d-none');
-      $('#m_client_text').addClass('text-danger font-weight-bold text-center');
-      $('#m_client_text').text('Primer Caracter debe ser una Letra del Alfabeto Indicando la Naturalidad del DNI (V E J G etc)');
-      setTimeout(() => {
-        $('#m_client_cont').addClass('d-none');
-      }, 2000);
-      return false;
-    }
-    if (sfphone.length < 10) { // Si el Numero de Telefono no tiene 10 Digitos Arroja Mensaje de Error
-      $('#m_client_cont').removeClass('d-none');
-      $('#m_client_text').addClass('text-danger font-weight-bold text-center');
-      $('#m_client_text').text('El Numero de Telefono debe tener 10 Digitos');
-      setTimeout(() => {
-        $('#m_client_cont').addClass('d-none');
-      }, 2000);
-      return false;
-    }
-    if (sfphone.length == 10) { // Si el Numero de Telefono tiene 10 Digitos Le Agrega el 58 al Comienzo
-      sfphone = '58' + sfphone;
-    }
-    id = $('#clientId').val();
-    name = $('#clientName').val();
-    nfdni = sfdni.charAt(0) + '-' + sfdni.substring(1); // Numero de DNI Formato Previo
-    dni = nfdni.toUpperCase(); // Numero de DNI Formateado
-    phone = sfphone.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '+($1) $2-$3-$4'); // Numero de Telefono Formateado
-    phonealt = $('#clientPhoneAlt').val();
-    email = $('#clientEmail').val();
+    loadSelectExchangeRatesDB();
+  });
+  /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
+  $('#formNewRate').submit(function (e) {
+    e.preventDefault();   
+    id = $('#idRate').val();
+    rate = $('#exchangeRate').val();
+    date = $('#dateRate').val();
+    type = $('#exchange_rate').val();
     dato = new FormData();
     dato.append('id', id);
-    dato.append('name', name);
-    dato.append('dni', dni);
-    dato.append('phone', phone);
-    dato.append('phonealt', phonealt);
-    dato.append('email', email);
+    dato.append('rate', rate);
+    dato.append('date', date);
+    dato.append('type', type);
     $.ajax({
-      url: 'clientes_controller.php?op=new_client',
+      url: 'tasacambiaria_controller.php?op=new_rate',
       method: 'POST',
       dataType: "json",
       data: dato,
@@ -154,7 +144,7 @@ $(document).ready(function () {
       }
     });
   })
-   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
+  /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
   $(document).on('click', '#b_delete_client', function () {
     var id = $(this).data('value');
     Swal.fire({
@@ -194,5 +184,5 @@ $(document).ready(function () {
     })
 
   })
-  loadDataTableClients();
+  loadDataTableRates();
 });

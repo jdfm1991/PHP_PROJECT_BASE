@@ -1,5 +1,5 @@
 <!-- Modal Nuevo Departamento -->
-<div class="modal fade" id="formNewDepartModal" tabindex="-1" aria-labelledby="NewDepartModalLabel" aria-hidden="true">
+<div class="modal fade" id="NewDepartModal" tabindex="-1" aria-labelledby="NewDepartModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -18,7 +18,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Cargar Informacion</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -46,7 +46,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary closemodal" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Crear Modulo</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -85,8 +85,8 @@
   </div>
 </div>
 
-<!-- Modal Nuevo Modulo -->
-<div class="modal fade" id="assignModuleModal" tabindex="-1" aria-labelledby="assingModuleModalLabel"
+<!-- Modal Para Asignacion de Modulo -->
+<div class="modal fade" id="assignModuleModal" tabindex="-1" aria-labelledby="assignModuleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -118,7 +118,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary closemodal" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Crear Modulo</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>
       </div>
@@ -166,7 +166,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-danger btn-light" data-bs-dismiss="modal"
               aria-label="Close">Cancelar</button>
-            <button type="submit" class="btn btn-outline-primary btn-light">Registar</button>
+            <button type="submit" class="btn btn-outline-primary btn-light">Guardar</button>
           </div>
           <div id="messegecont" class="alert alert-warning d-none" role="alert">
             <p id="messegetext" class="mb-0">Alert Description</p>
@@ -178,7 +178,7 @@
 </div>
 
 <!-- Modal para Iniciar Sesion -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -229,7 +229,7 @@
 </div>
 
 <!-- Modal Nuevo Cliente -->
-<div class="modal fade" id="newClientModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="newClientModal" tabindex="-1" aria-labelledby="newClientModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -257,7 +257,7 @@
             </div>
             <div class="form-group col-md-6">
               <label for="clientPhoneAlt" class="form-label">N° Telefonico Alternativo</label>
-              <input type="text" class="form-control" id="clientPhoneAlt" placeholder="N° Telefonico" required maxlength="20">
+              <input type="text" class="form-control" id="clientPhoneAlt" placeholder="N° Telefonico" maxlength="20">
             </div>
             <div class="form-group col-md-6">
               <label for="clientEmail" class="form-label">Email</label>
@@ -267,10 +267,51 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-danger btn-light" data-bs-dismiss="modal"
               aria-label="Close">Cancelar</button>
-            <button type="submit" class="btn btn-outline-primary btn-light">Registar</button>
+            <button type="submit" class="btn btn-outline-primary btn-light">Guardar</button>
           </div>
           <div id="m_client_cont" class="alert alert-warning d-none" role="alert">
             <p id="m_client_text" class="mb-0">Alert Description</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nueva Tasa de Cambio -->
+<div class="modal fade" id="newRateModal" tabindex="-1" aria-labelledby="newRateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="NewDepartModalLabel">Nuevo Departamento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body " id="modal_body">
+        <form id="formNewRate">
+          <input type="hidden" name="id" id="idRate">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="exchangeRate">Mont de la Tasa</label>
+              <input type="text" class="form-control" id="exchangeRate" name="exchangeRate" aria-describedby="exchangeRateHelp" required>
+              <small id="exchangeRateHelp" class="form-text text-muted">Monto de la Tasa de Cambio</small>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="dateRate">Fecha de la Tasa</label>
+              <input type="date" class="form-control" id="dateRate" name="dateRate" aria-describedby="dateRateHelp" max="<?php echo date('Y-m-d'); ?>" required>
+              <small id="dateRateHelp" class="form-text text-muted">Fecha de la Tasa de Cambio</small>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="validationCustom04">Tipo de Cambio</label>
+              <select class="custom-select" id="exchange_rate" required>
+                <!-- El Contenido  se carga a traves de Ajax Mediante Archivo js -->
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>
       </div>
