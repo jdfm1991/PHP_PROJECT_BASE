@@ -26,7 +26,15 @@ switch ($_GET["op"]) {
   case 'new_rate':
     $dato = array();
     if (empty($id)) {
-      $data = $exchange->createNewRateExchangeDB($id, $date, $rate, $type);
+      $datevalidate = $exchange->validateDateRateDB($date); //Validar Fecha de Exchange
+      if ($datevalidate > 0) {
+        $dato['status'] = false;
+        $dato['error'] = '500';
+        $dato['message'] = "La Tasa Cambiaria del Dia " . $date . " Ya Existe, Por Favor Intente Con Una Fecha Diferente \n";
+        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+        return;
+      }
+      $data = $exchange->createDataRateDB($date, $rate, $type);
       if ($data) {
         $dato['status'] = true;
         $dato['error'] = '200';
@@ -37,15 +45,15 @@ switch ($_GET["op"]) {
         $dato['message'] = "Error Al Registrar La Tasa Cambiaria del Dia " . $date . ", Por Favor Intente Nuevamente \n";
       }
     } else {
-      $data = $cliente->updateDataClientDB($id, $name, $dni, $phone, $phonealt, $email);
+      $data = $exchange->updateRateDataDB($id, $date, $rate, $type);
       if ($data) {
         $dato['status'] = true;
         $dato['error'] = '200';
-        $dato['message'] = "El Usuario " . $name . " Fue Actiualizado Satisfactoriamente \n";
+        $dato['message'] = "La Tasa Cambiaria del Dia  " . $date . " Fue Actiualizado Satisfactoriamente \n";
       } else {
         $dato['status'] = false;
         $dato['error'] = '500';
-        $dato['message'] = "Error Al Actualizar El Usuario" . $name . ", Por Favor Intente Nuevamente \n";
+        $dato['message'] = "Error Al Actualizar Tasa Cambiaria del Dia " . $date . ", Por Favor Intente Nuevamente \n";
       }
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
@@ -58,35 +66,21 @@ switch ($_GET["op"]) {
       $sub_array['id'] = $row['id'];
       $sub_array['date'] = $row['dateRate'];
       $sub_array['exchange'] = $row['exchRate'];
+      $sub_array['type'] = $row['acronym'];
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'get_data_rate':
+    $dato = array();
+    $data = $exchange->getExchangeRateDB($id);
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['date'] = $row['dateRate'];
+      $sub_array['exchange'] = $row['exchRate'];
       $sub_array['type'] = $row['typeRate'];
       $dato[] = $sub_array;
-    }
-    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-    break;
-  case 'get_data_client':
-    $dato = array();
-    $data = $cliente->getDataClientDB($id);
-    foreach ($data as $row) {
-      $sub_array['id'] = $row['id'];
-      $sub_array['name'] = $row['nameClient'];
-      $sub_array['dni'] = $row['dniClient'];
-      $sub_array['email'] = $row['emailClient'];
-      $sub_array['phone'] = $row['phoneClient'];
-      $sub_array['phonealt'] = $row['phoneClientAlt'];
-      $dato[] = $sub_array;
-    }
-    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-    break;
-  case 'delete_client':
-    $data = $cliente->deleteClientDB($id);
-    if ($data) {
-      $dato['status'] = true;
-      $dato['error'] = '200';
-      $dato['message'] = "El Cliente Fue Eliminado Satisfactoriamente \n";
-    } else {
-      $dato['status'] = false;
-      $dato['error'] = '500';
-      $dato['message'] = "Error Al Cliente El Usuario, Por Favor Intente Nuevamente \n";
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;

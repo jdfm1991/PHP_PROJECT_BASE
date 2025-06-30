@@ -309,6 +309,9 @@
               </select>
             </div>
           </div>
+          <div id="m_rate_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_rate_text" class="mb-0">Alert Description</p>
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             <button type="submit" class="btn btn-primary">Guardar</button>

@@ -7,105 +7,49 @@ class Exchange extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM exchange_rate_types_data_table");
+    $stmt = $conectar->prepare("SELECT * FROM rate_types_data_table");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-  public function createNewRateExchangeDB($id, $date, $rate, $type)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO exch_rate_data_table(id, dateRate, exchRate, typeRate) VALUES ('','2025-12-2', '12', '1')");
-    //$stmt->execute([$id, $date, $rate, $type]);
-    return $stmt;
-  }
-  public function updateDataClientDB($id, $name, $dni, $phone, $phonealt, $email)
-  {
-    $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE client_data_table SET nameClient=:name, dniClient=:dni, emailClient=:email, phoneClient=:phone, phoneClientAlt=:phonealt WHERE id = :id");
-    $stmt->execute(['name' => $name, 'dni' => $dni, 'email' => $email, 'phone' => $phone, 'phonealt' => $phonealt, 'id' => $id]);
-    return $stmt->rowCount();
   }
   public function getListExchangeRatesDB()
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM exch_rate_data_table");
+    $stmt = $conectar->prepare("SELECT A.id, dateRate, exchRate, acronym FROM rate_data_table AS A 
+                                  INNER JOIN rate_types_data_table AS B ON A.typeRate=B.id");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-  public function getDataClientDB($id)
+  public function getExchangeRateDB($id)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM client_data_table WHERE id = :id");
+    $stmt = $conectar->prepare("SELECT * FROM rate_data_table WHERE id = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-  public function deleteClientDB($id)
+  public function updateRateDataDB($id, $date, $rate, $type)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE client_data_table SET statusClient = :status WHERE id = :id");
-    $stmt->execute(['status' => 0, 'id' => $id]);
+    $stmt = $conectar->prepare("UPDATE rate_data_table SET dateRate=:date, exchRate=:rate, typeRate=:type WHERE id = :id");
+    $stmt->execute(['date' => $date, 'rate' => $rate, 'type' => $type, 'id' => $id]);
     return $stmt->rowCount();
   }
 
-
-
-
-
-
-
-
-  public function getNameUserTypes()
+  public function createDataRateDB($date, $rate, $type)
   {
     $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM user_types_data_table");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-
-  public function loginUserExistsDB($login)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("SELECT loginuser FROM user_data_table WHERE loginuser = :login");
-    $stmt->execute(['login' => $login]);
-    return $stmt->fetchColumn();
-  }
-
-  
-
-  public function getPasswordUserDB($id)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("SELECT passworduser FROM user_data_table WHERE id = :id");
-    $stmt->execute(['id' => $id]);
-    return $stmt->fetchColumn();
-  }
-
-  public function updateUserDataDBPasswordOff($id, $name, $email, $login, $type)
-  {
-    $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE user_data_table SET nameuser=:nameuser,emailuser=:emailuser,loginuser=:loginuser,leveluser=:leveluser WHERE id = :id");
-    $stmt->execute(['nameuser' => $name, 'emailuser' => $email, 'loginuser' => $login, 'leveluser' => $type, 'id' => $id]);
+    $stmt = $conectar->prepare("INSERT INTO rate_data_table (dateRate, exchRate, typeRate) VALUES (:date, :rate, :type)");
+    $stmt->execute(['date' => $date, 'rate' => $rate, 'type' => $type]);
     return $stmt->rowCount();
   }
-  
 
-  
-
-  
-  
-
-   public function getDataUserLogin($login)
+  public function validateDateRateDB($date)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM user_data_table WHERE loginuser = :login");
-    $stmt->execute(['login' => $login]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conectar->prepare("SELECT * FROM rate_data_table WHERE dateRate = :date");
+    $stmt->execute(['date' => $date]);
+    return $stmt->rowCount();
   }
 }

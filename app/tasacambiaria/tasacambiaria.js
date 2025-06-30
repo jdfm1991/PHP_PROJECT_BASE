@@ -10,7 +10,7 @@ $(document).ready(function () {
     });
   });
   /* Funcion para Cargar Select de los Tipos de Cambio */
-  const loadSelectExchangeRatesDB = async () => {
+  const loadSelectExchangeRatesDB = async (id) => {
     try {
       const response = await fetch('tasacambiaria_controller.php?op=get_exchange_rate_types');
       const data = await response.json();
@@ -18,9 +18,16 @@ $(document).ready(function () {
       container.innerHTML = '';
       data.forEach((opt, idx) => {
         const option = document.createElement('option');
-        option.setAttribute('value', opt.id);
-        option.innerHTML = `${opt.acr}`;
-        container.appendChild(option);
+        if (id == opt.id) {
+          option.setAttribute('value', opt.id);
+          option.innerHTML = `${opt.acr}`;
+          option.setAttribute('selected', 'selected');
+          container.appendChild(option);
+        } else {
+          option.setAttribute('value', opt.id);
+          option.innerHTML = `${opt.acr}`;
+          container.appendChild(option);
+        }
       })
     } catch (error) {
       console.log('Error', error);
@@ -31,7 +38,6 @@ $(document).ready(function () {
     const table = $('#rate_table').DataTable({
       responsive: true,
       scrollX: true,
-      autoWidth: false,
       paging: true,
       lengthChange: true,
       searching: true,
@@ -68,8 +74,7 @@ $(document).ready(function () {
         { data: "type" },
         {
           data: "id", render: (data, _, __, meta) =>
-            `<button id="b_edit_client" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
-          <button id="b_delete_client" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
+            `<button id="b_edit_rate" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>`, className: "text-center"
         }
       ]
     });
@@ -106,16 +111,15 @@ $(document).ready(function () {
             showConfirmButton: false,
             timer: 1500
           });
-          $('#client_table').DataTable().ajax.reload();
-          $('#formUser')[0].reset();
-          $('#newClientModal').modal('hide');
+          $('#rate_table').DataTable().ajax.reload();
+          $('#formNewRate')[0].reset();
+          $('#newRateModal').modal('hide');
         } else {
-          Swal.fire({
-            icon: "error",
-            title: response.message,
-            showConfirmButton: false,
-            timer: 1500
-          });
+          $('#m_rate_cont').removeClass('d-none');
+          $('#m_rate_text').text(response.message);
+          setTimeout(function () {
+            $('#m_rate_cont').addClass('d-none');
+          }, 3000);
         }
 
       }
@@ -123,66 +127,27 @@ $(document).ready(function () {
 
   });
   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
-  $(document).on('click', '#b_edit_client', function () {
+  $(document).on('click', '#b_edit_rate', function () {
     var id = $(this).data('value');
     $.ajax({
-      url: 'clientes_controller.php?op=get_data_client',
+      url: 'tasacambiaria_controller.php?op=get_data_rate',
       method: 'POST',
       dataType: 'json',
       data: { id: id },
       success: function (response) {
         $.each(response, function (idx, opt) {
-          $('#clientId').val(opt.id);
-          $('#clientName').val(opt.name);
-          $('#clientDni').val(opt.dni);
-          $('#clientPhone').val(opt.phone);
-          $('#clientPhoneAlt').val(opt.phonealt);
-          $('#clientEmail').val(opt.email);
+          $('#idRate').val(opt.id);
+          $('#exchangeRate').val(opt.exchange);
+          $('#dateRate').val(opt.date);
+          $('#dateRate').attr('disabled', true);
+          $('#exchange_rate').val(opt.type);
         });
-        $('.modal-title').text('Editar Informacion del Cliente');
-        $('#newClientModal').modal('show');
+        loadSelectExchangeRatesDB(id);
+        $('.modal-title').text('Actualizar Tasa de Cambio');
+        $('#newRateModal').modal('show');
       }
     });
   })
-  /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
-  $(document).on('click', '#b_delete_client', function () {
-    var id = $(this).data('value');
-    Swal.fire({
-      title: 'Estas seguro de eliminar el cliente?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, Eliminar!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: 'clientes_controller.php?op=delete_client',
-          method: 'POST',
-          dataType: 'json',
-          data: { id: id },
-          success: function (response) {
-            if (response.status == true) {
-              Swal.fire({
-                icon: "success",
-                title: response.message,
-                showConfirmButton: false,
-                timer: 1500
-              });
-              $('#client_table').DataTable().ajax.reload();
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: response.message,
-                showConfirmButton: false,
-                timer: 1500
-              });
-            }
-          }
-        });
-      }
-    })
-
-  })
+ 
   loadDataTableRates();
 });
