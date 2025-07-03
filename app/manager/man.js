@@ -41,53 +41,6 @@ $(document).ready(function () {
       console.log('Error', error);
     }
   };
-  /* Accion para asignar modulo */
-  $(document).on('click', '#b_assign_module', function () {
-    var module = $(this).data('value');
-    var value = $(this).attr('value');
-    $('#nameModuleByAssign').val(value); //Cargamos el nombre
-    $('#idModuleByAssign').val(module); //Cargamos el id
-    loadSelectDepartmentsAvailableDB(); //cargamos los departamentos
-    loadSidebarMenu();
-    $('#assignModuleModal').modal('show') //mostramos el modal
-  })
-  $('#formAssignModule').submit(function (e) {
-    e.preventDefault();
-    var module = $('#idModuleByAssign').val();
-    var depart = $('#nameDepartAssign').val();
-    var formData = new FormData();
-    formData.append('module', module);
-    formData.append('depart', depart);
-    $.ajax({
-      url: 'man_controller.php?op=assign_module',
-      method: 'POST',
-      dataType: "json",
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        if (response.status == true) {
-          $('#assignModuleModal').modal('hide');
-          $('#formAssignModule').trigger('reset');
-          Swal.fire({
-            icon: "success",
-            title: response.message,
-            showConfirmButton: false,
-            timer: 1500
-          });
-          loadListModulesAvailableDB();
-          loadListDepartmentsAvailableDB();
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: response.message,
-            showConfirmButton: false,
-            timer: 1500
-          });
-        }
-      }
-    });
-  });
   /* Funcion para Cargar los departamentos junto con sus respectivos modulos */
   const loadListDepartmentsAvailableDB = async () => {
     try {
@@ -132,6 +85,55 @@ $(document).ready(function () {
       console.log('Error', error);
     }
   };
+  /* */
+  $('#formAssignModule').submit(function (e) {
+    e.preventDefault();
+    var module = $('#idModuleByAssign').val();
+    var depart = $('#nameDepartAssign').val();
+    var formData = new FormData();
+    formData.append('module', module);
+    formData.append('depart', depart);
+    $.ajax({
+      url: 'man_controller.php?op=assign_module',
+      method: 'POST',
+      dataType: "json",
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response.status == true) {
+          $('#assignModuleModal').modal('hide');
+          $('#formAssignModule').trigger('reset');
+          Swal.fire({
+            icon: "success",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          loadListModulesAvailableDB();
+          loadListDepartmentsAvailableDB();
+          loadSidebarMenu();
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      }
+    });
+  });
+  /* Accion para asignar modulo */
+  $(document).on('click', '#b_assign_module', function () {
+    var module = $(this).data('value');
+    var value = $(this).attr('value');
+    $('#nameModuleByAssign').val(value); //Cargamos el nombre
+    $('#idModuleByAssign').val(module); //Cargamos el id
+    $('#assignModuleModal').modal('show') //mostramos el modal
+    loadListModulesAvailableDB(); //cargamos los modulos
+    loadSelectDepartmentsAvailableDB(); //cargamos los departamentos
+  })
   /* Accion para desasignar modulo */
   $(document).on('click', '#b_unassign_module', function () {
     var module = $(this).data('value');

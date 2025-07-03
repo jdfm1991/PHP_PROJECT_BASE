@@ -105,7 +105,7 @@
               <input type="text" class="form-control" id="nameModuleByAssign" required disabled>
             </div>
             <div class="col-md-6">
-              <label for="validationCustom04">Departamentos</label>
+              <label for="nameDepartAssign">Departamentos</label>
               <select class="custom-select" id="nameDepartAssign" required>
                 <option value="">Choose...</option>
                 <option>...</option>
@@ -318,6 +318,75 @@
           </div>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+
+<!--
+****************************************************************************
+ Modal Nueva Unidad Departamental
+****************************************************************************
+ -->
+<div class="modal fade" id="newUnitModal" tabindex="-1" aria-labelledby="newUnitModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="NewDepartModalLabel">Nueva Unidad Departamental</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body " id="modal_body">
+        <form id="formNewUnit">
+          <input type="hidden" name="id" id="idUnit">
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label for="unitLevel" class="form-label">Nivel</label>
+              <select class="form-control" id="unitLevel">
+                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="unitname">Unidad Departamental</label>
+              <input type="text" class="form-control" id="unitname" name="unitname" aria-describedby="unitname" required>
+              <small id="unitnameHelp" class="form-text text-muted">Numeracion de la Unidad</small>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="unitaliquots">% Alicuota</label>
+              <select class="custom-select" id="unitaliquots" required>
+                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectAliquots" -->
+              </select>
+            </div>
+          </div>
+          <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_unit_text" class="mb-0">Alert Description</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--
+  *************************************************
+  notificacion Para visualizar proceso terminado
+  *************************************************
+-->
+<div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+  <div id="bodyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+    <div class="toast-header">
+      <img src="<?php echo  URL_ASSETS; ?>/img/undraw_rocket.svg" class="rounded mr-2" alt="alt" width="20">
+      <strong class="mr-auto"></strong>
+      <!-- <small>11 mins ago</small> -->
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      <p><span id="toastText"></span></p>
     </div>
   </div>
 </div>

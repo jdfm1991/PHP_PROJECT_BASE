@@ -21,20 +21,34 @@ require_once(PATH_APP . "/head.php");
         <!-- Begin Page Content -->
         <div class="container-fluid">
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Desarrollo .::Estructuracion Departamentos y Modulos::.</h1>
+          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Usuario .::Creacion y Modificacion::.</h1>
           <div class="card mb-2">
             <div class="card-body">
-              <p class="text-monospace text-center">.::Modulos Disponibles Para Ser Asignados A Un Departamento::.</p>
-              <div id="modulescontainer" class="row list-group-item d-flex justify-content-between lh-sm align-items-center">
-                <!-- El Contenido  se carga a traves de Ajax -->
+              <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
+                <button id="newUnit" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newUnitModal"> Nueva Unidad Departamental </button>
               </div>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
-              <div class="accordion" id="accordionDepartment">
+              <div id="module_body">
+                <table id="units_table" class="table table-striped table-bordered" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>Departamento</th>
+                      <th>Nivel</th>
+                      <th>% Alicuota</th>
+                      <th>Estatus</th>
+                      <th>Accion</th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
                 <!-- El Contenido  se carga a traves de Ajax -->
               </div>
+
             </div>
           </div>
         </div>
@@ -57,7 +71,7 @@ require_once(PATH_APP . "/head.php");
   require_once(PATH_ASSETS . '/components/modal.php');
 
   ?>
-  <script src="man.js"></script>
+  <script src="unidaddepartamental.js"></script>
 </body>
 
 </html>
