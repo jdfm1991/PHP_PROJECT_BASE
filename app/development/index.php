@@ -25,10 +25,12 @@ require_once(PATH_APP . "/head.php");
           <div class="card mb-2">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-between lh-sm align-items-center">
-                <button id="newDepartment" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#formNewDepartModal"> Nuevo Departamento </button>
+                <button id="newDepartment" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#NewDepartModal"> Nuevo Departamento </button>
                 <button id="listDepartment" type="button" class="btn btn-outline-success btn-group-sm"> Lista de Departamentos </button>
                 <button id="newModule" type="button" class="btn btn-outline-success btn-group-sm">Nuevo Modulo </button>
                 <button id="listModules" type="button" class="btn btn-outline-success btn-group-sm"> Modulos en Proceso </button>
+                <button id="listModulesdb" type="button" class="btn btn-outline-success btn-group-sm"> Lista de Modulos </button>
+
               </div>
             </div>
           </div>

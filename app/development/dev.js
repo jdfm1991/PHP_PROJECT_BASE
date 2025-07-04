@@ -34,7 +34,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == true) {
-          $('#formNewDepartModal').modal('hide');
+          $('#NewDepartModal').modal('hide');
           $('#formNewDepart').trigger('reset');
           Swal.fire({
             icon: "success",
@@ -83,6 +83,113 @@ $(document).ready(function () {
         $module_body.append(items);
       }
     });
+  });
+
+  /* Funcion para escoger como crear los modulos del sistema */
+  $('#newModule').click(function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "Como Desea Crear el Nuevo Modulo?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      denyButtonColor: "#08cea1",
+      confirmButtonText: "Modulo Nuevo",
+      denyButtonText: "A Partir de Modulo Existente"
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        $('#newModuleModal').modal('show')
+      } else if (result.isDenied) {
+        getListModulesAvailablesDB();
+        $('#listModuleModal').modal('show')
+      }
+    });
+  });
+  /* Funcion para Crear todos los modulos que seran utilizados en el sistema */
+  $('#formNewModule').submit(function (e) {
+    e.preventDefault();
+    var module = $('#nameNewModule').val();
+    $.ajax({
+      url: "dev_controller.php?op=new_folder_module",
+      method: "POST",
+      dataType: "json",
+      data: { module: module },
+      success: function (response) {
+        if (response.status == true) {
+          $('#newModuleModal').modal('hide');
+          $('#formNewModule').trigger('reset');
+          Swal.fire({
+            icon: "success",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          $('#listModules').click()
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          $('#listModules').click()
+        }
+
+      }
+    });
+
+  });
+  /* Funcion para listar todos los modulos existentes en fase de desarrollo que puede ser activados en el sistema */
+  $('#listModules').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      url: "dev_controller.php?op=available_modules",
+      method: "POST",
+      dataType: "json",
+      success: function (response) {
+        const $module_body = $('#module_body').empty();
+        const items = response.map((opt, idx) =>
+          `<li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <small class="text-body-secondary d-inline">${idx + 1} - </small>
+              <h6 class="font-weight-bold d-inline">${opt.folder}</h6>
+            </div>
+            <div class="btn-group" role="group" aria-label="Button group name">
+              <button id="b_active_module" type="button" class="btn btn-outline-info btn-group-sm buttonActive" data-value="${opt.folder}"  title="Activar Modulo"><i class="bi bi-folder-symlink-fill"></i></button>
+            </div>
+          </li>`
+        );
+        $module_body.append(items.join(''));
+      }
+    });
+  });
+  /* Funcion para Listar todos los modulos existentes en la base de datos */
+  $('#listModulesdb').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      url: "dev_controller.php?op=get_name_module",
+      method: "POST",
+      dataType: "json",
+      success: function (response) {       
+        const $module_body = $('#module_body').empty();
+        const items = response.map((opt, idx) =>
+          `<li class="list-group-item d-flex justify-content-between lh-sm">
+            <div class="d-flex justify-content-between">
+              <small class="text-body-secondary d-inline">${idx + 1} - </small>
+              <div class="d-inline pl-2 justify-content-between text-center">
+                  <h6 class="font-weight-bold"> Nombre del modulo: ${opt.listname} </h6>
+              </div>   
+            </div>
+            <div class="btn-group" role="group" aria-label="Button group">
+                <button id="b_trash_module" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${opt.id}" value="${opt.name}"><i class="bi bi-trash3"></i></button>
+            </div>
+          </li>`
+        );
+        $module_body.append(items);
+      }
+    });
+
   });
   /* Cambiar el estatus de los departamentos en el sistema */
   $(document).on('click', '#b_enable_depart', function () {
@@ -173,85 +280,7 @@ $(document).ready(function () {
       }
     });
   });
-  /* Funcion para escoger como crear los modulos del sistema */
-  $('#newModule').click(function (e) {
-    e.preventDefault();
-    Swal.fire({
-      title: "Como Desea Crear el Nuevo Modulo?",
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      denyButtonColor: "#08cea1",
-      confirmButtonText: "Modulo Nuevo",
-      denyButtonText: "A Partir de Modulo Existente"
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        $('#newModuleModal').modal('show')
-      } else if (result.isDenied) {
-        getListModulesAvailablesDB();
-        $('#listModuleModal').modal('show')
-      }
-    });
-  });
-  /* Funcion para Crear todos los modulos que seran utilizados en el sistema */
-  $('#formNewModule').submit(function (e) {
-    e.preventDefault();
-    var module = $('#nameNewModule').val();
-    $.ajax({
-      url: "dev_controller.php?op=new_folder_module",
-      method: "POST",
-      dataType: "json",
-      data: { module: module },
-      success: function (response) {
-        if (response.status == true) {
-          $('#newModuleModal').modal('hide');
-          $('#formNewModule').trigger('reset');
-          Swal.fire({
-            icon: "success",
-            title: response.message,
-            showConfirmButton: false,
-            timer: 1500
-          });
-          $('#listModules').click()
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: response.message,
-            showConfirmButton: false,
-            timer: 1500
-          });
-          $('#listModules').click()
-        }
 
-      }
-    });
-
-  });
-  /* Funcion para listar todos los modulos existentes en fase de desarrollo que puede ser activados en el sistema */
-  $('#listModules').click(function (e) {
-    e.preventDefault();
-    $.ajax({
-      url: "dev_controller.php?op=available_modules",
-      method: "POST",
-      dataType: "json",
-      success: function (response) {
-        const $module_body = $('#module_body').empty();
-        const items = response.map((opt, idx) =>
-          `<li class="list-group-item d-flex justify-content-between lh-sm">
-            <div>
-              <small class="text-body-secondary d-inline">${idx + 1} - </small>
-              <h6 class="font-weight-bold d-inline">${opt.folder}</h6>
-            </div>
-            <div class="btn-group" role="group" aria-label="Button group name">
-              <button id="b_active_module" type="button" class="btn btn-outline-info btn-group-sm buttonActive" data-value="${opt.folder}"  title="Activar Modulo"><i class="bi bi-folder-symlink-fill"></i></button>
-            </div>
-          </li>`
-        );
-        $module_body.append(items.join(''));
-      }
-    });
-  });
   /* Funcion para activar modulos en el sistema, registrando en la base de datos del sistemas */
   $(document).on('click', '#b_active_module', function () {
     var module = $(this).data('value');
@@ -338,6 +367,53 @@ $(document).ready(function () {
       });
     }
   })
+
+  /* Eliminar Modulos de las Lista de Modulos Creador */
+  $(document).on('click', '#b_trash_module', function () {
+    var id = $(this).data('value');
+    var module = $(this).attr('value');
+    Swal.fire({
+      title: "¿Estas seguro que deseas eliminarlo?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Si, borralo!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "dev_controller.php?op=trash_module",
+          method: "POST",
+          dataType: "json",
+          data: { id: id, module: module },
+          success: function (response) {
+            if (response.status == true) {
+              Swal.fire({
+                title: "¡Eliminado!",
+                text: response.message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+              });
+              $('#listModulesdb').click()
+            } else {
+              Swal.fire({
+                title: "¡Eliminado!",
+                text: response.message,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1500
+              });
+              $('#listModulesdb').click()
+            }
+
+          }
+        });
+
+      }
+    });
+  });
   /* Funcion para listar todos los modulos existentes en fase de desarrolloE */
   const getListModulesAvailablesDB = async () => {
     try {

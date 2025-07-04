@@ -5,8 +5,8 @@ require_once("dev_module.php");
 
 $dev = new Development();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '';
-$module = (isset($_POST['module'])) ? $_POST['module'] : 'cosas';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '14';
+$module = (isset($_POST['module'])) ? $_POST['module'] : '';
 $namelist = (isset($_POST['namelist'])) ? $_POST['namelist'] : '';
 $copy = (isset($_POST['copy'])) ? $_POST['copy'] : 'clientes';
 $depart = (isset($_POST['depart'])) ? $_POST['depart'] : '';
@@ -63,17 +63,18 @@ switch ($_GET["op"]) {
     if ($valited) {
       $dato['status'] = false;
       $dato['message'] = "Error Al Este Departamento Posee Modulos Asignados, Por Favor Intente Nuevamente \n";
+      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+      return;
+    }
+    $availability = $dev->getAvailabilityDepartmenttDB($depart);
+    $available = ($availability == 1) ? 0 : 1;
+    $data = $dev->changeAvailabilityDepartmentDB($depart, $available);
+    if ($data) {
+      $dato['status'] = true;
+      $dato['message'] = "El Departamento Se Elimino Satisfactoriamente \n";
     } else {
-      $availability = $dev->getAvailabilityDepartmenttDB($depart);
-      $available = ($availability == 1) ? 0 : 1;
-      $data = $dev->changeAvailabilityDepartmentDB($depart, $available);
-      if ($data) {
-        $dato['status'] = true;
-        $dato['message'] = "El Departamento Se Elimino Satisfactoriamente \n";
-      } else {
-        $dato['status'] = false;
-        $dato['message'] = "Error Al Eliminar Departamento, Por Favor Intente Nuevamente \n";
-      }
+      $dato['status'] = false;
+      $dato['message'] = "Error Al Eliminar Departamento, Por Favor Intente Nuevamente \n";
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
@@ -159,16 +160,14 @@ switch ($_GET["op"]) {
 
   case 'new_module':
     $dato = array();
-    if (empty($id)) {
-      $id = uniqid();
-      $data = $dev->createModuleDB($id, $module, $namelist);
-      if ($data) {
-        $dato['status'] = true;
-        $dato['message'] = "El Modulo " . $namelist . " Fue Creado Satisfactoriamente \n";
-      } else {
-        $dato['status'] = false;
-        $dato['message'] = "Error Al Crear Modulo" . $namelist . ", Por Favor Intente Nuevamente \n";
-      }
+    $id = uniqid();
+    $data = $dev->createNewModuleDB($id, $module, $namelist);
+    if ($data) {
+      $dato['status'] = true;
+      $dato['message'] = "El Modulo " . $namelist . " Fue Creado Satisfactoriamente \n";
+    } else {
+      $dato['status'] = false;
+      $dato['message'] = "Error Al Crear Modulo" . $namelist . ", Por Favor Intente Nuevamente \n";
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
@@ -209,6 +208,7 @@ switch ($_GET["op"]) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
       $sub_array['name'] = $row['nameModule'];
+      $sub_array['listname'] = $row['nameListModule'];
       if ($row['statusModule'] == 1) {
         $sub_array['icon'] = '<i class="bi bi-lightbulb-fill"></i>';
         $sub_array['color'] = 'warning';
@@ -217,6 +217,34 @@ switch ($_GET["op"]) {
         $sub_array['color'] = 'dark';
       }
       $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'trash_module':
+    $dato = array();
+    $valited = $dev->getValitedModuleDB($id);
+    if ($valited) {
+      $dato['status'] = false;
+      $dato['message'] = "Error Al Este Modulo Esta Asignados A Un Departamento, Por Favor Intente Nuevamente \n";
+      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+      return;
+    }
+    $data = $dev->deleteModuleDB($id);
+    if ($data) {
+      $root = PATH_APP . '/' . $module;
+      $files = glob(PATH_APP . '/' . $module . '/*'); //obtenemos todos los nombres de los ficheros
+      foreach ($files as $file) {
+        if (is_file($file))
+          unlink($file); //eliminamos el fichero
+      }
+      if (is_dir($root)) {
+        rmdir($root);
+      }
+      $dato['status'] = true;
+      $dato['message'] = "El Departamento Se Elimino Satisfactoriamente \n";
+    } else {
+      $dato['status'] = false;
+      $dato['message'] = "Error Al Eliminar Departamento, Por Favor Intente Nuevamente \n";
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;

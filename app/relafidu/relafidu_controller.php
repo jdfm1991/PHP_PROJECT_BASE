@@ -40,6 +40,21 @@ switch ($_GET["op"]) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
+  case 'get_list_relafidu':
+    $dato = array();
+    $data = $ralafidu->getListFiduciaryRelationshipDB();
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['unit'] = $row['unit'];
+      $sub_array['level'] = $row['level'];
+      $sub_array['client'] = $row['nameClient'];
+      $sub_array['iunit'] = $row['iunit'];
+      $sub_array['iclient'] = $row['iclient'];
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
   default:
     header("Location:" . URL_APP);
     break;

@@ -64,13 +64,13 @@ class Development extends Conectar
     $stmt->execute([$depart, $tagdepart, $id]);
     return $stmt->rowCount();
   }
-  function createModuleDB($id, $module, $namelist)
+  function createNewModuleDB($id, $module, $namelist)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO module_data_table(id, nameModule, nameListModule) VALUES (?,?,?)");
-    $stmt->execute([$id, $module, $namelist]);
-    return $stmt;
+    $stmt = $conectar->prepare("INSERT INTO module_data_table(id, nameModule, nameListModule) VALUES (:id, :module, :namelist)");
+    $stmt->execute(['id' => $id, 'module' => $module, 'namelist' => $namelist]);
+    return $stmt->rowCount();
   }
   function getListNameModulesDB()
   {
@@ -83,7 +83,7 @@ class Development extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->query("SELECT * FROM module_data_table WHERE availableModule=1");
+    $stmt = $conectar->query("SELECT * FROM module_data_table");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
@@ -102,6 +102,24 @@ class Development extends Conectar
     $stmt = $conectar->prepare("SELECT id FROM model_department_data_table WHERE department = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchColumn();
+  }
+
+  function getValitedModuleDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id FROM model_department_data_table WHERE module = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchColumn();
+  }
+
+  public function deleteModuleDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("DELETE FROM module_data_table WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->rowCount();
   }
   
 }

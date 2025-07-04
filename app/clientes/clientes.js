@@ -9,6 +9,14 @@ $(document).ready(function () {
       );
     });
   });
+  const removeAccentsFromString = (str) => {
+    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return str.toUpperCase();
+  }
+
+  const removeHyphenFromString = (str) => {
+    return str.replace(/-/g, "");
+  }
   /* Arrow Function Que se Encarga de Cargar los Datos del Cliente en la Tabla */
   const loadDataTableClients = async () => {
     const table = $('#client_table').DataTable({
@@ -63,8 +71,9 @@ $(document).ready(function () {
   /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
   $('#formClient').submit(function (e) {
     e.preventDefault();
-    sfdni = $('#clientDni').val(); // Numero de DNI Sin Formatear
+    sfdni = removeHyphenFromString($('#clientDni').val()); // Numero de DNI Sin Formatear
     sfphone = $('#clientPhone').val(); // Numero de Telefono Sin Formatear
+    sfname = $('#clientName').val() // Nombre de Cliente Sin Formatear
     fc = sfdni.charAt(0); // Primer Caracter del DNI
     if (!fc.match(/[a-zA-Z]/)) { // Si el Primer Caracter del DNI no es una Letra Arroja Mensaje de Error
       $('#m_client_cont').removeClass('d-none');
@@ -83,12 +92,12 @@ $(document).ready(function () {
         $('#m_client_cont').addClass('d-none');
       }, 2000);
       return false;
-    }
+    } 
     if (sfphone.length == 10) { // Si el Numero de Telefono tiene 10 Digitos Le Agrega el 58 al Comienzo
       sfphone = '58' + sfphone;
     }
     id = $('#clientId').val();
-    name = $('#clientName').val();
+    name = removeAccentsFromString(sfname);
     nfdni = sfdni.charAt(0) + '-' + sfdni.substring(1); // Numero de DNI Formato Previo
     dni = nfdni.toUpperCase(); // Numero de DNI Formateado
     phone = sfphone.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '+($1) $2-$3-$4'); // Numero de Telefono Formateado
@@ -117,7 +126,7 @@ $(document).ready(function () {
             timer: 1500
           });
           $('#client_table').DataTable().ajax.reload();
-          $('#formUser')[0].reset();
+          $('#formClient')[0].reset();
           $('#newClientModal').modal('hide');
         } else {
           Swal.fire({

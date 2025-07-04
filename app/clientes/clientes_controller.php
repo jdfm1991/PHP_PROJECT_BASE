@@ -1,12 +1,14 @@
 <?php
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
+require_once(PATH_APP . "/relafidu/relafidu_module.php");
 require_once("clientes_module.php");
 
 $cliente = new Clientes();
+$ralafidu = new FiduciaryRelationship();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '685ffa345a725';
-$name = (isset($_POST['name'])) ? $_POST['name'] : 'jo';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '';
+$name = (isset($_POST['name'])) ? $_POST['name'] : '';
 $dni = (isset($_POST['dni'])) ? $_POST['dni'] : '';
 $phone = (isset($_POST['phone'])) ? $_POST['phone'] : '';
 $phonealt = (isset($_POST['phonealt'])) ? $_POST['phonealt'] : '';
@@ -43,7 +45,8 @@ switch ($_GET["op"]) {
     break;
   case 'get_list_clients':
     $dato = array();
-    $data = $cliente->getListClientsDB();
+    $search = (isset($_GET['search'])) ? ' AND nameClient LIKE "%' . $_GET['search'] . '%"' : '';
+    $data = $cliente->getListClientsDB($search);
     foreach ($data as $row) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
@@ -71,6 +74,14 @@ switch ($_GET["op"]) {
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
   case 'delete_client':
+    $valided = $ralafidu->validedFiduciaryRelationshipDB($id);
+    if ($valided > 0) {
+        $dato['status'] = false;
+        $dato['error'] = '500';
+        $dato['message'] = "No Puede Eliminiar Este Cliente, Ya que Tiene Relacion Con Una Unidad Departamental, Por Favor Intente Con Un Cliente Diferente \n";
+        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+        return;
+      }
     $data = $cliente->deleteClientDB($id);
     if ($data) {
       $dato['status'] = true;

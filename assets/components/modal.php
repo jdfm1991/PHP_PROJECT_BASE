@@ -252,7 +252,7 @@
             </div>
             <div class="form-group col-md-6">
               <label for="clientPhone" class="form-label">N° Telefonico Principal</label>
-              <input type="text" class="form-control" id="clientPhone" name="clientPhone" placeholder="N° Telefonico" required maxlength="11">
+              <input type="text" class="form-control" id="clientPhone" name="clientPhone" placeholder="N° Telefonico" maxlength="11">
               <small id="clientPhoneHelp" class="form-text text-muted">Escriba Codigo de Area Sin el Primer 0 + N° Telefonico</small>
             </div>
             <div class="form-group col-md-6">
@@ -261,7 +261,7 @@
             </div>
             <div class="form-group col-md-6">
               <label for="clientEmail" class="form-label">Email</label>
-              <input type="email" class="form-control" id="clientEmail" placeholder="Correo Electronico" required>
+              <input type="email" class="form-control" id="clientEmail" placeholder="Correo Electronico">
             </div>
           </div>
           <div class="modal-footer">

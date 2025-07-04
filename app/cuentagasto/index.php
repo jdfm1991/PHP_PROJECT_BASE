@@ -4,6 +4,7 @@
 require_once("../../config/const.php");
 require_once(PATH_APP . "/head.php");
 ?>
+
 <body id="page-top">
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -20,32 +21,34 @@ require_once(PATH_APP . "/head.php");
         <!-- Begin Page Content -->
         <div class="container-fluid">
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Clientes // Propietarios <br> .::Creacion y Modificacion::.</h1>
+          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Cuenta De Gastos <br> .::Creacion y Modificacion::.</h1>
           <div class="card mb-2">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
-                <button type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newClientModal"> Nuevo Cliente </button>
+                <button id="newUnit" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newUnitModal"> Nueva Unidad Departamental </button>
               </div>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
               <div id="module_body">
-                <table id="client_table" class="table table-striped table-bordered" style="width:100%">
+                <table id="units_table" class="table table-striped table-bordered" style="width:100%">
                   <thead>
                     <tr>
-                      <th>Nombre</th>
-                      <th>N° Documento</th>
-                      <th>Correo Electronico</th>
-                      <th>Telefono Pricipal</th>
-                      <th>Telefono Secundario</th>
+                      <th>Departamento</th>
+                      <th>Nivel</th>
+                      <th>% Alicuota</th>
+                      <th>Estatus</th>
+                      <th>Accion</th>
                     </tr>
+
                   </thead>
                   <tbody>
                   </tbody>
                 </table>
                 <!-- El Contenido  se carga a traves de Ajax -->
               </div>
+
             </div>
           </div>
         </div>
@@ -66,8 +69,9 @@ require_once(PATH_APP . "/head.php");
   <?php
   require_once(PATH_APP . "/plugins.php");
   require_once(PATH_ASSETS . '/components/modal.php');
+
   ?>
-  <script src="clientes.js"></script>
+  <script src="unidaddepartamental.js"></script>
 </body>
 
 </html>

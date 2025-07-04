@@ -18,11 +18,11 @@ class Clientes extends Conectar
     $stmt->execute(['name' => $name, 'dni' => $dni, 'email' => $email, 'phone' => $phone, 'phonealt' => $phonealt, 'id' => $id]);
     return $stmt->rowCount();
   }
-  public function getListClientsDB()
+  public function getListClientsDB($search)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM client_data_table WHERE statusClient = 1");
+    $stmt = $conectar->prepare("SELECT * FROM client_data_table WHERE statusClient = 1 $search ORDER BY nameClient ASC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }

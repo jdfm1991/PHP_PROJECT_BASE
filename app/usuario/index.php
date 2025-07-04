@@ -4,7 +4,6 @@
 require_once("../../config/const.php");
 require_once(PATH_APP . "/head.php");
 ?>
-
 <body id="page-top">
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -21,7 +20,7 @@ require_once(PATH_APP . "/head.php");
         <!-- Begin Page Content -->
         <div class="container-fluid">
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Usuario .::Creacion y Modificacion::.</h1>
+          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Usuario <br> .::Creacion y Modificacion::.</h1>
           <div class="card mb-2">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
@@ -41,14 +40,12 @@ require_once(PATH_APP . "/head.php");
                       <th>Tipo</th>
                       <th>Accion</th>
                     </tr>
-
                   </thead>
                   <tbody>
                   </tbody>
                 </table>
                 <!-- El Contenido  se carga a traves de Ajax -->
               </div>
-
             </div>
           </div>
         </div>
@@ -69,7 +66,6 @@ require_once(PATH_APP . "/head.php");
   <?php
   require_once(PATH_APP . "/plugins.php");
   require_once(PATH_ASSETS . '/components/modal.php');
-
   ?>
   <script src="usuario.js"></script>
 </body>

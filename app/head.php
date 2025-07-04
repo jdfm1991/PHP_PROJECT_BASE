@@ -17,5 +17,6 @@ require_once(PATH_CONFIG . "/abrir_sesion.php");
   <link href="<?php echo  URL_ASSETS; ?>/css/sb-admin-2.min.css" rel="stylesheet">
   <link href="<?php echo  URL_ASSETS; ?>/css/datatables.min.css" rel="stylesheet">
   <link href="<?php echo  URL_ASSETS; ?>/css/sweetalert2.min.css" rel="stylesheet">
+  <link  href="<?php echo  URL_ASSETS; ?>/css/style-custom.css" rel="stylesheet">
   <link href="<?php echo  URL_ASSETS; ?>/css/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 </head>

@@ -30,4 +30,25 @@ class FiduciaryRelationship extends Conectar
     $stmt->execute(['unit' => $unit]);
     return $stmt->rowCount();
   }
+
+  public function getListFiduciaryRelationshipDB()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT A.id, B.id AS iunit, C.id AS iclient, B.unit, D.level, C.nameClient FROM unit_client_data_table AS A 
+                                  INNER JOIN unit_data_table AS B ON A.unit=B.id
+                                  INNER JOIN unit_level_data_table AS D ON B.level=D.id
+                                  INNER JOIN client_data_table AS C ON A.client=C.id");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function validedFiduciaryRelationshipDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT * FROM unit_client_data_table WHERE client = :client");
+    $stmt->execute(['client' => $id]);
+    return $stmt->rowCount();
+  }
 }

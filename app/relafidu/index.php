@@ -25,9 +25,14 @@ require_once(PATH_APP . "/head.php");
           <div class="card mb-2">
             <div class="card-body">
               <details>
-                <summary><span class="text-monospace"><i class="fas fa-users"></i> Ver Clientes <i class="fas fa-users"></i></span></summary>
+                <summary>
+                  <span class="text-monospace">
+                    <i class="fas fa-users"></i> Ver Clientes <i class="fas fa-users"></i>
+                  </span>
+                  <input class="form-control form-control-sm w-25 d-inline float-end mx-2" type="search" name="searchClient" id="searchClient">
+                </summary>
                 <input type="hidden" name="clientId" id="clientId">
-                <div id="client_container" class="row list-group-item d-flex justify-content-between lh-sm align-items-center">
+                <div id="client_container" class="row list-group-item d-flex justify-content-between lh-sm align-items-center contenido">
                 </div>
               </details>
               <details>
@@ -39,16 +44,14 @@ require_once(PATH_APP . "/head.php");
           </div>
           <div class="card">
             <div class="card-body">
-              <table id="units_table" class="table table-striped table-bordered" style="width:100%">
+              <table id="relafidu_table" class="table table-striped table-bordered" style="width:100%">
                 <thead>
                   <tr>
                     <th>Departamento</th>
                     <th>Nivel</th>
-                    <th>% Alicuota</th>
+                    <th>Inquilino</th>
                     <th>Estatus</th>
-                    <th>Accion</th>
                   </tr>
-
                 </thead>
                 <tbody>
                 </tbody>
@@ -56,7 +59,7 @@ require_once(PATH_APP . "/head.php");
               <!-- El Contenido  se carga a traves de Ajax -->
             </div>
 
-            
+
 
           </div>
         </div>
