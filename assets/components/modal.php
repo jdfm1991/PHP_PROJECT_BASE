@@ -1,4 +1,8 @@
-<!-- Modal Nuevo Departamento -->
+<!--
+  *************************************************
+  Modal Nuevo Departamento 
+  *************************************************
+-->
 <div class="modal fade" id="NewDepartModal" tabindex="-1" aria-labelledby="NewDepartModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -25,8 +29,11 @@
     </div>
   </div>
 </div>
-
-<!-- Modal Nuevo Modulo -->
+<!-- 
+*************************************************
+Modal Nuevo Modulo 
+*************************************************
+-->
 <div class="modal fade" id="newModuleModal" tabindex="-1" aria-labelledby="NewModuleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -53,8 +60,11 @@
     </div>
   </div>
 </div>
-
-<!-- Modal Listado de Modulos -->
+<!-- 
+************************************************
+Modal Listado de Modulos 
+************************************************
+-->
 <div class="modal fade" id="listModuleModal" tabindex="-1" aria-labelledby="listModuleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
@@ -85,7 +95,11 @@
   </div>
 </div>
 
-<!-- Modal Para Asignacion de Modulo -->
+<!-- 
+************************************************
+Modal Para Asignacion de Modulo 
+************************************************
+-->
 <div class="modal fade" id="assignModuleModal" tabindex="-1" aria-labelledby="assignModuleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog">
@@ -125,8 +139,11 @@
     </div>
   </div>
 </div>
-
-<!-- Modal Nuevo Usuario -->
+<!-- 
+************************************************
+Modal Nuevo Usuario 
+************************************************
+-->
 <div class="modal fade" id="newUserModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -176,8 +193,11 @@
     </div>
   </div>
 </div>
-
-<!-- Modal para Iniciar Sesion -->
+<!-- 
+***********************************************
+Modal para Iniciar Sesion 
+***********************************************
+-->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -227,8 +247,11 @@
     </div>
   </div>
 </div>
-
-<!-- Modal Nuevo Cliente -->
+<!-- 
+***********************************************
+Modal Nuevo Cliente 
+***********************************************
+-->
 <div class="modal fade" id="newClientModal" tabindex="-1" aria-labelledby="newClientModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -277,8 +300,11 @@
     </div>
   </div>
 </div>
-
-<!-- Modal Nueva Tasa de Cambio -->
+<!-- 
+***********************************************
+Modal Nueva Tasa de Cambio 
+***********************************************
+-->
 <div class="modal fade" id="newRateModal" tabindex="-1" aria-labelledby="newRateModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -321,7 +347,6 @@
     </div>
   </div>
 </div>
-
 <!--
 ****************************************************************************
  Modal Nueva Unidad Departamental
@@ -372,7 +397,7 @@
 </div>
 <!--
   *************************************************
-  notificacion Para visualizar proceso terminado
+  Notificacion Para visualizar proceso terminado
   *************************************************
 -->
 <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
@@ -387,6 +412,57 @@
     </div>
     <div class="toast-body">
       <p><span id="toastText"></span></p>
+    </div>
+  </div>
+</div>
+<!--
+****************************************************************************
+ Modal Nueva Cuenta de Gasto
+****************************************************************************
+ -->
+<div class="modal fade" id="newExpenseModal" tabindex="-1" aria-labelledby="newExpenseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nueva Cuenta de Gasto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <form id="formNewExpense">
+          <input type="hidden" id="idExpense">
+          <div class="form-row">
+            <div class="form-group col-md-5">
+              <label for="typeExpense" class="form-label">Tipo de Gasto</label>
+              <select class="form-control" id="typeExpense" required>
+                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="codeExpense" class="form-label">Codigo de Gasto</label>
+              <input type="text" class="form-control" id="codeExpense" placeholder="Codigo de Gasto">
+            </div>
+            <div class="form-check form-check-inline col-md-2 text-center">
+              <input class="form-check-input" type="checkbox" id="fixedExpense">
+              <label class="form-check-label" for="fixedExpense">Gasto Fijo</label>
+            </div>
+            
+            <div class="form-group col-md-12">
+              <label for="nameExpense">Detalle del Gasto</label>
+              <input class="form-control" id="nameExpense" aria-describedby="nameExpenseHelp" placeholder="Ingrese el Detalle del Gasto a Realizar" required>
+              <small id="nameExpenseHelp" class="form-text text-muted">Detalle del Gasto que se va a realizar</small>
+            </div>
+          </div>
+          <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_unit_text" class="mb-0">Alert Description</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

@@ -1,26 +1,25 @@
 $(document).ready(function () {
-  const level = document.getElementById('unitLevel');
-  /* Funcion para Cargar Select de los niveles de las unidades departamentales */
-  const loadDataSelectUnitLevels = async (id) => {
+  /* Funcion para Cargar Select de los tipos de gastos departamentales */
+  const loadDataSelectTypeExpenses = async (id) => {
     try {
-      const response = await fetch('unidaddepartamental_controller.php?op=get_unit_levels');
+      const response = await fetch('cuentagasto_controller.php?op=get_type_expenses');
       const data = await response.json();
-      const container = document.getElementById('unitLevel');
+      const container = document.getElementById('typeExpense');
       container.innerHTML = '';
       const defaultOption = document.createElement('option');
       defaultOption.setAttribute('value', '');
-      defaultOption.innerHTML = 'Nivel...';
+      defaultOption.innerHTML = 'Tipo de Gasto...';
       container.appendChild(defaultOption);
       data.forEach((opt, idx) => {
         const option = document.createElement('option');
         if (id == opt.id) {
           option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.level}`;
+          option.innerHTML = `${opt.type}`;
           option.setAttribute('selected', 'selected');
           container.appendChild(option);
         } else {
           option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.level}`;
+          option.innerHTML = `${opt.type}`;
           container.appendChild(option);
         }
       })
@@ -28,6 +27,74 @@ $(document).ready(function () {
       console.log('Error', error);
     }
   }
+  /* Accion para marcar la casilla de los gastos fijos */
+  $("#fixedExpense").change(function () {
+    if ($(this).is(":checked")) {
+      $("#fixedExpense").prop('checked', true);
+    } else {
+      $("#fixedExpense").prop('checked', false);
+    }
+  });
+  /* Accion para Guardar o Actualizar Informacion de los Gastos en la Base de Datos */
+  $('#formNewExpense').submit(function (e) {
+    e.preventDefault();
+    id = $('#idExpense').val();
+    type = $('#typeExpense').val();
+    code = $('#codeExpense').val();
+    fixed = $('#fixedExpense').is(':checked');
+    name = $('#nameExpense').val();
+
+    console.log(id, type, code, fixed, name);
+    
+
+    /* dato = new FormData();
+    dato.append('id', id);
+    dato.append('unit', unit);
+    dato.append('levelu', levelu);
+    dato.append('aliquot', aliquot);
+    $.ajax({
+      url: 'unidaddepartamental_controller.php?op=new_unit',
+      method: 'POST',
+      dataType: "json",
+      data: dato,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response.status == true) {
+          Swal.fire({
+            icon: "success",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          $('#units_table').DataTable().ajax.reload();
+          $('#formNewUnit')[0].reset();
+          $('#newUnitModal').modal('hide');
+        } else {
+          if (response.error === '400') {
+            console.log(response);
+            $('#messegecont').removeClass('d-none');
+            $('#messegetext').text(response.message);
+            setTimeout(function () {
+              $('#messegecont').addClass('d-none');
+            }, 3000);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: response.message,
+              showConfirmButton: false,
+              timer: 1500
+            });
+
+          }
+        }
+      }
+    }); */
+  });
+
+
+
+
   /* Funcion para Cargar Select de los alicuotas de las unidades departamentales */
   const loadDataSelectUnitAliquots = async (id) => {
     try {
@@ -53,7 +120,7 @@ $(document).ready(function () {
     }
   }
   /* Funcion para listar todos los unidades departamentales existentes en la base de datos */
-  const LoadDataTableUnits = async () => {
+  const LoadDataTableUnit = async () => {
     const table = $('#units_table').DataTable({
       responsive: true,
       scrollX: true,
@@ -105,11 +172,9 @@ $(document).ready(function () {
 
   }
   /* Funcion para llamar a la carga de los select de niveles y alicuotas al crear una unidad departamental */
-  $('#newUnit').click(function (e) {
+  $('#newExpense').click(function (e) {
     e.preventDefault();
-    $('#unitLevel').attr('disabled', false);
-    loadDataSelectUnitLevels();
-    loadDataSelectUnitAliquots();
+    loadDataSelectTypeExpenses();
   });
   /* Funcion para obtener el nombre de la unidad departamental segun el nivel seleccionado */
   $('#unitLevel').change(function (e) {
@@ -126,57 +191,7 @@ $(document).ready(function () {
       }
     });
   });
-  /* Accion para Guardar o Actualizar Informacion de la Unidad Departamental en la Base de Datos */
-  $('#formNewUnit').submit(function (e) {
-    e.preventDefault();
-    id = $('#idUnit').val();
-    unit = $('#unitname').val();
-    levelu = $('#unitLevel').val();
-    aliquot = $('#unitaliquots').val();
-    dato = new FormData();
-    dato.append('id', id);
-    dato.append('unit', unit);
-    dato.append('levelu', levelu);
-    dato.append('aliquot', aliquot);
-    $.ajax({
-      url: 'unidaddepartamental_controller.php?op=new_unit',
-      method: 'POST',
-      dataType: "json",
-      data: dato,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        if (response.status == true) {
-          Swal.fire({
-            icon: "success",
-            title: response.message,
-            showConfirmButton: false,
-            timer: 1500
-          });
-          $('#units_table').DataTable().ajax.reload();
-          $('#formNewUnit')[0].reset();
-          $('#newUnitModal').modal('hide');
-        } else {
-          if (response.error === '400') {
-            console.log(response);
-            $('#messegecont').removeClass('d-none');
-            $('#messegetext').text(response.message);
-            setTimeout(function () {
-              $('#messegecont').addClass('d-none');
-            }, 3000);
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: response.message,
-              showConfirmButton: false,
-              timer: 1500
-            });
 
-          }
-        }
-      }
-    });
-  });
   /* Accion para cambiar el estado de la disponibilidad de unidad departamental */
   $(document).on('click', '#b_enable_unit', function (e) {
     e.preventDefault();

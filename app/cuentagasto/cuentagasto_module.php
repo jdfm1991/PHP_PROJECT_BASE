@@ -1,17 +1,24 @@
 <?php
 require_once("../../config/conexion.php");
 
-class Unitdepartmental extends Conectar
+class Expenses extends Conectar
 {
-  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LOS NIVELES DE UNIDADES DEPARTAMENTALES EXISTENTES EN LA BASE DE DATOS*/
-  public function getUnitLevelsBD()
+  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LOS TIPO DE GASTOS EXISTENTES EN LA BASE DE DATOS*/
+  public function getTypeExpensesBD()
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM unit_level_data_table");
+    $stmt = $conectar->prepare("SELECT * FROM expense_type_data_table");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+
+
+
+
+
+
+
   /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LOS TIPOS DE ALIQUOTAS EXISTENTES EN LA 
   BASE DE DATOS */
   public function getUnitAliquotsBD()

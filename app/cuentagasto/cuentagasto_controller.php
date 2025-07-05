@@ -1,11 +1,9 @@
 <?php
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
-require_once(PATH_APP . "/relafidu/relafidu_module.php");
-require_once("unidaddepartamental_module.php");
+require_once("cuentagasto_module.php");
 
-$unitdep = new Unitdepartmental();
-$ralafidu = new FiduciaryRelationship();
+$expenses = new Expenses();
 
 $id = (isset($_POST['id'])) ? $_POST['id'] : '';
 $unit = (isset($_POST['unit'])) ? $_POST['unit'] : '';
@@ -13,13 +11,13 @@ $level = (isset($_POST['levelu'])) ? $_POST['levelu'] : '';
 $aliquot = (isset($_POST['aliquot'])) ? $_POST['aliquot'] : '';
 
 switch ($_GET["op"]) {
-  case 'get_unit_levels':
+  case 'get_type_expenses':
     $dato = array();
-    $data = $unitdep->getUnitLevelsBD();
+    $data = $expenses->getTypeExpensesBD();
     foreach ($data as $row) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
-      $sub_array['level'] = $row['level'];
+      $sub_array['type'] = $row['expensetypename'];
       $dato[] = $sub_array;
     }
     echo json_encode($dato);

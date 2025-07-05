@@ -4,7 +4,6 @@
 require_once("../../config/const.php");
 require_once(PATH_APP . "/head.php");
 ?>
-
 <body id="page-top">
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -25,7 +24,7 @@ require_once(PATH_APP . "/head.php");
           <div class="card mb-2">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
-                <button id="newUnit" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newUnitModal"> Nueva Unidad Departamental </button>
+                <button id="newExpense" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newExpenseModal"> Nueva Cuenta </button>
               </div>
             </div>
           </div>
@@ -71,7 +70,7 @@ require_once(PATH_APP . "/head.php");
   require_once(PATH_ASSETS . '/components/modal.php');
 
   ?>
-  <script src="unidaddepartamental.js"></script>
+  <script src="cuentagasto.js"></script>
 </body>
 
 </html>
