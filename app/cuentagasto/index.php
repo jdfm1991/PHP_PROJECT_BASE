@@ -31,16 +31,15 @@ require_once(PATH_APP . "/head.php");
           <div class="card">
             <div class="card-body">
               <div id="module_body">
-                <table id="units_table" class="table table-striped table-bordered" style="width:100%">
+                <table id="expense_account_table" class="table table-striped table-bordered" style="width:100%">
                   <thead>
                     <tr>
-                      <th>Departamento</th>
-                      <th>Nivel</th>
-                      <th>% Alicuota</th>
-                      <th>Estatus</th>
+                      <th>Cuenta</th>
+                      <th>Codigo</th>
+                      <th>Tipo</th>
+                      <th>Concepto</th>
                       <th>Accion</th>
                     </tr>
-
                   </thead>
                   <tbody>
                   </tbody>
@@ -68,7 +67,6 @@ require_once(PATH_APP . "/head.php");
   <?php
   require_once(PATH_APP . "/plugins.php");
   require_once(PATH_ASSETS . '/components/modal.php');
-
   ?>
   <script src="cuentagasto.js"></script>
 </body>

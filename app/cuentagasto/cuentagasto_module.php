@@ -12,87 +12,58 @@ class Expenses extends Conectar
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
-
-
-
-
-
-
-  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LOS TIPOS DE ALIQUOTAS EXISTENTES EN LA 
-  BASE DE DATOS */
-  public function getUnitAliquotsBD()
+  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DEL NUEVO CODIGO DE GASTO QUE SE DESEAN CREAR EN LA BASE DE DATOS */
+  public function getNewCodeExpenseByTypeDB($id, $prefix)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM unit_aliquot_data_table");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LOS NOMBRES DE UNIDADES DEPARTAMENTALES QUE SE DESEAN CREAR EN LA BASE DE DATOS */
-  public function getNewUnitnameByLevelDB($id, $level)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("SELECT CONCAT('$level-A', LPAD(COUNT(*) + 1, 2, '0')) AS newunitname
-            FROM unit_data_table
-            WHERE level = :level");
-    $stmt->execute(['level' => $id]);
+    $stmt = $conectar->prepare("SELECT CONCAT('$prefix-', LPAD(COUNT(*) + 1, 2, '0')) AS newcode
+            FROM expense_accounts_data_table
+            WHERE type = :type");
+    $stmt->execute(['type' => $id]);
     return $stmt->fetchColumn();
   }
-  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA CREAR UNIDADES DEPARTAMENTALES EN LA BASE DE DATOS */
-  public function createNewUnitDB($id, $unit, $level, $aliquot)
+  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA CREAR EL NUEVO GASTO EN LA BASE DE DATOS */
+  public function createExpenseAccountDB($id, $type, $code, $fixed, $expense)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO unit_data_table (id, unit, level, aliquot) VALUES (:id, :unit, :level, :aliquot)");
-    $stmt->execute(['id' => $id, 'unit' => $unit, 'level' => $level, 'aliquot' => $aliquot]);
+    $stmt = $conectar->prepare("INSERT INTO expense_accounts_data_table (id, type, code, fixed, expense) VALUES (:id, :type, :code, :fixed, :expense)");
+    $stmt->execute(['id' => $id, 'type' => $type, 'code' => $code, 'fixed' => $fixed, 'expense' => $expense]);
     return $stmt->rowCount();
   }
-  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LAS UNIDADES DEPARTAMENTALES EXISTENTES EN LA BASE DE DATOS */
-  public function getListUnitsDB()
+  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LAS CUENTAS DE GASTOS EXISTENTES EN LA BASE DE DATOS */
+  public function getListExpenseAccountsDB()
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, unit, B.level, C.aliquot, enable FROM unit_data_table AS A 
-                                  INNER JOIN unit_level_data_table AS B ON A.level=B.id
-                                  INNER JOIN unit_aliquot_data_table AS C ON A.aliquot=C.id
-                                WHERE available=1");
+    $stmt = $conectar->prepare("SELECT A.id, B.expensetypename AS type, code, fixed, expense FROM expense_accounts_data_table AS A
+                                  INNER JOIN expense_type_data_table AS B ON A.type=B.id
+                                WHERE status=1");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DEL ESTADO DE UNIDADES DEPARTAMENTALES EXISTENTES EN LA BASE DE DATOS */
-  public function getEnableUnitDB($id)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("SELECT enable FROM unit_data_table WHERE id = :id");
-    $stmt->execute(['id' => $id]);
-    return $stmt->fetchColumn();
-  }
-  /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA CAMBIAR EL ESTADO DE UNIDADES DEPARTAMENTALES EN LA BASE DE DATOS */
-  public function changeEnableUnitDB($id, $enable)
-  {
-    $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE unit_data_table SET enable = :enable WHERE id = :id");
-    $stmt->execute(['enable' => $enable, 'id' => $id]);
-    return $stmt->rowCount();
   }
   /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION UNA UNIDAD DEPARTAMENTAL EXISTENTE EN LA BASE DE DATOS */
-  public function getDataUnitDB($id)
+  public function getDataExpenseAccountDB($id)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM unit_data_table WHERE id = :id");
+    $stmt = $conectar->prepare("SELECT * FROM expense_accounts_data_table WHERE id = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
-  public function updateUnitDataDB($id, $unit, $aliquot)
+  public function updateDataExpenseAccountDB($id, $type, $code, $fixed, $expense)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE unit_data_table SET unit=:unit, aliquot=:aliquot WHERE id = :id");
-    $stmt->execute(['unit' => $unit, 'aliquot' => $aliquot, 'id' => $id]);
+    $stmt = $conectar->prepare("UPDATE expense_accounts_data_table SET type=:type, code=:code, fixed=:fixed, expense=:expense WHERE id = :id");
+    $stmt->execute(['type' => $type, 'code' => $code, 'fixed' => $fixed, 'expense' => $expense, 'id' => $id]);
+    return $stmt->rowCount();
+  }
+  public function deleteClideleteExpenseAccountDBentDB($id)
+  {
+    $conectar = parent::conexion();
+    $stmt = $conectar->prepare("UPDATE expense_accounts_data_table SET status = :status WHERE id = :id");
+    $stmt->execute(['status' => 0, 'id' => $id]);
     return $stmt->rowCount();
   }
 

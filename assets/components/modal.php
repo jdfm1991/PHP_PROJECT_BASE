@@ -441,7 +441,7 @@ Modal Nueva Tasa de Cambio
             </div>
             <div class="form-group col-md-4">
               <label for="codeExpense" class="form-label">Codigo de Gasto</label>
-              <input type="text" class="form-control" id="codeExpense" placeholder="Codigo de Gasto">
+              <input type="text" class="form-control" id="codeExpense" placeholder="Codigo de Gasto" disabled>
             </div>
             <div class="form-check form-check-inline col-md-2 text-center">
               <input class="form-check-input" type="checkbox" id="fixedExpense">
