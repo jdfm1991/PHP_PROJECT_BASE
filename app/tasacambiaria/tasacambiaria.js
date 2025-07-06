@@ -1,14 +1,4 @@
 $(document).ready(function () {
-  /* Funcion para Ingresar Solo los Numeros en el Input de Telefono */
-  $(function () {
-    $("input[name='exchangeRate']").on("input", function (e) {
-      $(this).val(
-        $(this)
-          .val()
-          .replace(/[^0-9.]/g, "")
-      );
-    });
-  });
   /* Funcion para Cargar Select de los Tipos de Cambio */
   const loadSelectExchangeRatesDB = async (id) => {
     try {

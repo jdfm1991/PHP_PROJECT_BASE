@@ -50,7 +50,16 @@ const loadSidebarMenu = async () => {
     container.appendChild(li);
   })
 };
-
+/* Funcion para Ingresar Solo los Numeros en el Input de Telefono */
+  $(function () {
+    $("input[name='onlynumber']").on("input", function (e) {
+      $(this).val(
+        $(this)
+          .val()
+          .replace(/[^0-9.]/g, "")
+      );
+    });
+  });
 $(document).ready(function () {
   $('#btnLogin').click(function (e) {
     e.preventDefault();

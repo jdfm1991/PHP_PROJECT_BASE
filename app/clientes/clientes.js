@@ -1,14 +1,5 @@
 $(document).ready(function () {
-  /* Funcion para Ingresar Solo los Numeros en el Input de Telefono */
-  $(function () {
-    $("input[name='clientPhone']").on("input", function (e) {
-      $(this).val(
-        $(this)
-          .val()
-          .replace(/[^0-9]/g, "")
-      );
-    });
-  });
+  
   const removeAccentsFromString = (str) => {
     str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     return str.toUpperCase();

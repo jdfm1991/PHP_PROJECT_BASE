@@ -20,11 +20,11 @@ require_once(PATH_APP . "/head.php");
         <!-- Begin Page Content -->
         <div class="container-fluid">
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Cuenta De Gastos <br> .::Creacion y Modificacion::.</h1>
+          <h1 class="h3 mb-4 text-gray-800 text-center">Modulo de Registro De Gastos <br> .::Creacion y Modificacion::.</h1>
           <div class="card mb-2">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
-                <button id="newExpense" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newExpenseAccountModal"> Nueva Cuenta </button>
+                <button id="newExpense" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newExpenseModal"> Nuevo Gasto </button>
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@ require_once(PATH_APP . "/head.php");
   require_once(PATH_APP . "/plugins.php");
   require_once(PATH_ASSETS . '/components/modal.php');
   ?>
-  <script src="cuentagasto.js"></script>
+  <script src="registrogasto.js"></script>
 </body>
 
 </html>

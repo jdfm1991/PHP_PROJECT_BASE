@@ -14,7 +14,7 @@
       </div>
       <div class="modal-body" id="modal_body">
         <form id="formNewDepart">
-          <input type="hidden" name="id" id="idDepart">
+          <input type="hidden" id="idDepart">
           <div class="form-group">
             <label for="nameNewDepart">Nombre del Departamento</label>
             <input type="text" class="form-control" id="nameNewDepart" aria-describedby="nameNewHelp" required>
@@ -112,7 +112,7 @@ Modal Para Asignacion de Modulo
       </div>
       <div class="modal-body" id="modal_body">
         <form id="formAssignModule">
-          <input type="hidden" name="id" id="idModuleByAssign">
+          <input type="hidden" id="idModuleByAssign">
           <div class="form-row">
             <div class="col-md-6">
               <label for="validationCustom03">Modulo</label>
@@ -156,7 +156,7 @@ Modal Nuevo Usuario
       <div class="modal-body" id="modal_body">
         <form id="formUser">
           <div class="modal-body form-row">
-            <input type="hidden" name="id" id="userId">
+            <input type="hidden" id="userId">
             <div class="form-group col-md-6">
               <label for="userName" class="form-label">Nombre Completo</label>
               <input type="text" class="form-control" id="userName" placeholder="Nombre y Apellido" required>
@@ -264,7 +264,7 @@ Modal Nuevo Cliente
       <div class="modal-body" id="modal_body">
         <form id="formClient">
           <div class="modal-body form-row">
-            <input type="hidden" name="id" id="clientId">
+            <input type="hidden" id="clientId">
             <div class="form-group col-md-6">
               <label for="clientName" class="form-label">Nombre Completo</label>
               <input type="text" class="form-control" id="clientName" placeholder="Nombre y Apellido" required>
@@ -275,7 +275,7 @@ Modal Nuevo Cliente
             </div>
             <div class="form-group col-md-6">
               <label for="clientPhone" class="form-label">N° Telefonico Principal</label>
-              <input type="text" class="form-control" id="clientPhone" name="clientPhone" placeholder="N° Telefonico" maxlength="11">
+              <input type="text" class="form-control" id="clientPhone" name="onlynumber" placeholder="N° Telefonico" maxlength="11">
               <small id="clientPhoneHelp" class="form-text text-muted">Escriba Codigo de Area Sin el Primer 0 + N° Telefonico</small>
             </div>
             <div class="form-group col-md-6">
@@ -309,23 +309,23 @@ Modal Nueva Tasa de Cambio
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="NewDepartModalLabel">Nuevo Departamento</h5>
+        <h5 class="modal-title" id="NewDepartModalLabel">Nueva Tasa de Cambio</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body " id="modal_body">
         <form id="formNewRate">
-          <input type="hidden" name="id" id="idRate">
+          <input type="hidden" id="idRate">
           <div class="form-row">
             <div class="form-group col-md-4">
               <label for="exchangeRate">Mont de la Tasa</label>
-              <input type="text" class="form-control" id="exchangeRate" name="exchangeRate" aria-describedby="exchangeRateHelp" required>
+              <input type="text" class="form-control" id="exchangeRate" name="onlynumber" aria-describedby="exchangeRateHelp" required>
               <small id="exchangeRateHelp" class="form-text text-muted">Monto de la Tasa de Cambio</small>
             </div>
             <div class="form-group col-md-4">
               <label for="dateRate">Fecha de la Tasa</label>
-              <input type="date" class="form-control" id="dateRate" name="dateRate" aria-describedby="dateRateHelp" max="<?php echo date('Y-m-d'); ?>" required>
+              <input type="date" class="form-control" id="dateRate" aria-describedby="dateRateHelp" max="<?php echo date('Y-m-d'); ?>" required>
               <small id="dateRateHelp" class="form-text text-muted">Fecha de la Tasa de Cambio</small>
             </div>
             <div class="form-group col-md-4">
@@ -363,7 +363,7 @@ Modal Nueva Tasa de Cambio
       </div>
       <div class="modal-body " id="modal_body">
         <form id="formNewUnit">
-          <input type="hidden" name="id" id="idUnit">
+          <input type="hidden" id="idUnit">
           <div class="form-row">
             <div class="form-group col-md-3">
               <label for="unitLevel" class="form-label">Nivel</label>
@@ -373,7 +373,7 @@ Modal Nueva Tasa de Cambio
             </div>
             <div class="form-group col-md-6">
               <label for="unitname">Unidad Departamental</label>
-              <input type="text" class="form-control" id="unitname" name="unitname" aria-describedby="unitname" required>
+              <input type="text" class="form-control" id="unitname" aria-describedby="unitname" required>
               <small id="unitnameHelp" class="form-text text-muted">Numeracion de la Unidad</small>
             </div>
             <div class="form-group col-md-3">
@@ -420,7 +420,7 @@ Modal Nueva Tasa de Cambio
  Modal Nueva Cuenta de Gasto
 ****************************************************************************
  -->
-<div class="modal fade" id="newExpenseModal" tabindex="-1" aria-labelledby="newExpenseModalLabel" aria-hidden="true">
+<div class="modal fade" id="newExpenseAccountModal" tabindex="-1" aria-labelledby="newExpenseModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -448,7 +448,7 @@ Modal Nueva Tasa de Cambio
               <label class="form-check-label" for="fixedExpense">Gasto Fijo</label>
             </div>
             <div class="form-group col-md-12">
-              <label for="nameExpense">Detalle del Gasto</label>
+              <label for="nameExpense">Cuenta del Gasto</label>
               <input class="form-control" id="nameExpense" aria-describedby="nameExpenseHelp" placeholder="Ingrese el Detalle del Gasto a Realizar" required>
               <small id="nameExpenseHelp" class="form-text text-muted">Detalle del Gasto que se va a realizar</small>
             </div>
@@ -502,6 +502,67 @@ Modal Nueva Tasa de Cambio
             </div>
           </div>
 
+          <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_unit_text" class="mb-0">Alert Description</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--
+****************************************************************************
+ Modal Nueva Registro de Gasto
+****************************************************************************
+ -->
+<div class="modal fade" id="newExpenseModal" tabindex="-1" aria-labelledby="newExpenseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nueva Cuenta de Gasto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <form id="formExpense">
+          <input type="hidden" id="idExp">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="suplierExpense" class="form-label">Proveedor</label>
+              <select class="form-control" id="suplierExpense" required>
+                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="accountExpense" class="form-label">Cuenta de Gasto</label>
+              <select class="form-control" id="accountExpense" required>
+                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
+              </select>
+            </div>
+            <div class="form-group col-md-12">
+              <label for="nameExpense">Detalle del Gasto</label>
+              <textarea id="datailExpense" class="form-control" rows="3" placeholder="Ingrese el Detalle del Gasto a Realizar" aria-describedby="datailExpenseHelp" maxlength="150" required></textarea>
+              <small id="datailExpenseHelp" class="form-text text-muted">Detalle del Gasto que se va a realizar</small>
+              <label id="count" class="float-right"></label>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="montExpense">Monto Del Gasto</label>
+              <input type="text" class="form-control" id="montExpense" name="onlynumber" required>
+            </div>
+            <div class="form-check form-check-inline col-md-3 text-center">
+              <input class="form-check-input" type="checkbox" id="formExpenseExpense">
+              <label class="form-check-label" for="quotaExpense">Pago En Cuotas</label>
+            </div>
+            <div id="quota_content" class="form-group col-md-4">
+              <label for="montQuota">Cuota de Pago</label>
+              <input type="text" class="form-control" id="montQuota" name="onlynumber">
+            </div>
+          </div>
           <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
             <p id="m_unit_text" class="mb-0">Alert Description</p>
           </div>

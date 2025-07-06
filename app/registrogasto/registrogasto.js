@@ -1,15 +1,45 @@
 $(document).ready(function () {
-  const type = document.getElementById('typeExpense');
-  /* Funcion para Cargar Select de los tipos de gastos departamentales */
-  const loadDataSelectTypeExpenses = async (id) => {
+  $('#quota_content').hide();
+  /* Funcion para Cargar Select de los proveedores */
+  const loadDataSelectSupplier = async (id) => {
     try {
-      const response = await fetch('cuentagasto_controller.php?op=get_type_expenses');
+      const response = await fetch(URI + 'proveedores/proveedores_controller.php?op=get_list_suppliers');
       const data = await response.json();
-      const container = document.getElementById('typeExpense');
+      const container = document.getElementById('suplierExpense');
       container.innerHTML = '';
       const defaultOption = document.createElement('option');
       defaultOption.setAttribute('value', '');
-      defaultOption.innerHTML = 'Tipo de Gasto...';
+      defaultOption.innerHTML = 'Proveedor...';
+      container.appendChild(defaultOption);
+
+      data.forEach((opt, idx) => {
+
+        const option = document.createElement('option');
+        if (id == opt.id) {
+          option.setAttribute('value', opt.id);
+          option.innerHTML = `${opt.name}`;
+          option.setAttribute('selected', 'selected');
+          container.appendChild(option);
+        } else {
+          option.setAttribute('value', opt.id);
+          option.innerHTML = `${opt.name}`;
+          container.appendChild(option);
+        }
+      })
+    } catch (error) {
+      console.log('Error', error);
+    }
+  }
+  /* Funcion para Cargar Select de las cuentas de gastos */
+  const loadDataSelectExpenseAccounts = async (id) => {
+    try {
+      const response = await fetch(URI + 'cuentagasto/cuentagasto_controller.php?op=get_list_expense_accounts');
+      const data = await response.json();
+      const container = document.getElementById('accountExpense');
+      container.innerHTML = '';
+      const defaultOption = document.createElement('option');
+      defaultOption.setAttribute('value', '');
+      defaultOption.innerHTML = 'Cuentas de Gastos...';
       container.appendChild(defaultOption);
       data.forEach((opt, idx) => {
         const option = document.createElement('option');
@@ -29,7 +59,7 @@ $(document).ready(function () {
     }
   }
   /* Funcion para listar todos los unidades departamentales existentes en la base de datos */
-  const LoadDataTableExpenseAccounts = async () => {
+  const LoadDataTableExpenseAccount = async () => {
     const table = $('#expense_account_table').DataTable({
       responsive: true,
       scrollX: true,
@@ -77,31 +107,8 @@ $(document).ready(function () {
       ]
     });
   }
-  /* Funcion para obtener el nombre del Tipo de Gasto seleccionado */
-  $('#typeExpense').change(function (e) {
-    e.preventDefault();
-    const id = type.value;
-    const text = type.options[type.selectedIndex].text;
-    $.ajax({
-      url: "cuentagasto_controller.php?op=get_code_expense_by_type",
-      method: 'POST',
-      dataType: "json",
-      data: { id: id, type: text },
-      success: function (response) {
-        $('#codeExpense').val(response);
-      }
-    });
-  });
-  /* Accion para marcar la casilla de los gastos fijos */
-  $("#fixedExpense").change(function () {
-    if ($(this).is(":checked")) {
-      $("#fixedExpense").prop('checked', true);
-    } else {
-      $("#fixedExpense").prop('checked', false);
-    }
-  });
   /* Accion para Guardar o Actualizar Informacion de los Gastos en la Base de Datos */
-  $('#formNewExpense').submit(function (e) {
+  $('#formExpense').submit(function (e) {
     e.preventDefault();
     id = $('#idExpense').val();
     typed = $('#typeExpense').val();
@@ -115,7 +122,7 @@ $(document).ready(function () {
     dato.append('fixed', fixed);
     dato.append('expense', expense);
     $.ajax({
-      url: 'cuentagasto_controller.php?op=new_expense_account',
+      url: 'registrogasto_controller.php?op=new_expense',
       method: 'POST',
       dataType: "json",
       data: dato,
@@ -131,7 +138,7 @@ $(document).ready(function () {
           });
           $('#expense_account_table').DataTable().ajax.reload();
           $('#formNewExpense')[0].reset();
-          $('#newExpenseAccountModal').modal('hide');
+          $('#newExpenseModal').modal('hide');
         } else {
           if (response.error === '400') {
             console.log(response);
@@ -153,10 +160,41 @@ $(document).ready(function () {
       }
     });
   });
-  /* Funcion Para Cargar El Contenido del Select "typeExpense" */
+  /* Funcion Para Cargar El Contenido del Selectores del Modal "newExpenseModal" */
   $('#newExpense').click(function (e) {
     e.preventDefault();
-    loadDataSelectTypeExpenses();
+    $('.modal-title').text('Nuevo Gasto');
+    loadDataSelectSupplier();
+    loadDataSelectExpenseAccounts();
+  });
+  $('#datailExpense').keyup(function (e) {
+    letters = $(this).val().length;
+    $('#count').removeClass('bg-success bg-warning bg-danger test-black');
+    $('#count').addClass('badge');
+    $('#count').addClass('text-white');
+    $('#count').addClass('font-weight-bold');
+    if (letters > 0 && letters <= 80) {
+      $('#count').addClass('bg-success');
+      $('#count').text(letters + ' / 150');
+    }
+    if (letters >= 81 && letters <= 130) {
+      $('#count').addClass('bg-warning');
+      $('#count').addClass('text-black');
+      $('#count').text(letters + ' / 150');
+    }
+    if (letters >= 131) {
+      $('#count').addClass('bg-danger');
+      $('#count').text('Le queda pocos caracteres ' + letters + ' / 150');
+    }
+
+  });
+  /* Accion para marcar la casilla de los gastos fijos */
+  $("#quotaExpense").change(function () {
+    if ($(this).is(":checked")) {
+      $('#quota_content').show();
+    } else {
+      $('#quota_content').hide();
+    }
   });
   /* Accion Para Editar Una Cuenta de Gasto Existente En La Lista de Cuentas de Gastos*/
   $(document).on('click', '#b_edit_expense_account', function (e) {
@@ -178,7 +216,7 @@ $(document).ready(function () {
         }
         $('#nameExpense').val(response.expense);
         $('#typeExpense').attr('disabled', true);
-        $('#newExpenseAccountModal').modal('show');
+        $('#newExpenseModal').modal('show');
       }
     });
   })
