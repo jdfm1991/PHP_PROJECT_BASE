@@ -447,7 +447,6 @@ Modal Nueva Tasa de Cambio
               <input class="form-check-input" type="checkbox" id="fixedExpense">
               <label class="form-check-label" for="fixedExpense">Gasto Fijo</label>
             </div>
-            
             <div class="form-group col-md-12">
               <label for="nameExpense">Detalle del Gasto</label>
               <input class="form-control" id="nameExpense" aria-describedby="nameExpenseHelp" placeholder="Ingrese el Detalle del Gasto a Realizar" required>
@@ -468,40 +467,41 @@ Modal Nueva Tasa de Cambio
 </div>
 <!--
 ****************************************************************************
- Modal Nueva Unidad Departamental
+ Modal Nuevo Proveedor
 ****************************************************************************
  -->
 <div class="modal fade" id="newSuplierModal" tabindex="-1" aria-labelledby="newSuplierModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="NewDepartModalLabel">Nueva Unidad Departamental</h5>
+        <h5 class="modal-title" id="NewDepartModalLabel">Nueva Proveedor</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body " id="modal_body">
-        <form id="formNewUnit">
-          <input type="hidden" name="id" id="idUnit">
+        <form id="formNewSuplier">
+          <input type="hidden" id="idSuplier">
           <div class="form-row">
-            <div class="form-group col-md-3">
-              <label for="unitLevel" class="form-label">Nivel</label>
-              <select class="form-control" id="unitLevel">
+            <div class="form-group col-md-12">
+              <label for="nameSuplier">Nombre de Proveedor</label>
+              <input type="text" class="form-control" id="nameSuplier" aria-describedby="nameSuplierHelp" placeholder="Ingrese el Nombre del Proveedor" required>
+              <small id="nameSuplierHelp" class="form-text text-muted">Ingrese el Nombre del Proveedor</small>
+            </div>
+            <div id="container_link" class="container-fluid card">
+              <div class="d-flex justify-content-end mb-2 mt-2">
+                <input type="search" id="searchClient" class="form-control" list="listClients">
+                <datalist id="listClients">
+                  <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
+                </datalist>
+                <button id="newLink" type="button" class="btn btn-outline-success btn-group-sm" title="Crear Vinculo"><i class="fas fa-plus"></i></button>
+              </div>
+              <div id="liked" class="container-sm mb-2">
                 <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
-              </select>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="unitname">Unidad Departamental</label>
-              <input type="text" class="form-control" id="unitname" name="unitname" aria-describedby="unitname" required>
-              <small id="unitnameHelp" class="form-text text-muted">Numeracion de la Unidad</small>
-            </div>
-            <div class="form-group col-md-3">
-              <label for="unitaliquots">% Alicuota</label>
-              <select class="custom-select" id="unitaliquots" required>
-                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectAliquots" -->
-              </select>
+              </div>
             </div>
           </div>
+
           <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
             <p id="m_unit_text" class="mb-0">Alert Description</p>
           </div>

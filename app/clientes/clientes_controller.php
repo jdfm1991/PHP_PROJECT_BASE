@@ -76,12 +76,12 @@ switch ($_GET["op"]) {
   case 'delete_client':
     $valided = $ralafidu->validedFiduciaryRelationshipDB($id);
     if ($valided > 0) {
-        $dato['status'] = false;
-        $dato['error'] = '500';
-        $dato['message'] = "No Puede Eliminiar Este Cliente, Ya que Tiene Relacion Con Una Unidad Departamental, Por Favor Intente Con Un Cliente Diferente \n";
-        echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-        return;
-      }
+      $dato['status'] = false;
+      $dato['error'] = '500';
+      $dato['message'] = "No Puede Eliminiar Este Cliente, Ya que Tiene Relacion Con Una Unidad Departamental, Por Favor Intente Con Un Cliente Diferente \n";
+      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+      return;
+    }
     $data = $cliente->deleteClientDB($id);
     if ($data) {
       $dato['status'] = true;

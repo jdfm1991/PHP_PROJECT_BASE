@@ -41,4 +41,15 @@ class Clientes extends Conectar
     $stmt->execute(['status' => 0, 'id' => $id]);
     return $stmt->rowCount();
   }
+
+  public function getRelationshipClientSuplierDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT A.id, A.suplier, B.nameClient FROM client_suplier_data_table AS A 
+                                  INNER JOIN client_data_table AS B ON A.client=B.id
+                                WHERE suplier = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }

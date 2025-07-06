@@ -1,25 +1,7 @@
 $(document).ready(function () {
-  /* Funcion para Ingresar Solo los Numeros en el Input de Telefono */
-  $(function () {
-    $("input[name='clientPhone']").on("input", function (e) {
-      $(this).val(
-        $(this)
-          .val()
-          .replace(/[^0-9]/g, "")
-      );
-    });
-  });
-  const removeAccentsFromString = (str) => {
-    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    return str.toUpperCase();
-  }
-
-  const removeHyphenFromString = (str) => {
-    return str.replace(/-/g, "");
-  }
   /* Arrow Function Que se Encarga de Cargar los Datos del Cliente en la Tabla */
-  const loadDataTableClients = async () => {
-    const table = $('#client_table').DataTable({
+  const loadDataTableSuppliers = async () => {
+    const table = $('#supplier_table').DataTable({
       responsive: true,
       scrollX: true,
       autoWidth: false,
@@ -48,70 +30,118 @@ $(document).ready(function () {
         processing: "Procesando..."
       },
       ajax: {
-        url: "clientes_controller.php?op=get_list_clients",
+        url: "proveedores_controller.php?op=get_list_suppliers",
         type: "GET",
         dataType: "json",
         dataSrc: "",
       },
       columns: [
         { data: "name" },
-        { data: "dni" },
-        { data: "email" },
-        { data: "phone" },
-        { data: "phonealt" },
+        {
+          data: null, render: (data, type, row, meta) =>
+            data.clients.length > 0 ? data.clients.map((client) => client.nameClient).join(', ') : 'Sin Clientes'
+        },
         {
           data: "id", render: (data, _, __, meta) =>
-            `<button id="b_edit_client" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
-          <button id="b_delete_client" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
+            `<button id="b_edit_supplier" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
+          <button id="b_delete_supplier" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
         }
       ]
     });
 
   }
-  /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
-  $('#formClient').submit(function (e) {
+  const loadRelacionSuppliers = async (id) => {
+    $.ajax({
+      url: 'proveedores_controller.php?op=get_data_relationship_suplier',
+      method: 'POST',
+      dataType: 'json',
+      data: { id: id },
+      success: function (response) {
+        $("#liked").empty();
+        $.each(response, function (idx, opt) {
+          $("#liked").append(`<li class=" d-flex justify-content-between lh-sm">
+                  <div>
+                    <small class="text-body-secondary d-inline">${idx + 1} - </small>
+                    <h6 class="font-weight-bold d-inline">${opt.client}</h6>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Button group name">
+                    <button id="b_trash_link" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${opt.id}" value="${opt.suplier}" title="Eliminar Vinculo"><i class="bi bi-dash"></i></button>
+                  </div>
+                </li>`);
+        });
+      }
+    });
+  }
+  /* Funcion para llamar a la carga de los select de niveles y alicuotas al crear una unidad departamental */
+  $('#newSupplier').click(function (e) {
     e.preventDefault();
-    sfdni = removeHyphenFromString($('#clientDni').val()); // Numero de DNI Sin Formatear
-    sfphone = $('#clientPhone').val(); // Numero de Telefono Sin Formatear
-    sfname = $('#clientName').val() // Nombre de Cliente Sin Formatear
-    fc = sfdni.charAt(0); // Primer Caracter del DNI
-    if (!fc.match(/[a-zA-Z]/)) { // Si el Primer Caracter del DNI no es una Letra Arroja Mensaje de Error
-      $('#m_client_cont').removeClass('d-none');
-      $('#m_client_text').addClass('text-danger font-weight-bold text-center');
-      $('#m_client_text').text('Primer Caracter debe ser una Letra del Alfabeto Indicando la Naturalidad del DNI (V E J G etc)');
-      setTimeout(() => {
-        $('#m_client_cont').addClass('d-none');
-      }, 2000);
-      return false;
-    }
-    if (sfphone.length < 10) { // Si el Numero de Telefono no tiene 10 Digitos Arroja Mensaje de Error
-      $('#m_client_cont').removeClass('d-none');
-      $('#m_client_text').addClass('text-danger font-weight-bold text-center');
-      $('#m_client_text').text('El Numero de Telefono debe tener 10 Digitos');
-      setTimeout(() => {
-        $('#m_client_cont').addClass('d-none');
-      }, 2000);
-      return false;
-    } 
-    if (sfphone.length == 10) { // Si el Numero de Telefono tiene 10 Digitos Le Agrega el 58 al Comienzo
-      sfphone = '58' + sfphone;
-    }
-    id = $('#clientId').val();
-    name = removeAccentsFromString(sfname);
-    nfdni = sfdni.charAt(0) + '-' + sfdni.substring(1); // Numero de DNI Formato Previo
-    dni = nfdni.toUpperCase(); // Numero de DNI Formateado
-    phone = sfphone.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '+($1) $2-$3-$4'); // Numero de Telefono Formateado
-    phonealt = $('#clientPhoneAlt').val();
-    email = $('#clientEmail').val();
+    $('#nameSuplier').val("");
+    $('#container_link').hide();
+    $('.modal-title').text('Nuevo Proveedor');
+    $('#newSuplierModal').modal('show');
+  });
+  $('#searchClient').keyup(function (e) {
+    e.preventDefault();
+    search = $('#searchClient').val();
+    $.ajax({
+      url: URI + 'relafidu/relafidu_controller.php?op=get_list_related_clients',
+      method: 'POST',
+      dataType: 'json',
+      data: { search: search },
+      success: function (response) {
+        $("#listClients").empty();
+        $.each(response, function (idx, opt) {
+          $("#listClients").append(`<option id="#selectedId" value="${opt.unit} ${opt.name} - ${opt.iclient}">`);
+        });
+      }
+    });
+  });
+
+  $('#newLink').click(function (e) {
+    e.preventDefault();
+    id = $('#idSuplier').val();
+    client = $('#searchClient').val().split(' - ')[1];
+    $.ajax({
+      url: 'proveedores_controller.php?op=new_link',
+      method: 'POST',
+      dataType: 'json',
+      data: { id: id, client: client },
+      success: function (response) {
+        if (response.status == true) {
+          $(".mr-auto").text("Procesos Exitoso");
+          $(".toast").css("background-color", "rgb(29 255 34 / 85%)");
+          $(".toast").css("color", "white");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+          $('#searchClient').val("");
+          loadRelacionSuppliers(id);
+          $('#supplier_table').DataTable().ajax.reload();
+        } else {
+          $(".mr-auto").text("Procesos Fallido");
+          $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
+          $(".toast").css("color", "white");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+        }
+      }
+    });
+  });
+
+
+  /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
+  $('#formNewSuplier').submit(function (e) {
+    e.preventDefault();
+    id = $('#idSuplier').val();
+    name = $('#nameSuplier').val();
+    link = $('#selectClient').val();
     dato = new FormData();
     dato.append('id', id);
     dato.append('name', name);
-    dato.append('dni', dni);
-    dato.append('phone', phone);
-    dato.append('phonealt', phonealt);
-    dato.append('email', email);
+    dato.append('link', link);
     $.ajax({
-      url: 'clientes_controller.php?op=new_client',
+      url: 'proveedores_controller.php?op=new_supplier',
       method: 'POST',
       dataType: "json",
       data: dato,
@@ -125,9 +155,9 @@ $(document).ready(function () {
             showConfirmButton: false,
             timer: 1500
           });
-          $('#client_table').DataTable().ajax.reload();
-          $('#formClient')[0].reset();
-          $('#newClientModal').modal('hide');
+          $('#supplier_table').DataTable().ajax.reload();
+          $('#formNewSuplier')[0].reset();
+          $('#newSuplierModal').modal('hide');
         } else {
           Swal.fire({
             icon: "error",
@@ -142,32 +172,28 @@ $(document).ready(function () {
 
   });
   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
-  $(document).on('click', '#b_edit_client', function () {
+  $(document).on('click', '#b_edit_supplier', function () {
     var id = $(this).data('value');
     $.ajax({
-      url: 'clientes_controller.php?op=get_data_client',
+      url: 'proveedores_controller.php?op=get_data_supplier',
       method: 'POST',
       dataType: 'json',
       data: { id: id },
       success: function (response) {
-        $.each(response, function (idx, opt) {
-          $('#clientId').val(opt.id);
-          $('#clientName').val(opt.name);
-          $('#clientDni').val(opt.dni);
-          $('#clientPhone').val(opt.phone);
-          $('#clientPhoneAlt').val(opt.phonealt);
-          $('#clientEmail').val(opt.email);
-        });
-        $('.modal-title').text('Editar Informacion del Cliente');
-        $('#newClientModal').modal('show');
+        loadRelacionSuppliers(response.id);
+        $('#idSuplier').val(response.id);
+        $('#nameSuplier').val(response.name);
+        $('#container_link').show();
+        $('.modal-title').text('Editar Informacion del Proveedor');
+        $('#newSuplierModal').modal('show');
       }
     });
   })
-   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
-  $(document).on('click', '#b_delete_client', function () {
+  /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
+  $(document).on('click', '#b_delete_supplier', function () {
     var id = $(this).data('value');
     Swal.fire({
-      title: 'Estas seguro de eliminar el cliente?',
+      title: 'Estas seguro de eliminar este proveedor?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -176,7 +202,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: 'clientes_controller.php?op=delete_client',
+          url: 'proveedores_controller.php?op=delete_supplier',
           method: 'POST',
           dataType: 'json',
           data: { id: id },
@@ -188,7 +214,7 @@ $(document).ready(function () {
                 showConfirmButton: false,
                 timer: 1500
               });
-              $('#client_table').DataTable().ajax.reload();
+              $('#supplier_table').DataTable().ajax.reload();
             } else {
               Swal.fire({
                 icon: "error",
@@ -203,5 +229,37 @@ $(document).ready(function () {
     })
 
   })
-  loadDataTableClients();
+
+  $(document).on('click', '#b_trash_link', function () {
+    id = $(this).data('value');
+    var suplier = $(this).attr('value');
+    $.ajax({
+      url: 'proveedores_controller.php?op=delete_link',
+      method: 'POST',
+      dataType: 'json',
+      data: { id: id },
+      success: function (response) {
+        if (response.status == true) {
+          $(".mr-auto").text("Procesos Exitoso");
+          $(".toast").css("background-color", "rgb(29 255 34 / 85%)");
+          $(".toast").css("color", "white");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+          $('#searchClient').val("");
+          loadRelacionSuppliers(suplier);
+          $('#supplier_table').DataTable().ajax.reload();
+        } else {
+          $(".mr-auto").text("Procesos Fallido");
+          $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
+          $(".toast").css("color", "white");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+        }
+      }
+    });
+
+  })
+  loadDataTableSuppliers();
 });

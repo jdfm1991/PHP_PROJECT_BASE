@@ -22,7 +22,7 @@ $(document).ready(function () {
     const table = $('#client_table').DataTable({
       responsive: true,
       scrollX: true,
-      autoWidth: false,
+      autoWidth: true,
       paging: true,
       lengthChange: true,
       searching: true,
@@ -62,9 +62,12 @@ $(document).ready(function () {
         {
           data: "id", render: (data, _, __, meta) =>
             `<button id="b_edit_client" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
-          <button id="b_delete_client" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
+            <button id="b_delete_client" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
         }
-      ]
+      ],
+      columnsDefs: [
+        { targets: 5, width: "20%" },
+      ],
     });
 
   }

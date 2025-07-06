@@ -9,6 +9,7 @@ $ralafidu = new FiduciaryRelationship();
 
 $unit = (isset($_POST['unit'])) ? $_POST['unit'] : '';
 $client = (isset($_POST['client'])) ? $_POST['client'] : '';
+$search = (isset($_POST['search'])) ?  $_POST['search'] : 'jo';
 
 switch ($_GET["op"]) {
   case 'get_list_units':
@@ -51,6 +52,21 @@ switch ($_GET["op"]) {
       $sub_array['client'] = $row['nameClient'];
       $sub_array['iunit'] = $row['iunit'];
       $sub_array['iclient'] = $row['iclient'];
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'get_list_related_clients':
+    $dato = array();
+    $data = $ralafidu->getDataRelationshipClientUnitDB($search);
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['iunit'] = $row['iunit'];
+      $sub_array['iclient'] = $row['iclient'];
+      $sub_array['unit'] = $row['unit'];
+      $sub_array['level'] = $row['level'];
+      $sub_array['name'] = $row['nameClient'];
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

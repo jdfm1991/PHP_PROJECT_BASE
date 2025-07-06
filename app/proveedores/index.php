@@ -4,6 +4,7 @@
 require_once("../../config/const.php");
 require_once(PATH_APP . "/head.php");
 ?>
+
 <body id="page-top">
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -24,28 +25,24 @@ require_once(PATH_APP . "/head.php");
           <div class="card mb-2">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
-                <button type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newSuplierModal"> Nuevo Proveedor </button>
+                <button id="newSupplier" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newSuplierModal"> Nuevo Proveedor </button>
               </div>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
-              <div id="module_body">
-                <table id="supplier_table" class="table table-striped table-bordered" style="width:100%">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>N° Documento</th>
-                      <th>Correo Electronico</th>
-                      <th>Telefono Pricipal</th>
-                      <th>Telefono Secundario</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-                <!-- El Contenido  se carga a traves de Ajax -->
-              </div>
+              <table id="supplier_table" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Nombre de Proveedor</th>
+                    <th>Cliente Asociado</th>
+                    <th>Correo Electronico</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+              <!-- El Contenido  se carga a traves de Ajax -->
             </div>
           </div>
         </div>

@@ -31,7 +31,7 @@ require_once(PATH_APP . "/head.php");
           <div class="card">
             <div class="card-body">
               <div id="module_body">
-                <table id="client_table" class="table table-striped table-bordered" style="width:100%">
+                <table id="client_table" class="table table-striped table-bordered">
                   <thead>
                     <tr>
                       <th>Nombre</th>
