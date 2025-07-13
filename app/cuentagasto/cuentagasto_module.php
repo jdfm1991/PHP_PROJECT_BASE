@@ -1,7 +1,7 @@
 <?php
 require_once("../../config/conexion.php");
 
-class Expenses extends Conectar
+class ExpenseAccounts extends Conectar
 {
   /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION DE LOS TIPO DE GASTOS EXISTENTES EN LA BASE DE DATOS*/
   public function getTypeExpensesBD()

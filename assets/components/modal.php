@@ -420,7 +420,7 @@ Modal Nueva Tasa de Cambio
  Modal Nueva Cuenta de Gasto
 ****************************************************************************
  -->
-<div class="modal fade" id="newExpenseAccountModal" tabindex="-1" aria-labelledby="newExpenseModalLabel" aria-hidden="true">
+<div class="modal fade" id="newExpenseAccountModal" tabindex="-1" aria-labelledby="newExpenseAccountModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -544,23 +544,74 @@ Modal Nueva Tasa de Cambio
                 <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
               </select>
             </div>
-            <div class="form-group col-md-12">
-              <label for="nameExpense">Detalle del Gasto</label>
+            <div class="form-group col-md-8">
+              <label for="datailExpense">Detalle del Gasto</label>
               <textarea id="datailExpense" class="form-control" rows="3" placeholder="Ingrese el Detalle del Gasto a Realizar" aria-describedby="datailExpenseHelp" maxlength="150" required></textarea>
               <small id="datailExpenseHelp" class="form-text text-muted">Detalle del Gasto que se va a realizar</small>
               <label id="count" class="float-right"></label>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="dateExpense">Fecha del Gasto</label>
+              <input type="date" class="form-control" id="dateExpense" max="<?php echo date('Y-m-d'); ?>" required>
             </div>
             <div class="form-group col-md-4">
               <label for="montExpense">Monto Del Gasto</label>
               <input type="text" class="form-control" id="montExpense" name="onlynumber" required>
             </div>
             <div class="form-check form-check-inline col-md-3 text-center">
-              <input class="form-check-input" type="checkbox" id="formExpenseExpense">
+              <input class="form-check-input" type="checkbox" id="quotaExpense">
               <label class="form-check-label" for="quotaExpense">Pago En Cuotas</label>
             </div>
             <div id="quota_content" class="form-group col-md-4">
               <label for="montQuota">Cuota de Pago</label>
               <input type="text" class="form-control" id="montQuota" name="onlynumber">
+            </div>
+          </div>
+          <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_unit_text" class="mb-0">Alert Description</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--
+****************************************************************************
+ Modal Registro de Pago de Cuenta Por Pagar
+****************************************************************************
+ -->
+<div class="modal fade" id="cxpPayModal" tabindex="-1" aria-labelledby="cxpPayModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Datos de Cuentas Por Pagar</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <form id="formExpense">
+          <input type="hidden" id="idCsp">
+          <div class="form-group row">
+            <span class="text-uppercase text-monospace col-sm-5">Fecha de Gasto: </span>
+            <p id="t_date" class="font-weight-bold text-uppercase col-sm-7"> </p>
+            <span class="text-uppercase text-monospace col-sm-5">Proveedor: </span>
+            <p id="t_suplier" class="font-weight-bold text-uppercase col-sm-7"> </p>
+            <span class="text-uppercase text-monospace col-sm-5">Cuenta de Gasto: </span>
+            <p id="t_account" class="font-weight-bold text-uppercase col-sm-7"> </p>
+            <span class="text-uppercase text-monospace col-sm-5">Detalle del Gasto: </span>
+            <p id="t_detail" class="font-weight-bold text-uppercase col-sm-7"> </p>
+            <span class="text-uppercase text-monospace col-sm-5">Saldo del Gasto: </span>
+            <div class="col-sm-3 mb-2">
+              <input type="text" class="form-control" id="t_balance" disabled>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="payment">Monto Del Pago</label>
+              <input type="text" class="form-control" id="payment" name="onlynumber" required>
             </div>
           </div>
           <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">

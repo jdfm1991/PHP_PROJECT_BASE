@@ -31,13 +31,14 @@ require_once(PATH_APP . "/head.php");
           <div class="card">
             <div class="card-body">
               <div id="module_body">
-                <table id="expense_account_table" class="table table-striped table-bordered" style="width:100%">
+                <table id="expense_table" class="table table-striped table-bordered" style="width:100%">
                   <thead>
                     <tr>
-                      <th>Cuenta</th>
-                      <th>Codigo</th>
-                      <th>Tipo</th>
+                      <th>Fecha</th>
+                      <th>Provedor</th>
+                      <th>Cuento</th>
                       <th>Concepto</th>
+                      <th>Monto</th>
                       <th>Accion</th>
                     </tr>
                   </thead>

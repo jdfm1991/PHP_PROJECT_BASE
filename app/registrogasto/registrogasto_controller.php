@@ -1,100 +1,80 @@
 <?php
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
-require_once("cuentagasto_module.php");
+require_once("registrogasto_module.php");
 
 $expenses = new Expenses();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '6869260d82a19';
-$type = (isset($_POST['type'])) ? $_POST['type'] : '1';
-$code = (isset($_POST['code'])) ? $_POST['code'] : '1';
-$fixe = (isset($_POST['fixed'])) ? $_POST['fixed'] : 'false';
-$expense = (isset($_POST['expense'])) ? $_POST['expense'] : '1';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '6873ad6c02425';
+$date = (isset($_POST['date'])) ? $_POST['date'] : '';
+$suplier = (isset($_POST['suplier'])) ? $_POST['suplier'] : '';
+$account = (isset($_POST['account'])) ? $_POST['account'] : '';
+$detail = (isset($_POST['detail'])) ? $_POST['detail'] : '';
+$mont = (isset($_POST['mont'])) ? $_POST['mont'] : '';
+$quota = (isset($_POST['quota']) && (!empty($_POST['quota']))) ? $_POST['quota'] : NULL;
 
 switch ($_GET["op"]) {
-  case 'get_type_expenses':
-    $dato = array();
-    $data = $expenses->getTypeExpensesBD();
-    foreach ($data as $row) {
-      $sub_array = array();
-      $sub_array['id'] = $row['id'];
-      $sub_array['type'] = $row['expensetypename'];
-      $dato[] = $sub_array;
-    }
-    echo json_encode($dato);
-    break;
-  case 'get_code_expense_by_type':
-    $prefix = substr($type, 0, 4);
-    $code = $expenses->getNewCodeExpenseByTypeDB($id, $prefix);
-    echo json_encode($code, JSON_UNESCAPED_UNICODE);
-    break;
-  case 'new_expense_account':
+  case 'new_expense':
     $dato = array();
     if (empty($id)) {
       $id = uniqid();
-      $fixed = ($fixe == 'true') ? 1 : 0;
-      $data = $expenses->createExpenseAccountDB($id, $type, $code, $fixed, $expense);
+      $data = $expenses->createExpenseDB($id, $date, $suplier, $account, $detail, $mont, $quota);
       if ($data) {
         $dato['status'] = true;
         $dato['error'] = '200';
-        $dato['message'] = "La Cuenta de Gasto " . $expense . " Fue Creada Satisfactoriamente \n";
+        $dato['message'] = "El Gasto Fue Creada Satisfactoriamente \n";
       } else {
         $dato['status'] = false;
         $dato['error'] = '500';
-        $dato['message'] = "Error Al Crear La Cuenta de Gasto" . $expense . ", Por Favor Intente Nuevamente \n";
+        $dato['message'] = "Error Al Crear El Gasto, Por Favor Intente Nuevamente \n";
       }
     } else {
-      $fixed = ($fixe == 'true') ? 1 : 0;
-      $data = $expenses->updateDataExpenseAccountDB($id, $type, $code, $fixed, $expense);
+      $data = $expenses->updateDataExpenseDB($id, $date, $detail, $mont, $quota);
       if ($data) {
         $dato['status'] = true;
         $dato['error'] = '200';
-        $dato['message'] = "La Cuenta de Gastol " . $expense . " Fue Actiualizado Satisfactoriamente \n";
+        $dato['message'] = "El Gasto Fue Actiualizado Satisfactoriamente \n";
       } else {
         $dato['status'] = false;
         $dato['error'] = '500';
-        $dato['message'] = "Error Al Actualizar La Cuenta de Gasto" . $expense . ", Por Favor Intente Nuevamente \n";
+        $dato['message'] = "Error Al Actualizar el Gasto, Por Favor Intente Nuevamente \n";
       }
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-
-  case 'get_list_expense_accounts':
+  case 'get_list_expenses':
     $dato = array();
-    $data = $expenses->getListExpenseAccountsDB();
+    $data = $expenses->getListExpensesDB();
     foreach ($data as $row) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
-      $sub_array['type'] = $row['type'];
-      $sub_array['code'] = $row['code'];
-      $sub_array['fixed'] = ($row['fixed'] == 1) ? 'GASTO FIJO' : 'GASTO VARIABLE';
-      $sub_array['expense'] = $row['expense'];
+      $sub_array['date'] = $row['dateExpense'];
+      $sub_array['suplier'] = $row['nameSuplier'];
+      $sub_array['account'] = $row['expense'];
+      $sub_array['expense'] = $row['expenseName'];
+      $sub_array['mont'] = ($row['quotasExpense'] > 0) ? $row['quotasExpense']  : $row['montExpense'];;
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-  case 'get_data_expense_account':
+  case 'get_data_expense':
     $dato = array();
-    $data = $expenses->getDataExpenseAccountDB($id);
+    $data = $expenses->getDataExpenseDB($id);
     foreach ($data as $data) {
       $dato['id'] = $data['id'];
-      $dato['type'] = $data['type'];
-      $dato['code'] = $data['code'];
-      $dato['fixed'] = $data['fixed'];
-      $dato['expense'] = $data['expense'];
+      $dato['date'] = $data['dateExpense'];
+      $dato['suplier'] = $data['idSuplier'];
+      $dato['account'] = $data['idExpenseAccount'];
+      $dato['expense'] = $data['expenseName'];
+      $dato['mont'] = $data['montExpense'];
+      $dato['quota'] = $data['quotasExpense'];
+      $dato['dater'] = $data['dateRegExp'];
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-  case 'delete_expense_account':
-    /* $valided = $ralafidu->validedFiduciaryRelationshipDB($id);
-    if ($valided > 0) {
-      $dato['status'] = false;
-      $dato['error'] = '500';
-      $dato['message'] = "No Puede Eliminiar Este Cliente, Ya que Tiene Relacion Con Una Unidad Departamental, Por Favor Intente Con Un Cliente Diferente \n";
-      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-      return;
-    } */
-    $data = $expenses->deleteClideleteExpenseAccountDBentDB($id);
+
+  case 'delete_expense':
+    $data = $expenses->deleteClideleteExpenseDB($id);
     if ($data) {
       $dato['status'] = true;
       $dato['error'] = '200';
