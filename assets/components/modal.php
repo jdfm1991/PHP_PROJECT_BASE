@@ -594,7 +594,7 @@ Modal Nueva Tasa de Cambio
         </button>
       </div>
       <div class="modal-body ">
-        <form id="formExpense">
+        <form id="formExpensePay">
           <input type="hidden" id="idCsp">
           <div class="form-group row">
             <span class="text-uppercase text-monospace col-sm-5">Fecha de Gasto: </span>

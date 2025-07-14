@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 6.0.0-dev+20250624.c910e1faac
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 05-07-2025 a las 16:31:20
--- Versión del servidor: 8.0.26
--- Versión de PHP: 8.4.8
+-- Tiempo de generación: 14-07-2025 a las 01:04:49
+-- Versión del servidor: 8.0.19
+-- Versión de PHP: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -43,16 +44,16 @@ CREATE TABLE `client_data_table` (
 --
 
 INSERT INTO `client_data_table` (`id`, `nameClient`, `dniClient`, `emailClient`, `phoneClient`, `phoneClientAlt`, `balanceClient`, `statusClient`) VALUES
-('6867048c7287a', 'EUDES CHÁVEZ', 'V-0', 'aurajimenez0501@gmail.com', '+(58) 414-875-7142', '', 0.0000, 1),
+('6867048c7287a', 'EUDES CHAVEZ', 'V-0', 'aurajimenez0501@gmail.com', '+(58) 414-875-7142', '', 0.0000, 1),
 ('686704ef02be3', 'FELICIA DE AIELLO', 'V-0', 'aiello.john@yahoo.com', '+(58) 412-904-1763', '', 0.0000, 1),
 ('686705156466c', 'NORJUL GONZÁLEZ', 'V-0', 'norjulband@gmail.com', '+(58) 414-875-3380', '', 0.0000, 1),
 ('68670543ece17', 'ANA GALAVÍS', 'V-0', 'anitagalavis@gmail.com', '+(58) 414-872-7500', '', 0.0000, 1),
-('6867056ad8b81', 'ANDRÉS JIMÉNEZ', 'V-0', 'ANDRESJOSEJIMENEZ@GMAIL.COM', '+(58) 000-000-0000', '', 0.0000, 1),
+('6867056ad8b81', 'ANDRES JIMENEZ', 'V-0', 'ANDRESJOSEJIMENEZ@GMAIL.COM', '+(58) 000-000-0000', '', 0.0000, 1),
 ('686705862a2fd', 'CARMELA DE MOSSUTO', 'V-0', 'analisis.inmuebles.ori@gmail.com', '+(58) 000-000-0000', '', 0.0000, 1),
 ('686705b5c74cb', 'MIKER CEBALLOS', 'V-0', 'quinteromaikel5@gmail.com', '+(58) 412-193-6876', '', 0.0000, 1),
 ('686705dc03704', 'RODOLFO VERDE', 'V-0', 'rodolfo.verde@gmail.com', '+(58) 416-486-0443', '', 0.0000, 1),
-('68670616c6115', 'ACHILLER PÉRSICO', 'V-0', 'achi3@me.com', '+(58) 000-000-0000', '', 0.0000, 1),
-('6867066e51795', 'JUAN FERNÁNDEZ', 'V-0', 'juanfernandez26@hotmail.com', '+(58) 414-860-0262', '', 0.0000, 1),
+('68670616c6115', 'ACHILLER PERSICO', 'V-0', 'achi3@me.com', '+(58) 000-000-0000', '', 0.0000, 1),
+('6867066e51795', 'JUAN FERNANDEZ', 'V-0', 'juanfernandez26@hotmail.com', '+(58) 414-860-0262', '', 0.0000, 1),
 ('686706a6b2e61', 'NIEVES BOADA', 'V-0', 'azocarc@hotmail.com', '+(58) 414-867-2641', '', 0.0000, 1),
 ('686706d574179', 'EMPERATRIZ PÉREZ', 'V-0', 'empiperez@hotmail.com', '+(58) 414-094-0590', '', 0.0000, 1),
 ('686712836921b', 'NAIKARYS BARRETO ', '-', 'NAYMAR8478@GMAIL.COM', '', '', 0.0000, 1),
@@ -79,7 +80,7 @@ INSERT INTO `client_data_table` (`id`, `nameClient`, `dniClient`, `emailClient`,
 ('686715488d3c9', 'AMAELI FRANCISCO GUILLÉN', '-', 'agrosanjose30@gmail.com', '+(58) 414-830-3606', '', 0.0000, 1),
 ('686715556bf03', 'SUCESIÓN OLIVIA LÓPEZ', '-', 'libiatorres6@gmail.com', '', '', 0.0000, 1),
 ('686715660009b', 'MILIZA CAMACARO', '-', 'bassansouki@gmail.com', '+(58) 414-872-2780', '', 0.0000, 1),
-('6867157acade9', 'EDUARDO CANELÓN', '-', 'eduardo_canelon@hotmail.com', '+(58) 414-853-3810', '', 0.0000, 1),
+('6867157acade9', 'EDUARDO CANELON', '-', 'eduardo_canelon@hotmail.com', '+(58) 414-853-3810', '', 0.0000, 1),
 ('686715d643467', 'GISELA VÁZQUEZ', '-', 'gikavato@hotmail.com', '+(58) 414-869-2272', '', 0.0000, 1),
 ('686715ee2b961', 'ADIANA RIZZO', '-', 'adiana_r64@hotmail.com', '+(58) 424-559-4858', '', 0.0000, 1),
 ('686715feb5909', 'ROBERT RIVAS', '-', 'robertrivas01@hotmail.com', '+(58) 424-919-7289', '', 0.0000, 1),
@@ -112,7 +113,27 @@ INSERT INTO `client_data_table` (`id`, `nameClient`, `dniClient`, `emailClient`,
 ('68671ec41ef87', 'JOSÉ OLIVIERI', '-', 'holajoseolivieri@hotmail.com', '+(58) 414-869-2615', '', 0.0000, 1),
 ('68671ee0915ad', 'MAURICIO ESPINOZA', '-', 'mauricioivanespinoza@gmail.com', '+(58) 416-892-4353', '', 0.0000, 1),
 ('68671efe989e1', 'PEDRO MARCHETTA', '-', 'lgms2111@gmail.com', '+(58) 424-966-5140', '', 0.0000, 1),
-('68671f18ef50a', 'CARMEN GARCÍA', '-', 'carmen.garcia@corposistemas.net', '+(58) 414-889-2188', '', 0.0000, 1);
+('68671f18ef50a', 'CARMEN GARCÍA', '-', 'carmen.garcia@corposistemas.net', '+(58) 414-889-2188', '', 0.0000, 1),
+('686a855ee6b2a', 'JOVANNI FRANCO', 'V-20972144', 'jova@ho.com', '+(58) 424-959-0510', '', 0.0000, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `client_suplier_data_table`
+--
+
+CREATE TABLE `client_suplier_data_table` (
+  `id` int NOT NULL,
+  `suplier` varchar(20) NOT NULL,
+  `client` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `client_suplier_data_table`
+--
+
+INSERT INTO `client_suplier_data_table` (`id`, `suplier`, `client`) VALUES
+(42, '686983313e734', '6867157acade9');
 
 -- --------------------------------------------------------
 
@@ -158,13 +179,42 @@ CREATE TABLE `expense_accounts_data_table` (
 --
 
 INSERT INTO `expense_accounts_data_table` (`id`, `type`, `code`, `fixed`, `expense`, `status`) VALUES
-('6869260d82a19', 1, '1', 0, '1', 0),
 ('686926441810a', 3, 'SERV-02', 1, 'SERVICIO DE SUMINISTRO DE ENERGIA ELECTRICA', 1),
 ('686926b35aa97', 1, 'NOMI-05', 1, 'NOMINA VIGILANTE', 1),
 ('6869280a22d15', 4, 'SUMI-01', 0, 'COMPRA DE TUBERIA', 1),
 ('6869283fb8231', 4, 'SUMI-02', 0, 'COMPRA DE HERRAMIENTAS', 1),
-('68692c9dd54e7', 1, 'NOMI-02', 1, 'NOMINA ADMINISTRATIVA', 1),
-('68693254a580b', 3, 'SERV-03', 0, 'kjscinij', 0);
+('68692c9dd54e7', 1, 'NOMI-02', 1, 'NOMINA ADMINISTRATIVA', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `expense_data_table`
+--
+
+CREATE TABLE `expense_data_table` (
+  `id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `dateExpense` date NOT NULL,
+  `idSuplier` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `idExpenseAccount` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `expenseName` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `montExpense` decimal(28,4) NOT NULL,
+  `quotasExpense` decimal(28,4) DEFAULT NULL,
+  `balanceExpense` decimal(28,4) NOT NULL,
+  `dateRegExp` date NOT NULL,
+  `statusExpense` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `expense_data_table`
+--
+
+INSERT INTO `expense_data_table` (`id`, `dateExpense`, `idSuplier`, `idExpenseAccount`, `expenseName`, `montExpense`, `quotasExpense`, `balanceExpense`, `dateRegExp`, `statusExpense`) VALUES
+('6873a466732f3', '2025-01-01', '1', '1', 'gasto', '1.0000', NULL, '1.0000', '2025-01-01', 1),
+('6873a4c333d1d', '2025-01-01', '1', '1', 'gasto', '1.0000', NULL, '1.0000', '2025-07-13', 1),
+('6873a4d3b4a55', '2025-01-01', '1', '1', '', '1.0000', NULL, '1.0000', '2025-07-13', 1),
+('6873ac49740ac', '2025-01-01', '1', '1', '', '1.0000', NULL, '1.0000', '2025-07-13', 1),
+('6873ad6c02425', '2025-07-08', '686983313e734', '686926b35aa97', 'PAGO DE NOMINA VIGILATE DEL PERIODO 15-06-2025 AL 30-06-2025', '350.0000', NULL, '350.0000', '2025-07-13', 1),
+('6873bc39690d2', '2025-07-08', '6869888b438d2', '686926441810a', 'IUBN,WDVNBKIUD', '60.0000', NULL, '60.0000', '2025-07-13', 0);
 
 -- --------------------------------------------------------
 
@@ -212,7 +262,10 @@ INSERT INTO `model_department_data_table` (`id`, `department`, `module`) VALUES
 (19, '6856987c2d4e2', '685f132f33d58'),
 (20, '6867c5a421535', '6861253393088'),
 (22, '6856985d2b6d2', '68685896364bd'),
-(23, '685698498f2f4', '68694ff24e79b');
+(23, '685698498f2f4', '68694ff24e79b'),
+(24, '6856985d2b6d2', '686ad2263a378'),
+(25, '6856985d2b6d2', '6873c5890614c'),
+(26, '6856985d2b6d2', '6873f2371fb47');
 
 -- --------------------------------------------------------
 
@@ -239,9 +292,12 @@ INSERT INTO `module_data_table` (`id`, `nameModule`, `nameListModule`, `statusMo
 ('685fca37cc263', 'clientes', 'Clientes // Propietarios', 0, 1),
 ('6861253393088', 'tasacambiaria', 'Tasa Cambiaria', 0, 1),
 ('686468b3c1e87', 'unidaddepartamental', 'Unidad Departamental', 0, 1),
-('6865d5d3a0e00', 'relafidu', 'Relaciones Feduciarias', 0, 1),
+('6865d5d3a0e00', 'relafidu', 'Relaciones Fiduciarias', 0, 1),
 ('68685896364bd', 'cuentagasto', 'Cuenta de Gastos', 0, 1),
-('68694ff24e79b', 'proveedores', 'Proveedores', 0, 1);
+('68694ff24e79b', 'proveedores', 'Proveedores', 0, 1),
+('686ad2263a378', 'registrogasto', 'Registro de Gastos', 0, 1),
+('6873c5890614c', 'cxp', 'Cuentas Por Pagar', 0, 1),
+('6873f2371fb47', 'banco', 'Banco - Conciliador', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -261,11 +317,11 @@ CREATE TABLE `rate_data_table` (
 --
 
 INSERT INTO `rate_data_table` (`id`, `dateRate`, `exchRate`, `typeRate`) VALUES
-(1, '2025-12-31', 12.0000, 1),
-(2, '2025-12-31', 145.2500, 1),
-(3, '2025-12-31', 102.4500, 1),
-(4, '2025-06-04', 110.2500, 1),
-(5, '2025-06-05', 125.0000, 1);
+(1, '2025-12-31', '12.0000', 1),
+(2, '2025-12-31', '145.2500', 1),
+(3, '2025-12-31', '102.4500', 1),
+(4, '2025-06-04', '110.2500', 1),
+(5, '2025-06-05', '125.0000', 1);
 
 -- --------------------------------------------------------
 
@@ -295,8 +351,17 @@ INSERT INTO `rate_types_data_table` (`id`, `exchangeratetypes`, `acronym`) VALUE
 CREATE TABLE `suplier_data_table` (
   `id` varchar(20) NOT NULL,
   `nameSuplier` varchar(100) NOT NULL,
-  `statusSuplier` tinyint(1) NOT NULL
+  `statusSuplier` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `suplier_data_table`
+--
+
+INSERT INTO `suplier_data_table` (`id`, `nameSuplier`, `statusSuplier`) VALUES
+('686983313e734', 'Fumigacion', 1),
+('6869888b438d2', 'CANTV', 1),
+('68698896e4298', 'HIDROBOLIVAR', 1);
 
 -- --------------------------------------------------------
 
@@ -314,12 +379,12 @@ CREATE TABLE `unit_aliquot_data_table` (
 --
 
 INSERT INTO `unit_aliquot_data_table` (`id`, `aliquot`) VALUES
-(1, 1.9870),
-(2, 1.3003),
-(3, 1.2699),
-(4, 0.8737),
-(5, 2.2683),
-(6, 2.1193);
+(1, '1.9870'),
+(2, '1.3003'),
+(3, '1.2699'),
+(4, '0.8737'),
+(5, '2.2683'),
+(6, '2.1193');
 
 -- --------------------------------------------------------
 
@@ -340,7 +405,6 @@ CREATE TABLE `unit_client_data_table` (
 INSERT INTO `unit_client_data_table` (`id`, `client`, `unit`) VALUES
 (6, '686712836921b', '686707b369f10'),
 (7, '686712836921b', '686707bc60583'),
-(8, '686712cd6eb7a', '686707e883c4d'),
 (9, '686713665dcce', '686707f970a08'),
 (10, '68671389ae950', '6867095a1250f'),
 (11, '6867139f16e5d', '68670814b4214'),
@@ -409,7 +473,8 @@ INSERT INTO `unit_client_data_table` (`id`, `client`, `unit`) VALUES
 (74, '6867066e51795', '68670baede46b'),
 (75, '68670616c6115', '68670bb7e84b1'),
 (76, '686705dc03704', '68670bc25fe4a'),
-(77, '686705b5c74cb', '68670bcf30676');
+(77, '686705b5c74cb', '68670bcf30676'),
+(78, '686712cd6eb7a', '686707e883c4d');
 
 -- --------------------------------------------------------
 
@@ -598,6 +663,13 @@ ALTER TABLE `client_data_table`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `client_suplier_data_table`
+--
+ALTER TABLE `client_suplier_data_table`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `client` (`client`);
+
+--
 -- Indices de la tabla `department_data_table`
 --
 ALTER TABLE `department_data_table`
@@ -607,6 +679,12 @@ ALTER TABLE `department_data_table`
 -- Indices de la tabla `expense_accounts_data_table`
 --
 ALTER TABLE `expense_accounts_data_table`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `expense_data_table`
+--
+ALTER TABLE `expense_data_table`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -658,6 +736,12 @@ ALTER TABLE `unit_client_data_table`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `unit_data_table`
+--
+ALTER TABLE `unit_data_table`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `unit_level_data_table`
 --
 ALTER TABLE `unit_level_data_table`
@@ -680,6 +764,12 @@ ALTER TABLE `user_types_data_table`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `client_suplier_data_table`
+--
+ALTER TABLE `client_suplier_data_table`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+
+--
 -- AUTO_INCREMENT de la tabla `expense_type_data_table`
 --
 ALTER TABLE `expense_type_data_table`
@@ -689,7 +779,7 @@ ALTER TABLE `expense_type_data_table`
 -- AUTO_INCREMENT de la tabla `model_department_data_table`
 --
 ALTER TABLE `model_department_data_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `rate_data_table`
@@ -713,7 +803,7 @@ ALTER TABLE `unit_aliquot_data_table`
 -- AUTO_INCREMENT de la tabla `unit_client_data_table`
 --
 ALTER TABLE `unit_client_data_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT de la tabla `unit_level_data_table`
@@ -726,6 +816,16 @@ ALTER TABLE `unit_level_data_table`
 --
 ALTER TABLE `user_types_data_table`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `client_suplier_data_table`
+--
+ALTER TABLE `client_suplier_data_table`
+  ADD CONSTRAINT `client_suplier_data_table_ibfk_1` FOREIGN KEY (`client`) REFERENCES `client_data_table` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

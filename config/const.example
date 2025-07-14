@@ -16,3 +16,5 @@ const URL_ASSETS  = URI."/assets";
 
 define("PATH_APP",     $_SERVER['DOCUMENT_ROOT'].PROJECT."/app");
 define("PATH_ASSETS",     $_SERVER['DOCUMENT_ROOT'].PROJECT."/assets");
+define("PATH_CONFIG",     $_SERVER['DOCUMENT_ROOT'].PROJECT."/config");
+define("PATH_VENDOR",     $_SERVER['DOCUMENT_ROOT'].PROJECT."/vendor");

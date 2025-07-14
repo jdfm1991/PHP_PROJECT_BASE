@@ -1,5 +1,5 @@
 const URI = 'http://localhost/vistasegura/app/';
-//const URI = 'http://localhost/vistasegura/assets/components/';
+const URL_ASSETS = 'http://localhost/vistasegura/assets/';
 
 const loadSidebarMenu = async () => {
   const response = await fetch(URI + 'manager/man_controller.php?op=list_modules_by_depart');
