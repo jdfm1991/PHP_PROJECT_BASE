@@ -1,4 +1,4 @@
-details {
+.details {
   max-height: 200px;
   overflow-y: auto;
   padding: 10px;
@@ -7,7 +7,7 @@ details {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-summary {
+.summary {
   cursor: pointer;
   font-weight: bold;
   margin-bottom: 10px;

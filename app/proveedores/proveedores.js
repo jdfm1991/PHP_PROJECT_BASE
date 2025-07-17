@@ -91,7 +91,7 @@ $(document).ready(function () {
       success: function (response) {
         $("#listClients").empty();
         $.each(response, function (idx, opt) {
-          $("#listClients").append(`<option id="#selectedId" value="${opt.unit} ${opt.name} - ${opt.iclient}">`);
+          $("#listClients").append(`<option value="${opt.unit} ${opt.name} - ${opt.iclient}">`);
         });
       }
     });

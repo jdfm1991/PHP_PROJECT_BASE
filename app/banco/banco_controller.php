@@ -1,6 +1,10 @@
 <?php
+require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
 require_once(PATH_VENDOR . "/autoload.php");
+require_once("banco_module.php");
+
+$bankmov = new BankingMovements();
 
 $path = PATH_ASSETS . "/uploads";
 $monthNames = [
@@ -19,7 +23,6 @@ $monthNames = [
 ];
 
 switch ($_GET['op']) {
-
   case 'load_bank_statement_by_excel':
     $data = array();
     if (!is_dir($path)) {
@@ -34,7 +37,7 @@ switch ($_GET['op']) {
       echo json_encode($data, JSON_UNESCAPED_UNICODE);
       return;
     }
-    $targetpath = $path . '/' .$_FILES['sheetexcel']['name'];
+    $targetpath = $path . '/' . $_FILES['sheetexcel']['name'];
     move_uploaded_file($_FILES['sheetexcel']['tmp_name'], $targetpath);
     $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
     $spreadsheet = $reader->load($targetpath);
@@ -45,13 +48,13 @@ switch ($_GET['op']) {
       $data['message'] = "Por Favor Debe Cargar un Archivo de Excel";
       echo json_encode($data, JSON_UNESCAPED_UNICODE);
       return;
-    }else{
+    } else {
       $data['status'] = true;
       $data['error'] = '200';
       $data['message'] = "El Archivo Fue Cargado Satisfactoriamente";
     }
     unset($sheetData[1]);
-    $i = 2;
+    $i = 1;
     foreach ($sheetData as $row) {
       $sub_array = array();
       $sub_array['line'] = $i;
@@ -75,8 +78,57 @@ switch ($_GET['op']) {
     }
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     break;
+  case 'new_banking_movements':
+    $dato = array();
+    $targetpath = $path . '/' . $_FILES['sheetexcel']['name'];
+    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+    $spreadsheet = $reader->load($targetpath);
+    $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+    unset($sheetData[1]);
+    $i = 0;
+    $j = 0;
+    $k = 0;
+    $l = 0;
+    foreach ($sheetData as $row) {
+      $datef = explode(" ", str_replace("de ", "", $row['A']));
+      $mes = $monthNames[strtolower(trim($datef[1]))];
+      $id = uniqid();
+      $date = $datef[2] . '-' . str_pad($mes, 2, "0", STR_PAD_LEFT) . '-' . $datef[0];
+      $refenc = $row['B'];
+      $descri = $row['C'];
+      $amount = str_replace(",", ".", str_replace(".", "", $row['D']));
+      $motion  = $row['F'];
+      $i++;
+      $verify = $bankmov->verifyReferenceMovementDB($refenc);
+      if ($verify == 0) {
+        $data = $bankmov->createNewBankingMovementsDB($id, $date, $refenc, $descri, $amount, $motion);
+        if ($data) {
+          $j++;
+        } else {
+          $k++;
+        }
+      } else {
+        $l++;
+      }
+      if ($j == $i) {
+        $dato['status'] = true;
+        $dato['code'] = '201';
+        $dato['message'] = "Se Registraron de Manera Exitosa Los Movimientos Cargados";
+      } else if ($l == $i) {
+        $dato['status'] = true;
+        $dato['code'] = '201';
+        $dato['message'] = "Los Movimientos Cargados, No se Registraron, Bebido a Que Ya Se Registraron Anteriormente";
+      }
+      if ($k == $i) {
+        $dato['status'] = false;
+        $dato['code'] = '500';
+        $dato['message'] = "Error Al Guardos los Movimientos en la Base de Datos";
+      }
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
 
   default:
-     
+
     break;
 }

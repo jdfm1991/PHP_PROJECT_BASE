@@ -1,12 +1,9 @@
 $(document).ready(function () {
   /* Funcion para listar todos los clientes existentes en la base de datos */
   const loadListClentAvailableDB = async (clientName) => {
-    console.log(clientName);
     try {
       const response = await fetch(URI + 'clientes/clientes_controller.php?op=get_list_clients&search=' + clientName);
-      const data = await response.json();
-      console.log(data);
-      
+      const data = await response.json();      
       const container = document.getElementById('client_container');
       container.innerHTML = '';
       data.forEach((opt, idx) => {

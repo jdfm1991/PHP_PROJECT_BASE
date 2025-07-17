@@ -112,6 +112,20 @@ switch ($_GET["op"]) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
+  case 'get_unit_by_name':
+    $dato = array();
+    $data = $unitdep->getDataUnitByNameDB($_GET['search']);
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['unit'] = $row['unit'];
+      $sub_array['level'] = $row['level'];
+      $sub_array['aliquot'] = $row['aliquot'];
+      $sub_array['name'] = $row['nameClient'];
+      $sub_array['email'] = $row['emailClient'];
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
   default:
     header("Location:" . URL_APP);
     break;

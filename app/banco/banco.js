@@ -1,6 +1,7 @@
 $(document).ready(function () {
   $('#content_data').hide();
   let sheetexcel = $('#sheetexcel')[0].files[0];
+  /* Funcion para cargar el excel del banco y mostrar la informacion */
   const loadBankStatementByExcel = (sheetexcel) => {
     var datos = new FormData();
     datos.append('sheetexcel', sheetexcel)
@@ -45,21 +46,74 @@ $(document).ready(function () {
         }
       }
     });
-
   }
+  /* Accion que llama la funcion para cargar el excel */
   $('#sheetexcel').change(function () {
     sheetexcel = $('#sheetexcel')[0].files[0];
-    $("#wait_time").removeClass("d-none");
-    $("#wait_time").addClass("show");
-    $("#wait_time").removeClass("alert-info alert-danger alert-success");
-    $("#wait_time").addClass("alert-info");
-    $('#m_load_file').empty();
-    $('#loader').attr('src', URL_ASSETS + 'img/loader.gif');
-    $('#m_load_file').append(`
+    // Se verifica si se selecciono un archivo
+    if (sheetexcel == undefined) {
+      $('#content_data').hide();
+      $('#data_table').empty();
+      $("#wait_time").removeClass("d-none");
+      $("#wait_time").addClass("show");
+      $("#wait_time").removeClass("alert-info alert-danger alert-success");
+      $("#wait_time").addClass("alert-danger");
+      $('#loader').attr('src', URL_ASSETS + 'img/error.gif');
+      $('#m_load_file').empty();
+      $('#m_load_file').append(`
+            <h2><strong>Debe seleccionar un archivo</strong></h2>
+            `);
+      return false;
+    } else {
+      $("#wait_time").removeClass("d-none");
+      $("#wait_time").addClass("show");
+      $("#wait_time").removeClass("alert-info alert-danger alert-success");
+      $("#wait_time").addClass("alert-info");
+      $('#m_load_file').empty();
+      $('#loader').attr('src', URL_ASSETS + 'img/loader.gif');
+      $('#m_load_file').append(`
       <h2><strong>Espere un momento, por favor...</strong></h2><h3>Se esta cargando el archivo</h3>
       `);
-    setTimeout(() => {
-      loadBankStatementByExcel(sheetexcel);
-    }, 1000);
+      setTimeout(() => {
+        loadBankStatementByExcel(sheetexcel);
+      }, 1000);
+
+    }
+  });
+  /* Accion para guardar la informacion una vez cargada y visualizada */
+  $('#load_data').click(function (e) {
+    e.preventDefault();
+    sheetexcel = $('#sheetexcel')[0].files[0];
+    var datos = new FormData();
+    datos.append('sheetexcel', sheetexcel)
+    $.ajax({
+      url: "banco_controller.php?op=new_banking_movements",
+      type: "POST",
+      dataType: "json",
+      data: datos,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response.status == true) {
+          Swal.fire({
+            icon: "success",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          $('#data_table').empty();
+          $('#content_data').hide();
+          $('#formBankStatement')[0].reset();
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      }
+    });
   });
 });

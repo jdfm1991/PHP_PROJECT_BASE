@@ -400,7 +400,7 @@ Modal Nueva Tasa de Cambio
   Notificacion Para visualizar proceso terminado
   *************************************************
 -->
-<div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+<div class="position-fixed bottom-0 right-0 p-3" style="z-index: 9999; right: 0; bottom: 0;">
   <div id="bodyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
     <div class="toast-header">
       <img src="<?php echo  URL_ASSETS; ?>/img/undraw_rocket.svg" class="rounded mr-2" alt="alt" width="20">
@@ -614,6 +614,126 @@ Modal Nueva Tasa de Cambio
               <input type="text" class="form-control" id="payment" name="onlynumber" required>
             </div>
           </div>
+          <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_unit_text" class="mb-0">Alert Description</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--
+****************************************************************************
+ Modal Registro de Pago de Cuenta Por Pagar
+****************************************************************************
+ -->
+<div class="modal fade" id="rcIndividualModal" tabindex="-1" aria-labelledby="cxpPayModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row mb-3 mt-3 justify-content-between">
+          <h5 class="modal-title col-sm-4 mb-3"></h5>
+          <div class="col-sm-4 mb-3 text-right text-uppercase text-monospace">N° de Recibo de Cobro: </div>
+          <div class="col-sm-4 mb-3 text-left text-uppercase text-monospace"><i class="bi bi-geo"></i> <span id="n_rc" class="h4 font-weight-bold text-info"></span> <i class="bi bi-geo"></i></div>
+          <div class="form-row col-sm-8">
+            <label class="form-label col-sm-3 mb-2" for="p_cobro">Periodo de Cobro</label>
+            <div class="col-sm-3 mb-2">
+              <input id="p_cobro" type="text" class="form-control" placeholder="Periodo de Cobro">
+            </div>
+            <label class="col-sm-3 mb-2" for="p_cobro">Fecha de vencimiento</label>
+            <div class="col-sm-3 mb-2">
+              <input id="f_vence" type="date" class="form-control" placeholder="Periodo de Cobro">
+            </div>
+            <div class="col-sm-2 mb-2">
+              <input id="n_dpto" type="text" class="form-control" placeholder="N° Dpto">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input id="name_client" type="text" class="form-control" placeholder="Nombre de Inquilino">
+            </div>
+            <div class="col-sm-2 mb-2">
+              <input id="l_dpto" type="text" class="form-control" placeholder="Piso">
+            </div>
+            <div class="col-sm-2 mb-2">
+              <input id="a_dpto" type="text" class="form-control" placeholder="Alicuota">
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input id="e_dpto" type="text" class="form-control" placeholder="Email Inquilino">
+            </div>
+            <div class="col-sm-12 align-items-end btn-group" role="group">
+              <button id="b_gastos_f" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Fijos </button>
+              <button id="1" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Varios </button>
+              <button id="2" type="button" class="btn btn-outline-success btn-group w-25"> Penalizaciones </button>
+              <button id="3" type="button" class="btn btn-outline-success btn-group w-25"> Ingresos </button>
+            </div>
+          </div>
+          <div class="form-row col-sm-4 p-0 mt-0">
+            <div class="row col-sm-12">
+              <label class="col-sm-8 text-uppercase text-monospace">
+                Total Gastos Fijos
+              </label>
+              <input type="text" id="" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+            </div>
+            <div class="row col-sm-12">
+              <label class="col-sm-8 text-uppercase text-monospace">
+                Total Gastos Variables
+              </label>
+              <input type="text" id="4" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+            </div>
+            <div class="row col-sm-12">
+              <label class="col-sm-8 text-uppercase text-monospace">
+                Total Penalizaciones
+              </label>
+              <input type="text" id="5" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+            </div>
+            <div class="row col-sm-12">
+              <label class="col-sm-8 text-uppercase text-monospace">
+                Total Ingresos
+              </label>
+              <input type="text" id="6" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+            </div>
+            <div class="row col-sm-12">
+              <label class="col-sm-8 text-uppercase text-monospace">
+                Total General
+              </label>
+              <input type="text" id="7" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <form id="formReceipt">
+          <input type="hidden" id="idReceipt">
+          <div id="content_fixed" class="card mb-2 d-none">
+            <div id="title_fixed" class="card-header text-muted text-center p-0"></div>
+            <div id="content_fixed_body" class="card-body pb-1 pt-1">
+              
+            </div>
+            <div class="card-footer text-muted text-right p-0">
+              <p class="card-text mr-5">Total: <span id="total_fixed"></span></p>
+            </div>
+          </div>
+          <div id="content_non_fixed" class="card mb-2">
+            <div id="title_non_fixed" class="card-header text-muted text-center p-0">Header</div>
+            <div id="content_non_fixed_body" class="card-body pb-1 pt-1">
+              <h4 class="card-title">Title</h4>
+              <p class="card-text">Text</p>
+            </div>
+            <div class="card-footer text-muted text-right p-0">
+              <p class="card-text mr-5">Footer</p>
+            </div>
+          </div>
+
+
+
+
+
           <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
             <p id="m_unit_text" class="mb-0">Alert Description</p>
           </div>

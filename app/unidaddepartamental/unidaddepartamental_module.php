@@ -89,4 +89,19 @@ class Unitdepartmental extends Conectar
     return $stmt->rowCount();
   }
 
+  public function getDataUnitByNameDB($search)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT A.id, B.unit, D.level, E.aliquot, C.nameClient, C.emailClient 
+                                    FROM unit_client_data_table AS A 
+                                  INNER JOIN unit_data_table AS B ON A.unit=B.id
+                                  INNER JOIN unit_level_data_table AS D ON B.level=D.id
+                                  INNER JOIN unit_aliquot_data_table AS E ON B.aliquot=E.id
+                                  INNER JOIN client_data_table AS C ON A.client=C.id
+                                WHERE B.unit LIKE '%$search%'");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
 }
