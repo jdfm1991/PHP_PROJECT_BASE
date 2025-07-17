@@ -665,7 +665,7 @@ Modal Nueva Tasa de Cambio
             </div>
             <div class="col-sm-12 align-items-end btn-group" role="group">
               <button id="b_gastos_f" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Fijos </button>
-              <button id="1" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Varios </button>
+              <button id="b_gastos_v" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Varios </button>
               <button id="2" type="button" class="btn btn-outline-success btn-group w-25"> Penalizaciones </button>
               <button id="3" type="button" class="btn btn-outline-success btn-group w-25"> Ingresos </button>
             </div>
@@ -675,31 +675,31 @@ Modal Nueva Tasa de Cambio
               <label class="col-sm-8 text-uppercase text-monospace">
                 Total Gastos Fijos
               </label>
-              <input type="text" id="" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+              <input type="text" id="amout_gf" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
             </div>
             <div class="row col-sm-12">
               <label class="col-sm-8 text-uppercase text-monospace">
                 Total Gastos Variables
               </label>
-              <input type="text" id="4" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+              <input type="text" id="amout_gv" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
             </div>
             <div class="row col-sm-12">
               <label class="col-sm-8 text-uppercase text-monospace">
                 Total Penalizaciones
               </label>
-              <input type="text" id="5" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+              <input type="text" id="amout_p" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
             </div>
             <div class="row col-sm-12">
               <label class="col-sm-8 text-uppercase text-monospace">
                 Total Ingresos
               </label>
-              <input type="text" id="6" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+              <input type="text" id="amout_i" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
             </div>
             <div class="row col-sm-12">
               <label class="col-sm-8 text-uppercase text-monospace">
                 Total General
               </label>
-              <input type="text" id="7" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+              <input type="text" id="amout_tg" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
             </div>
           </div>
         </div>
@@ -716,17 +716,17 @@ Modal Nueva Tasa de Cambio
               
             </div>
             <div class="card-footer text-muted text-right p-0">
-              <p class="card-text mr-5">Total: <span id="total_fixed"></span></p>
+              <p class="card-text mr-5">Total: <span id="total_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
             </div>
           </div>
-          <div id="content_non_fixed" class="card mb-2">
-            <div id="title_non_fixed" class="card-header text-muted text-center p-0">Header</div>
+
+          <div id="content_non_fixed" class="card mb-2 d-none">
+            <div id="title_non_fixed" class="card-header text-muted text-center p-0"></div>
             <div id="content_non_fixed_body" class="card-body pb-1 pt-1">
-              <h4 class="card-title">Title</h4>
-              <p class="card-text">Text</p>
+
             </div>
             <div class="card-footer text-muted text-right p-0">
-              <p class="card-text mr-5">Footer</p>
+              <p class="card-text mr-5">Total: <span id="total_non_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
             </div>
           </div>
 

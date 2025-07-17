@@ -7,8 +7,8 @@ require_once("cuentagasto_module.php");
 $expaccount = new ExpenseAccounts();
 $expenses = new Expenses();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '';
-$type = (isset($_POST['type'])) ? $_POST['type'] : '';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '6878e170425f1';
+$type = (isset($_POST['type'])) ? $_POST['type'] : '1';
 $code = (isset($_POST['code'])) ? $_POST['code'] : '';
 $fixe = (isset($_POST['fixed'])) ? $_POST['fixed'] : 'false';
 $expense = (isset($_POST['expense'])) ? $_POST['expense'] : '';
@@ -80,10 +80,10 @@ switch ($_GET["op"]) {
     $data = $expaccount->getDataExpenseAccountDB($id);
     foreach ($data as $data) {
       $dato['id'] = $data['id'];
-      $dato['type'] = $data['type'];
-      $dato['code'] = $data['code'];
-      $dato['fixed'] = $data['fixed'];
-      $dato['expense'] = $data['expense'];
+      $dato['type'] = $data['typeaccount'];
+      $dato['code'] = $data['codeaccount'];
+      $dato['fixed'] = $data['fixedaccount'];
+      $dato['expense'] = $data['expenseaccount'];
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
@@ -96,7 +96,7 @@ switch ($_GET["op"]) {
       echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       return;
     } 
-    $data = $expaccount->deleteClideleteExpenseAccountDBentDB($id);
+    $data = $expaccount->deleteExpenseAccountDB($id);
     if ($data) {
       $dato['status'] = true;
       $dato['error'] = '200';

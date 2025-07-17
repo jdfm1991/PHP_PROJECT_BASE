@@ -50,9 +50,9 @@ switch ($_GET["op"]) {
       $sub_array['id'] = $row['id'];
       $sub_array['date'] = $row['dateExpense'];
       $sub_array['suplier'] = $row['nameSuplier'];
-      $sub_array['account'] = $row['expense'];
+      $sub_array['account'] = $row['expenseaccount'];
       $sub_array['expense'] = $row['expenseName'];
-      $sub_array['mont'] = ($row['quotasExpense'] > 0) ? $row['quotasExpense']  : $row['montExpense'];;
+      $sub_array['mont'] = number_format(($row['quotasExpense'] > 0) ? $row['quotasExpense']  : $row['montExpense'], 2);
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
@@ -66,8 +66,8 @@ switch ($_GET["op"]) {
       $dato['suplier'] = $data['idSuplier'];
       $dato['account'] = $data['idExpenseAccount'];
       $dato['expense'] = $data['expenseName'];
-      $dato['mont'] = $data['montExpense'];
-      $dato['quota'] = $data['quotasExpense'];
+      $dato['mont'] = number_format($data['montExpense'], 2);
+      $dato['quota'] = ($data['quotasExpense']!=null) ? number_format($data['quotasExpense'], 2) : NULL; 
       $dato['dater'] = $data['dateRegExp'];
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

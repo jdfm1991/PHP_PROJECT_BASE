@@ -19,7 +19,7 @@ class ExpenseAccounts extends Conectar
     parent::set_names();
     $stmt = $conectar->prepare("SELECT CONCAT('$prefix-', LPAD(COUNT(*) + 1, 2, '0')) AS newcode
             FROM expense_accounts_data_table
-            WHERE type = :type");
+            WHERE typeaccount = :type");
     $stmt->execute(['type' => $id]);
     return $stmt->fetchColumn();
   }
@@ -28,7 +28,7 @@ class ExpenseAccounts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO expense_accounts_data_table (id, type, code, fixed, expense) VALUES (:id, :type, :code, :fixed, :expense)");
+    $stmt = $conectar->prepare("INSERT INTO expense_accounts_data_table (id, typeaccount, codeaccount, fixedaccount, expenseaccount) VALUES (:id, :type, :code, :fixed, :expense)");
     $stmt->execute(['id' => $id, 'type' => $type, 'code' => $code, 'fixed' => $fixed, 'expense' => $expense]);
     return $stmt->rowCount();
   }
@@ -37,9 +37,9 @@ class ExpenseAccounts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, B.expensetypename AS type, code, fixed, expense FROM expense_accounts_data_table AS A
-                                  INNER JOIN expense_type_data_table AS B ON A.type=B.id
-                                WHERE status=1");
+    $stmt = $conectar->prepare("SELECT A.id, B.expensetypename AS type, codeaccount AS code, fixedaccount AS fixed, expenseaccount AS expense FROM expense_accounts_data_table AS A
+                                  INNER JOIN expense_type_data_table AS B ON A.typeaccount=B.id
+                                WHERE statusaccount=1");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -55,14 +55,14 @@ class ExpenseAccounts extends Conectar
   public function updateDataExpenseAccountDB($id, $type, $code, $fixed, $expense)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE expense_accounts_data_table SET type=:type, code=:code, fixed=:fixed, expense=:expense WHERE id = :id");
+    $stmt = $conectar->prepare("UPDATE expense_accounts_data_table SET typeaccount=:type, codeaccount=:code, fixedaccount=:fixed, expenseaccount=:expense WHERE id = :id");
     $stmt->execute(['type' => $type, 'code' => $code, 'fixed' => $fixed, 'expense' => $expense, 'id' => $id]);
     return $stmt->rowCount();
   }
-  public function deleteClideleteExpenseAccountDBentDB($id)
+  public function deleteExpenseAccountDB($id)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE expense_accounts_data_table SET status = :status WHERE id = :id");
+    $stmt = $conectar->prepare("UPDATE expense_accounts_data_table SET statusaccount = :status WHERE id = :id");
     $stmt->execute(['status' => 0, 'id' => $id]);
     return $stmt->rowCount();
   }

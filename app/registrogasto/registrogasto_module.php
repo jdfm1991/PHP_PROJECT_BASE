@@ -16,7 +16,7 @@ class Expenses extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, dateExpense, B.nameSuplier, C.expense, expenseName, montExpense, quotasExpense 
+    $stmt = $conectar->prepare("SELECT A.id, dateExpense, B.nameSuplier, C.expenseaccount, expenseName, montExpense, quotasExpense 
                                     FROM expense_data_table AS A 
                                   INNER JOIN suplier_data_table AS B ON A.idSuplier=B.id
                                   INNER JOIN expense_accounts_data_table AS C ON A.idExpenseAccount=C.id

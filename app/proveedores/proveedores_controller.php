@@ -36,7 +36,7 @@ switch ($_GET["op"]) {
       } else {
         $dato['status'] = false;
         $dato['error'] = '500';
-        $dato['message'] = "Error Al Actualizar El Usuario" . $name . ", Por Favor Intente Nuevamente \n";
+        $dato['message'] = "Error Al Actualizar El Usuario " . $name . ", Por Favor Intente Nuevamente \n";
       }
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

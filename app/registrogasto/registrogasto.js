@@ -11,9 +11,7 @@ $(document).ready(function () {
       defaultOption.setAttribute('value', '');
       defaultOption.innerHTML = 'Proveedor...';
       container.appendChild(defaultOption);
-
-      data.forEach((opt, idx) => {
-
+      data.forEach((opt, idx) => {       
         const option = document.createElement('option');
         if (id == opt.id) {
           option.setAttribute('value', opt.id);
@@ -45,12 +43,12 @@ $(document).ready(function () {
         const option = document.createElement('option');
         if (id == opt.id) {
           option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.type}`;
+          option.innerHTML = `${opt.expense}`;
           option.setAttribute('selected', 'selected');
           container.appendChild(option);
         } else {
           option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.type}`;
+          option.innerHTML = `${opt.expense}`;
           container.appendChild(option);
         }
       })
@@ -114,6 +112,7 @@ $(document).ready(function () {
     $('.modal-title').text('Nuevo Gasto');
     $('#suplierExpense').attr('disabled', false);
     $('#accountExpense').attr('disabled', false);
+    $('#idExp').val('');
     $('#formExpense')[0].reset();
     loadDataSelectSupplier();
     loadDataSelectExpenseAccounts();
@@ -153,7 +152,7 @@ $(document).ready(function () {
     id = $('#idExp').val();
     suplier = $('#suplierExpense').val();
     account = $('#accountExpense').val();
-    detail = $('#datailExpense').val();
+    detail = $('#datailExpense').val().toUpperCase();
     mont = $('#montExpense').val();
     quota = $('#montQuota').val();
     date = $('#dateExpense').val();
@@ -214,7 +213,7 @@ $(document).ready(function () {
       dataType: 'json',
       data: { id: id },
       success: function (response) {
-        loadDataSelectSupplier(response.supplier);
+        loadDataSelectSupplier(response.suplier);
         loadDataSelectExpenseAccounts(response.account);
         $('.modal-title').text('Editar Gasto');
         $('#idExp').val(response.id);

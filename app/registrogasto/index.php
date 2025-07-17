@@ -36,7 +36,7 @@ require_once(PATH_APP . "/head.php");
                     <tr>
                       <th>Fecha</th>
                       <th>Provedor</th>
-                      <th>Cuento</th>
+                      <th>Cuenta</th>
                       <th>Concepto</th>
                       <th>Monto</th>
                       <th>Accion</th>

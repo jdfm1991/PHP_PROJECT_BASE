@@ -107,7 +107,7 @@ $(document).ready(function () {
     typed = $('#typeExpense').val();
     code = $('#codeExpense').val();
     fixed = $('#fixedExpense').is(':checked');
-    expense = $('#nameExpense').val();
+    expense = $('#nameExpense').val().toUpperCase();
     dato = new FormData();
     dato.append('id', id);
     dato.append('type', typed);
@@ -156,6 +156,11 @@ $(document).ready(function () {
   /* Funcion Para Cargar El Contenido del Select "typeExpense" */
   $('#newExpense').click(function (e) {
     e.preventDefault();
+    $('#typeExpense').attr('disabled', false);
+    $("#fixedExpense").prop('checked', false);
+    $('#idExpense').val('');
+    $('#codeExpense').val('');
+    $('#nameExpense').val('');
     loadDataSelectTypeExpenses();
   });
   /* Accion Para Editar Una Cuenta de Gasto Existente En La Lista de Cuentas de Gastos*/

@@ -75,6 +75,7 @@ $(document).ready(function () {
   /* Funcion para llamar a la carga de los select de niveles y alicuotas al crear una unidad departamental */
   $('#newSupplier').click(function (e) {
     e.preventDefault();
+    $('#idSuplier').val("");
     $('#nameSuplier').val("");
     $('#container_link').hide();
     $('.modal-title').text('Nuevo Proveedor');
@@ -134,7 +135,7 @@ $(document).ready(function () {
   $('#formNewSuplier').submit(function (e) {
     e.preventDefault();
     id = $('#idSuplier').val();
-    name = $('#nameSuplier').val();
+    name = $('#nameSuplier').val().toUpperCase();
     link = $('#selectClient').val();
     dato = new FormData();
     dato.append('id', id);
