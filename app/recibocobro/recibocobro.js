@@ -1,6 +1,16 @@
 $(document).ready(function () {
   const DateNow = new Date();
   const opciones = { year: 'numeric', month: 'long' };
+  /* Definiendo elementos para obtener valores de los gastos fijos y almacenarlos en un arreglo */
+  const codef = document.getElementsByName('codef')
+  const typef = document.getElementsByName('typef')
+  const expensef = document.getElementsByName('expensef')
+  const gf_amount = document.getElementsByName('gf_amount')
+  /* Definiendo elementos para obtener valores de los gastos variables y almacenarlos en un arreglo */
+  const codenf = document.getElementsByName('codenf')
+  const typenf = document.getElementsByName('typenf')
+  const expensenf = document.getElementsByName('expensenf')
+  const gv_amount = document.getElementsByName('gv_amount')
   const getNewNumberRC = function () {
     $.ajax({
       url: "recibocobro_controller.php?op=get_new_number",
@@ -16,8 +26,6 @@ $(document).ready(function () {
     return x.toFixed(2);
   }
   const getTotals = function () {
-    const gf_amount = document.getElementsByName('gf_amount')
-    const gv_amount = document.getElementsByName('gv_amount')
     let suma_gf = 0;
     let suma_gv = 0;
     let suma = 0;
@@ -105,13 +113,15 @@ $(document).ready(function () {
             opt.details.map((detail) => {
               return `
               <div id="detail_${detail.id}" name="cont_${opt.id}" class="row">
-                    <div class="col-sm-1" >
-                    <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
-                    </div>
-                    <label name="name" class="col-sm-8 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
-                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${detail.aumont}</span>
-                    <input name="gf_amount" type="text" class="form-control col-sm-1" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
-                  </div>
+                <input type="hidden" name="typef" value="${opt.id}">
+                <input type="hidden" name="codef" value="${detail.id}">
+                <div class="col-sm-1" >
+                <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
+                </div>
+                <label name="expensef" class="col-sm-8 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
+                <span class="col-sm-2 font-weight-bold text-right" name="amount">${detail.aumont}</span>
+                <input name="gf_amount" type="text" class="form-control col-sm-1" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
+              </div>
                `
             }) +
             `</div>
@@ -153,10 +163,12 @@ $(document).ready(function () {
             opt.details.map((detail) => {
               return `
               <div id="detail_${detail.id}" name="cont_${opt.id}" class="row">
+                    <input type="hidden" name="typenf" value="${opt.id}">
+                    <input type="hidden" name="codenf" value="${detail.id}">
                     <div class="col-sm-1" >
                     <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
                     </div>
-                    <label name="name" class="col-sm-8 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
+                    <label name="expensenf" class="col-sm-8 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
                     <span class="col-sm-2 font-weight-bold text-right" name="amount">${detail.aumont}</span>
                     <input name="gv_amount" type="text" class="form-control col-sm-1" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
                   </div>
@@ -180,7 +192,7 @@ $(document).ready(function () {
     const n_item = contain.length
     if (n_item == 0) {
       container.remove();
-    } 
+    }
     const elementerase = document.getElementById('detail_' + id);
     if (elementerase == null) {
       $(".mr-auto").text("Procesos Exitoso");
@@ -201,4 +213,23 @@ $(document).ready(function () {
     }
     getTotals(cont);
   })
+  $('#formReceipt').submit(function (e) {
+    e.preventDefault();
+    let dataexpense = []
+    for (let i = 0; i < expensef.length; i++) {
+      const type = typef[i].value;
+      const code = codef[i].value;
+      const expense = expensef[i].textContent;
+      const amount = gf_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: expense, amount: amount })
+    }
+    for (let i = 0; i < expensenf.length; i++) {
+      const type = typenf[i].value;
+      const code = codenf[i].value;
+      const expense = expensenf[i].textContent;
+      const amount = gv_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: expense, amount: amount })
+    }
+    console.log(dataexpense);
+  });
 });

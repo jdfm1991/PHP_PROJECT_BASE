@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 6.0.0-dev+20250624.c910e1faac
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 14-07-2025 a las 01:04:49
--- Versión del servidor: 8.0.19
--- Versión de PHP: 7.4.4
+-- Tiempo de generación: 19-07-2025 a las 00:32:42
+-- Versión del servidor: 8.0.26
+-- Versión de PHP: 8.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -21,6 +20,59 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `project_base`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `bank_movements_data_table`
+--
+
+CREATE TABLE `bank_movements_data_table` (
+  `id` varchar(20) NOT NULL,
+  `dateload` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datemov` date NOT NULL,
+  `referencemov` varchar(20) NOT NULL,
+  `descriptionmov` varchar(100) NOT NULL,
+  `detailmov` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `amountmov` decimal(28,4) NOT NULL,
+  `typemov` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `bank_movements_data_table`
+--
+
+INSERT INTO `bank_movements_data_table` (`id`, `dateload`, `datemov`, `referencemov`, `descriptionmov`, `detailmov`, `amountmov`, `typemov`) VALUES
+('687587cb79c68', '2025-07-14 18:42:19', '2023-05-08', '31266738881', 'TRANS.CTAS. A TERCEROS BANESCO', NULL, 1160.0000, 'Nota de Crédito'),
+('687587cb7f30a', '2025-07-14 18:42:19', '2023-05-08', '31266740878', 'TRANS.CTAS. A TERCEROS BANESCO', NULL, 28000.0000, 'Nota de Crédito'),
+('687587cb8186c', '2025-07-14 18:42:19', '2023-05-08', '00000024775', 'TRF CR INM 0157 J410261374  COMERCIAL LA MAN', NULL, 4625.0000, 'Nota de Crédito'),
+('687587cb83905', '2025-07-14 18:42:19', '2023-05-08', '31288174176', 'TRANS.CTAS. A TERCEROS BANESCO', NULL, 1569.6100, 'Nota de Crédito'),
+('687587cb86451', '2025-07-14 18:42:19', '2023-05-08', '31288223463', 'TRANS.CTAS. A TERCEROS BANESCO', NULL, 494.6400, 'Nota de Crédito'),
+('68758a58549bf', '2025-07-14 18:53:12', '2023-05-02', '12740582842', 'COM. TRF. CR.INM.OB', NULL, 0.1300, 'Nota de Débito'),
+('68758a5856e7e', '2025-07-14 18:53:12', '2023-05-02', '12740717854', 'TRF.OB 0108 V 14010128 ROMER RIVAS 0255', NULL, 3019.9200, 'Nota de Débito'),
+('68758a585aa81', '2025-07-14 18:53:12', '2023-05-02', '12741860737', 'TRF.OB 0102 V 12637102 DIOMELYS CUENCA 0255', NULL, 1980.0000, 'Nota de Débito'),
+('68758a585ddb6', '2025-07-14 18:53:12', '2023-05-02', '12742140506', 'TRF.OB 0108 V 17883529 EDGAR GUAINA 0255', NULL, 2348.1200, 'Nota de Débito'),
+('68758a5861435', '2025-07-14 18:53:12', '2023-05-02', '12742141850', 'TRF.OB 0108 V 12360990 ROGER PRADO 0255', NULL, 593.5200, 'Nota de Débito'),
+('68758a5864849', '2025-07-14 18:53:12', '2023-05-02', '03405395167', 'TRF.MB 0134 J313641065 DISTRIBUIDORA Y C 0255', NULL, 11843.7400, 'Nota de Crédito'),
+('68758a58661e1', '2025-07-14 18:53:12', '2023-05-02', '02300580381', 'INCLUSION DE PLANILLA SENIAT C/CTA', NULL, 21.1500, 'Nota de Débito'),
+('68758a5867e76', '2025-07-14 18:53:12', '2023-05-02', '02300561543', 'INCLUSION DE PLANILLA SENIAT C/CTA', NULL, 818.9400, 'Nota de Débito'),
+('68758a5869932', '2025-07-14 18:53:12', '2023-05-02', '02300626065', 'INCLUSION DE PLANILLA SENIAT C/CTA', NULL, 1637.1900, 'Nota de Débito'),
+('68758a586b3b9', '2025-07-14 18:53:12', '2023-05-02', '02300870823', 'INCLUSION DE PLANILLA SENIAT C/CTA', NULL, 3389.8200, 'Nota de Débito'),
+('68758a586ceb7', '2025-07-14 18:53:12', '2023-05-02', '03405342794', 'TRF.MB 0134 J308968099 TRANSPORTE CONFIS 0255', NULL, 1070.2600, 'Nota de Crédito'),
+('68758a586ede0', '2025-07-14 18:53:12', '2023-05-02', '03405733563', 'TRF.MB 0134 V012685370 MALDONADO GARCES  0255', NULL, 2970.0000, 'Nota de Débito'),
+('68758a58712bc', '2025-07-14 18:53:12', '2023-05-02', '03405768342', 'TRF.MB 0134 J297953582 COMERCIALIZADORA  0255', NULL, 173.2200, 'Nota de Crédito'),
+('68758a5873060', '2025-07-14 18:53:12', '2023-05-02', '03405917321', 'TRF.MB 0134 J297953582 COMERCIALIZADORA  0255', NULL, 34650.0000, 'Nota de Crédito'),
+('68758a5875239', '2025-07-14 18:53:12', '2023-05-02', '03405932900', 'TRF.MB 0134 J297953582 COMERCIALIZADORA  0255', NULL, 634.1400, 'Nota de Crédito'),
+('68758a587724c', '2025-07-14 18:53:12', '2023-05-02', '03405934009', 'TRF.MB 0134 J002076348 ALIMENTOS LE BISC 0255', NULL, 34650.0200, 'Nota de Débito'),
+('68758a5879eaf', '2025-07-14 18:53:12', '2023-05-02', '31221629533', 'BANESCOPAGOS 3100324017', NULL, 211.6700, 'Nota de Débito'),
+('68758a587c702', '2025-07-14 18:53:12', '2023-05-02', '31221634574', 'BANESCOPAGOS 3100324033', NULL, 1200.5300, 'Nota de Débito'),
+('68758a587ec7d', '2025-07-14 18:53:12', '2023-05-02', '31221669366', 'BANESCOPAGOS 3100324071', NULL, 173.2200, 'Nota de Débito'),
+('68758a5880f8a', '2025-07-14 18:53:12', '2023-05-03', '31233224442', 'Banesco Pago Movil', NULL, 1548.0200, 'Nota de Crédito'),
+('68758a5883cca', '2025-07-14 18:53:12', '2023-05-04', '05002776191', 'TodoTicket 2004 C.A.', NULL, 679.3700, 'Nota de Débito'),
+('68758a588605b', '2025-07-14 18:53:12', '2023-05-04', '03406413151', 'TRF.MB 0134 V008275866 FUENTES RIOS ALEJ 0255', NULL, 45.0000, 'Nota de Débito'),
+('68758a58882b9', '2025-07-14 18:53:12', '2023-05-04', '18479622106', 'Banesco Pago Movil', NULL, 497.4000, 'Nota de Débito'),
+('68758a588b810', '2025-07-14 18:53:12', '2023-05-05', '00012393384', 'TRF CR INM 0105 J311487263 DISTRIBUCIONES CO', NULL, 2500.0000, 'Nota de Crédito'),
+('68758a588d377', '2025-07-14 18:53:12', '2023-05-05', '12744053219', 'TRF.OB 0105 V 13657787 JORGE BONILLA 0255', NULL, 2002.4000, 'Nota de Débito');
 
 -- --------------------------------------------------------
 
@@ -133,7 +185,20 @@ CREATE TABLE `client_suplier_data_table` (
 --
 
 INSERT INTO `client_suplier_data_table` (`id`, `suplier`, `client`) VALUES
-(42, '686983313e734', '6867157acade9');
+(48, '6878fa3e7a8a7', '6867157acade9');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `collection_receipts_data_table`
+--
+
+CREATE TABLE `collection_receipts_data_table` (
+  `id` varchar(20) NOT NULL,
+  `daterec` date NOT NULL,
+  `numrec` varchar(20) NOT NULL,
+  `aumont` decimal(28,4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -167,23 +232,28 @@ INSERT INTO `department_data_table` (`id`, `nameDepartment`, `tagDepartment`, `s
 
 CREATE TABLE `expense_accounts_data_table` (
   `id` varchar(20) NOT NULL,
-  `type` int NOT NULL,
-  `code` varchar(10) NOT NULL,
-  `fixed` tinyint(1) NOT NULL DEFAULT '0',
-  `expense` varchar(250) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1'
+  `typeaccount` int NOT NULL,
+  `codeaccount` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fixedaccount` tinyint(1) NOT NULL DEFAULT '0',
+  `expenseaccount` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `statusaccount` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `expense_accounts_data_table`
 --
 
-INSERT INTO `expense_accounts_data_table` (`id`, `type`, `code`, `fixed`, `expense`, `status`) VALUES
-('686926441810a', 3, 'SERV-02', 1, 'SERVICIO DE SUMINISTRO DE ENERGIA ELECTRICA', 1),
-('686926b35aa97', 1, 'NOMI-05', 1, 'NOMINA VIGILANTE', 1),
-('6869280a22d15', 4, 'SUMI-01', 0, 'COMPRA DE TUBERIA', 1),
-('6869283fb8231', 4, 'SUMI-02', 0, 'COMPRA DE HERRAMIENTAS', 1),
-('68692c9dd54e7', 1, 'NOMI-02', 1, 'NOMINA ADMINISTRATIVA', 1);
+INSERT INTO `expense_accounts_data_table` (`id`, `typeaccount`, `codeaccount`, `fixedaccount`, `expenseaccount`, `statusaccount`) VALUES
+('686926441810a', 3, 'SERV-01', 1, 'PAGO DE SERVICIO BASICOS', 1),
+('686926b35aa97', 1, 'NOMI-02', 1, 'NOMINA VIGILANTE', 1),
+('6869280a22d15', 4, 'SUMI-01', 0, 'COMPRA DE TUBERIA', 0),
+('6869283fb8231', 4, 'SUMI-02', 0, 'COMPRA DE HERRAMIENTAS', 0),
+('68692c9dd54e7', 1, 'NOMI-01', 1, 'NOMINA ADMINISTRATIVA', 1),
+('6878e48409563', 1, 'NOMI-03', 1, 'NOMINA ESPECIAL', 1),
+('6878f200b8acd', 3, 'SERV-02', 0, 'INSTALACION DE SISTEMAS', 1),
+('6878fabe09205', 2, 'MANT-01', 1, 'MANTENIMIENTO DE EDIFICO', 1),
+('6878fb91b2125', 4, 'SUMI-03', 0, 'COMPRA DE MATERIAL DE FERRETERIA', 1),
+('6878fba244c5f', 4, 'SUMI-04', 0, 'COMPRA DE MATERIAL DE OFICINA', 1);
 
 -- --------------------------------------------------------
 
@@ -209,12 +279,20 @@ CREATE TABLE `expense_data_table` (
 --
 
 INSERT INTO `expense_data_table` (`id`, `dateExpense`, `idSuplier`, `idExpenseAccount`, `expenseName`, `montExpense`, `quotasExpense`, `balanceExpense`, `dateRegExp`, `statusExpense`) VALUES
-('6873a466732f3', '2025-01-01', '1', '1', 'gasto', '1.0000', NULL, '1.0000', '2025-01-01', 1),
-('6873a4c333d1d', '2025-01-01', '1', '1', 'gasto', '1.0000', NULL, '1.0000', '2025-07-13', 1),
-('6873a4d3b4a55', '2025-01-01', '1', '1', '', '1.0000', NULL, '1.0000', '2025-07-13', 1),
-('6873ac49740ac', '2025-01-01', '1', '1', '', '1.0000', NULL, '1.0000', '2025-07-13', 1),
-('6873ad6c02425', '2025-07-08', '686983313e734', '686926b35aa97', 'PAGO DE NOMINA VIGILATE DEL PERIODO 15-06-2025 AL 30-06-2025', '350.0000', NULL, '350.0000', '2025-07-13', 1),
-('6873bc39690d2', '2025-07-08', '6869888b438d2', '686926441810a', 'IUBN,WDVNBKIUD', '60.0000', NULL, '60.0000', '2025-07-13', 0);
+('6873ad6c02425', '2025-07-08', '686983313e734', '686926b35aa97', 'PAGO DE NOMINA VIGILATE DEL PERIODO 15-06-2025 AL 30-06-2025', 350.0000, NULL, 350.0000, '2025-07-13', 0),
+('6873bc39690d2', '2025-07-08', '6869888b438d2', '686926441810a', 'IUBN,WDVNBKIUD', 60.0000, NULL, 60.0000, '2025-07-13', 0),
+('6878eb944af70', '2025-07-01', '6869888b438d2', '686926441810a', 'PAGO DE SERVICIO DE TELEFONIA MES DE JULIO', 50.0000, NULL, 50.0000, '2025-07-17', 0),
+('6878f01403451', '2025-07-17', '6878ea6c22400', '6878e48409563', 'PAFO SERVICI', 150.0000, NULL, 150.0000, '2025-07-17', 0),
+('6878f02f989b8', '2025-07-01', '6878eae8a7e99', '68692c9dd54e7', 'PAGO SUELDO DEL MES JULIO', 300.0000, NULL, 300.0000, '2025-07-17', 0),
+('6878f0dfc70c6', '2025-07-01', '6878eaf6abcd9', '686926b35aa97', 'SALARIO MES DE JULIO 2025', 80.0000, NULL, 80.0000, '2025-07-17', 0),
+('6878f97b28918', '2025-07-01', '6878eae8a7e99', '68692c9dd54e7', 'PAGO SALARIO MES DE JULIO', 300.0000, NULL, 30.0000, '2025-07-17', 1),
+('6878f98a81a5a', '2025-07-01', '6878eaf6abcd9', '686926b35aa97', 'PAGO SALARIO MES DE JULIO', 150.0000, NULL, 150.0000, '2025-07-17', 1),
+('6878f9bc18178', '2025-07-01', '6878ea6c22400', '6878f200b8acd', 'PAGO DE INSLACACION DE SISTEMA ADMINISTRATIVO PARA GESTION DE CONDOMINIO', 250.0000, NULL, 250.0000, '2025-07-17', 1),
+('6878fa0939958', '2025-07-01', '6869888b438d2', '686926441810a', 'PAGO DE SERVICION TELEFONICO MES DE JULIO', 50.0000, NULL, 50.0000, '2025-07-17', 1),
+('6878fa27a8f45', '2025-07-01', '68698896e4298', '686926441810a', 'PAGO SERVICIO DE AGUA MES DE JULIO', 50.0000, NULL, 50.0000, '2025-07-17', 1),
+('6878faf59cae7', '2025-07-01', '6878fa3e7a8a7', '6878fabe09205', 'FUMIGACION DE EDIFIO', 350.0000, 50.0000, 350.0000, '2025-07-17', 1),
+('6878fc5b680a5', '2025-07-01', '6878fc1e1a0df', '6878fb91b2125', 'COMPRA DE TUBERIA DE 3/4 PARA RAPARACION DE AVERIA EN PISO 3', 50.0000, NULL, 50.0000, '2025-07-17', 1),
+('6878fc86cfa68', '2025-07-01', '6878fc1e1a0df', '6878fba244c5f', 'COMPRA DE HOJAS DE MAQUINA PARA DEPARTAMENTO DE ADMINISTRACION DE CONDOMINIO', 20.0000, NULL, 20.0000, '2025-07-17', 1);
 
 -- --------------------------------------------------------
 
@@ -256,7 +334,6 @@ CREATE TABLE `model_department_data_table` (
 INSERT INTO `model_department_data_table` (`id`, `department`, `module`) VALUES
 (10, '6856987c2d4e2', '685dc00146424'),
 (13, '685698498f2f4', '685fca37cc263'),
-(15, '685698498f2f4', '686468b3c1e87'),
 (16, '685698498f2f4', '6865d5d3a0e00'),
 (18, '6856987c2d4e2', '685f1320579a0'),
 (19, '6856987c2d4e2', '685f132f33d58'),
@@ -265,7 +342,9 @@ INSERT INTO `model_department_data_table` (`id`, `department`, `module`) VALUES
 (23, '685698498f2f4', '68694ff24e79b'),
 (24, '6856985d2b6d2', '686ad2263a378'),
 (25, '6856985d2b6d2', '6873c5890614c'),
-(26, '6856985d2b6d2', '6873f2371fb47');
+(26, '6856985d2b6d2', '6873f2371fb47'),
+(27, '6867c5a421535', '686468b3c1e87'),
+(28, '685698498f2f4', '6876d314238b2');
 
 -- --------------------------------------------------------
 
@@ -297,7 +376,8 @@ INSERT INTO `module_data_table` (`id`, `nameModule`, `nameListModule`, `statusMo
 ('68694ff24e79b', 'proveedores', 'Proveedores', 0, 1),
 ('686ad2263a378', 'registrogasto', 'Registro de Gastos', 0, 1),
 ('6873c5890614c', 'cxp', 'Cuentas Por Pagar', 0, 1),
-('6873f2371fb47', 'banco', 'Banco - Conciliador', 0, 1);
+('6873f2371fb47', 'banco', 'Banco - Conciliador', 0, 1),
+('6876d314238b2', 'recibocobro', 'Recibos de Cobro', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -317,11 +397,11 @@ CREATE TABLE `rate_data_table` (
 --
 
 INSERT INTO `rate_data_table` (`id`, `dateRate`, `exchRate`, `typeRate`) VALUES
-(1, '2025-12-31', '12.0000', 1),
-(2, '2025-12-31', '145.2500', 1),
-(3, '2025-12-31', '102.4500', 1),
-(4, '2025-06-04', '110.2500', 1),
-(5, '2025-06-05', '125.0000', 1);
+(1, '2025-12-31', 12.0000, 1),
+(2, '2025-12-31', 145.2500, 1),
+(3, '2025-12-31', 102.4500, 1),
+(4, '2025-06-04', 110.2500, 1),
+(5, '2025-06-05', 125.0000, 1);
 
 -- --------------------------------------------------------
 
@@ -359,9 +439,16 @@ CREATE TABLE `suplier_data_table` (
 --
 
 INSERT INTO `suplier_data_table` (`id`, `nameSuplier`, `statusSuplier`) VALUES
-('686983313e734', 'Fumigacion', 1),
+('686983313e734', 'Jovanni Franco', 0),
 ('6869888b438d2', 'CANTV', 1),
-('68698896e4298', 'HIDROBOLIVAR', 1);
+('68698896e4298', 'HIDROBOLIVAR', 1),
+('6878ea6c22400', 'JOVANNI FRANCO', 1),
+('6878eae8a7e99', 'MAIRA', 1),
+('6878eaf6abcd9', 'EMPLEADO 1', 1),
+('6878eafdc0eb4', 'EMPLEADO 2', 0),
+('6878eb053775a', 'EMPLEADO 3', 0),
+('6878fa3e7a8a7', 'FUMINCA', 1),
+('6878fc1e1a0df', 'PROVEEDOR DE SERVICIO O SUMINISTRO', 1);
 
 -- --------------------------------------------------------
 
@@ -379,12 +466,12 @@ CREATE TABLE `unit_aliquot_data_table` (
 --
 
 INSERT INTO `unit_aliquot_data_table` (`id`, `aliquot`) VALUES
-(1, '1.9870'),
-(2, '1.3003'),
-(3, '1.2699'),
-(4, '0.8737'),
-(5, '2.2683'),
-(6, '2.1193');
+(1, 1.9870),
+(2, 1.3003),
+(3, 1.2699),
+(4, 0.8737),
+(5, 2.2683),
+(6, 2.1193);
 
 -- --------------------------------------------------------
 
@@ -657,6 +744,12 @@ INSERT INTO `user_types_data_table` (`id`, `nameusertype`) VALUES
 --
 
 --
+-- Indices de la tabla `bank_movements_data_table`
+--
+ALTER TABLE `bank_movements_data_table`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `client_data_table`
 --
 ALTER TABLE `client_data_table`
@@ -668,6 +761,12 @@ ALTER TABLE `client_data_table`
 ALTER TABLE `client_suplier_data_table`
   ADD PRIMARY KEY (`id`),
   ADD KEY `client` (`client`);
+
+--
+-- Indices de la tabla `collection_receipts_data_table`
+--
+ALTER TABLE `collection_receipts_data_table`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `department_data_table`
@@ -767,7 +866,7 @@ ALTER TABLE `user_types_data_table`
 -- AUTO_INCREMENT de la tabla `client_suplier_data_table`
 --
 ALTER TABLE `client_suplier_data_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `expense_type_data_table`
@@ -779,7 +878,7 @@ ALTER TABLE `expense_type_data_table`
 -- AUTO_INCREMENT de la tabla `model_department_data_table`
 --
 ALTER TABLE `model_department_data_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `rate_data_table`
