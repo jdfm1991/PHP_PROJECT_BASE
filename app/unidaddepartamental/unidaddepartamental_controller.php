@@ -114,9 +114,12 @@ switch ($_GET["op"]) {
     break;
   case 'get_unit_by_name':
     $dato = array();
-    $data = $unitdep->getDataUnitByNameDB($_GET['search']);
+    $search = (isset($_POST['search'])) ? $_POST['search'] : '';
+    $data = $unitdep->getDataUnitByNameDB($search);
     foreach ($data as $row) {
       $sub_array = array();
+      $sub_array['uid'] = $row['uid'];
+      $sub_array['cid'] = $row['cid'];
       $sub_array['unit'] = $row['unit'];
       $sub_array['level'] = $row['level'];
       $sub_array['aliquot'] = $row['aliquot'];

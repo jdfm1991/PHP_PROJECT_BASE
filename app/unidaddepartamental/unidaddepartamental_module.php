@@ -93,7 +93,7 @@ class Unitdepartmental extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, B.unit, D.level, E.aliquot, C.nameClient, C.emailClient 
+    $stmt = $conectar->prepare("SELECT A.id, B.id AS uid, B.unit, D.level, E.aliquot, A.id AS cid, C.nameClient, C.emailClient 
                                     FROM unit_client_data_table AS A 
                                   INNER JOIN unit_data_table AS B ON A.unit=B.id
                                   INNER JOIN unit_level_data_table AS D ON B.level=D.id

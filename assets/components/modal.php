@@ -635,109 +635,148 @@ Modal Nueva Tasa de Cambio
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <form id="formReceipt">
-          <div class="row mb-3 mt-3 justify-content-between">
-            <h5 class="modal-title col-sm-4 mb-3"></h5>
-            <div class="col-sm-4 mb-3 text-right text-uppercase text-monospace">N° de Recibo de Cobro: </div>
-            <div class="col-sm-4 mb-3 text-left text-uppercase text-monospace"><i class="bi bi-geo"></i> <span id="n_rc" class="h4 font-weight-bold text-info"></span> <i class="bi bi-geo"></i></div>
-            <div class="form-row col-sm-8">
-              <label class="form-label col-sm-3 mb-2" for="p_cobro">Periodo de Cobro</label>
-              <div class="col-sm-3 mb-2">
-                <input id="p_cobro" type="text" class="form-control" placeholder="Periodo de Cobro">
-              </div>
-              <label class="col-sm-3 mb-2" for="p_cobro">Fecha de vencimiento</label>
-              <div class="col-sm-3 mb-2">
-                <input id="f_vence" type="date" class="form-control" placeholder="Periodo de Cobro">
-              </div>
-              <div class="col-sm-2 mb-2">
-                <input id="n_dpto" type="text" class="form-control" placeholder="N° Dpto">
-              </div>
-              <div class="col-sm-6 mb-2">
-                <input id="name_client" type="text" class="form-control" placeholder="Nombre de Inquilino">
-              </div>
-              <div class="col-sm-2 mb-2">
-                <input id="l_dpto" type="text" class="form-control" placeholder="Piso">
-              </div>
-              <div class="col-sm-2 mb-2">
-                <input id="a_dpto" type="text" class="form-control" placeholder="Alicuota">
-              </div>
-              <div class="col-sm-6 mb-2">
-                <input id="e_dpto" type="text" class="form-control" placeholder="Email Inquilino">
-              </div>
-              <div class="col-sm-12 align-items-end btn-group" role="group">
-                <button id="b_gastos_f" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Fijos </button>
-                <button id="b_gastos_v" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Varios </button>
-                <button id="2" type="button" class="btn btn-outline-success btn-group w-25"> Penalizaciones </button>
-                <button id="3" type="button" class="btn btn-outline-success btn-group w-25"> Ingresos </button>
-              </div>
-            </div>
-            <div class="form-row col-sm-4 p-0 mt-0">
-              <div class="row col-sm-12">
-                <label class="col-sm-8 text-uppercase text-monospace">
-                  Total Gastos Fijos
-                </label>
-                <input type="text" id="amout_gf" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
-              </div>
-              <div class="row col-sm-12">
-                <label class="col-sm-8 text-uppercase text-monospace">
-                  Total Gastos Variables
-                </label>
-                <input type="text" id="amout_gv" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
-              </div>
-              <div class="row col-sm-12">
-                <label class="col-sm-8 text-uppercase text-monospace">
-                  Total Penalizaciones
-                </label>
-                <input type="text" id="amout_p" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
-              </div>
-              <div class="row col-sm-12">
-                <label class="col-sm-8 text-uppercase text-monospace">
-                  Total Ingresos
-                </label>
-                <input type="text" id="amout_i" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
-              </div>
-              <div class="row col-sm-12">
-                <label class="col-sm-8 text-uppercase text-monospace">
-                  Total General
-                </label>
-                <input type="text" id="amout_tg" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
-              </div>
-            </div>
-          </div>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <h5 class="modal-title text-center"></h5>
+        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="modal-body ">
+      <div class="modal-body">
+        <form id="formReceipt">
+          <input type="hidden" id="id_rc">
+          <input type="hidden" id="id_u">
+          <input type="hidden" id="id_c">
+          <div class="container-sm !justify !spacing">
+            <div class="form-row mb-3 mt-3 justify-content-between">
+              <div class="col-sm-8 mb-3 text-right text-uppercase text-monospace">N° de Recibo de Cobro: </div>
+              <div class="col-sm-4 mb-3 text-left text-uppercase text-monospace"><i class="bi bi-geo"></i> <span id="n_rc" class="h4 font-weight-bold text-info"></span> <i class="bi bi-geo"></i></div>
+              <!-- Inicio de contenedor de datos de Recibo de Cobro -->
+              <div class="form-row col-sm-8">
+                <label class="form-label col-sm-3 mb-2" for="p_cobro">Periodo de Cobro</label>
+                <div class="col-sm-3 mb-2">
+                  <input id="p_cobro" type="text" class="form-control" placeholder="Periodo de Cobro">
+                </div>
+                <label class="col-sm-3 mb-2" for="f_vence">Fecha de vencimiento</label>
+                <div class="col-sm-3 mb-2">
+                  <input id="f_vence" type="date" class="form-control" placeholder="Periodo de Cobro">
+                </div>
+                <div class="col-sm-2 mb-2">
+                  <input id="n_dpto" type="text" class="form-control" placeholder="N° Dpto">
+                </div>
+                <div class="col-sm-6 mb-2">
+                  <input id="name_client" type="text" class="form-control" placeholder="Nombre de Inquilino">
+                </div>
+                <div class="col-sm-2 mb-2">
+                  <input id="l_dpto" type="text" class="form-control" placeholder="Piso">
+                </div>
+                <div class="col-sm-2 mb-2">
+                  <input id="a_dpto" type="text" class="form-control" placeholder="Alicuota">
+                </div>
+                <div class="col-sm-6 mb-2">
+                  <input id="e_dpto" type="text" class="form-control" placeholder="Email Inquilino">
+                </div>
+                <div class="col-sm-12 align-items-end btn-group" role="group">
+                  <button id="b_gastos_f" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Fijos </button>
+                  <button id="b_gastos_v" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Varios </button>
+                  <button id="2" type="button" class="btn btn-outline-success btn-group w-25"> Penalizaciones </button>
+                  <button id="3" type="button" class="btn btn-outline-success btn-group w-25"> Ingresos </button>
+                </div>
+              </div>
+              <!-- Fin de contenedor de datos de Recibo de Cobro -->
+              <!-- Inicio de contenedor de totales de Recibo de Cobro -->
+              <div class="form-row col-sm-4 p-0 mt-0">
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Total Gastos Fijos
+                  </label>
+                  <input type="text" id="amout_gf" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Total Gastos Variables
+                  </label>
+                  <input type="text" id="amout_gv" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Total Penalizaciones
+                  </label>
+                  <input type="text" id="amout_p" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Total Ingresos
+                  </label>
+                  <input type="text" id="amout_i" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Total General
+                  </label>
+                  <input type="text" id="amout_tg" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+              </div>
+              <!-- Fin de contenedor de totales de Recibo de Cobro -->
+            </div>
+          </div>
+          <!-- Inicio de contenedor de los Items del Recibo de Cobro -->
+          <div >
+            <!-- Inicio de contenedor de los Items Gastos Fijos -->
+            <div id="content_fixed" class="card mb-2 d-none">
+              <div id="title_fixed" class="card-header text-muted text-center p-0"></div>
+              <div id="content_fixed_body" class="card-body pb-1 pt-1">
 
-        <input type="hidden" id="idReceipt">
-        <div id="content_fixed" class="card mb-2 d-none">
-          <div id="title_fixed" class="card-header text-muted text-center p-0"></div>
-          <div id="content_fixed_body" class="card-body pb-1 pt-1">
+              </div>
+              <div class="card-footer text-muted text-right p-0">
+                <p class="card-text mr-5">Total: <span id="total_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+              </div>
+            </div>
+            <!-- Fin de contenedor de los Items Gastos Fijos -->
+            <!-- Inicio de contenedor de los Items Gastos Variables -->
+            <div id="content_non_fixed" class="card mb-2 d-none">
+              <div id="title_non_fixed" class="card-header text-muted text-center p-0"></div>
+              <div id="content_non_fixed_body" class="card-body pb-1 pt-1">
+
+              </div>
+              <div class="card-footer text-muted text-right p-0">
+                <p class="card-text mr-5">Total: <span id="total_non_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+              </div>
+            </div>
+            <!-- Fin de contenedor de los Items Gastos Variables -->
+            <!-- Inicio de contenedor de los Items Penalizaciones -->
+            <div id="content_penalty" class="card mb-2 d-none">
+              <div id="title_penalty" class="card-header text-muted text-center p-0"></div>
+              <div id="content_penalty_body" class="card-body pb-1 pt-1">
+
+              </div>
+              <div class="card-footer text-muted text-right p-0">
+                <p class="card-text mr-5">Total: <span id="total_penalty" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+              </div>
+            </div>
+            <!-- Fin de contenedor de los Items Penalizaciones -->
+            <!-- Inicio de contenedor de los Items Ingresos -->
+            <div id="content_income" class="card mb-2 d-none">
+              <div id="title_income" class="card-header text-muted text-center p-0"></div>
+              <div id="content_income_body" class="card-body pb-1 pt-1">
+
+              </div>
+              <div class="card-footer text-muted text-right p-0">
+                <p class="card-text mr-5">Total: <span id="total_income" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+              </div>
+            </div>
+            <!-- Fin de contenedor de los Items Ingresos -->
+            <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
+              <p id="m_unit_text" class="mb-0">Alert Description</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary x" data-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Totalizar</button>
+            </div>
 
           </div>
-          <div class="card-footer text-muted text-right p-0">
-            <p class="card-text mr-5">Total: <span id="total_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
-          </div>
-        </div>
-        <div id="content_non_fixed" class="card mb-2 d-none">
-          <div id="title_non_fixed" class="card-header text-muted text-center p-0"></div>
-          <div id="content_non_fixed_body" class="card-body pb-1 pt-1">
-
-          </div>
-          <div class="card-footer text-muted text-right p-0">
-            <p class="card-text mr-5">Total: <span id="total_non_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
-          </div>
-        </div>
-        <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
-          <p id="m_unit_text" class="mb-0">Alert Description</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Guardar</button>
-        </div>
+          <!-- Fin de contenedor de los Items del Recibo de Cobro -->
         </form>
       </div>
+
     </div>
   </div>
 </div>

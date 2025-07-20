@@ -11,6 +11,9 @@ $(document).ready(function () {
   const typenf = document.getElementsByName('typenf')
   const expensenf = document.getElementsByName('expensenf')
   const gv_amount = document.getElementsByName('gv_amount')
+  const clearFields = function () {
+    $('#formReceipt')[0].reset();
+  }
   const getNewNumberRC = function () {
     $.ajax({
       url: "recibocobro_controller.php?op=get_new_number",
@@ -53,7 +56,8 @@ $(document).ready(function () {
   $('#rc_indivual').click(function (e) {
     e.preventDefault();
     const period = DateNow.toLocaleDateString('es-VE', opciones).toUpperCase();
-    const vence = DateNow.getFullYear() + '-' + String(DateNow.getMonth() + 1).padStart(2, '0') + '-' + String(DateNow.getDate() + 15).padStart(2, '0');
+    const vencimento = new Date(DateNow.getTime() + 15 * 24 * 60 * 60 * 1000); // 15 Representa La cantidad de dias a sumar, 24 * 60 * 60 * 1000 Representa la cantidad de milisegundos en un dia
+    const vence = vencimento.getFullYear() + '-' + String(vencimento.getMonth() + 1).padStart(2, '0') + '-' + String(vencimento.getDate() ).padStart(2, '0');   
     $('#p_cobro').val(period);
     $('#f_vence').val(vence);
     getNewNumberRC();
@@ -66,13 +70,37 @@ $(document).ready(function () {
   });
   $('#name_client').click(function () {
     depart = $('#n_dpto').val();
+    if (depart == '') {
+      clearFields();
+      $(".mr-auto").text("Procesos Fallido");
+      $(".toast").css("z-index", "1000");
+      $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
+      $(".toast").css("color", "white");
+      $(".toast").attr("background-color", "");
+      $("#toastText").text("Debe Seleccionar un Departamento Para Continuar");
+      $('.toast').toast('show');
+      return false;
+    }
     $.ajax({
       url: URI + 'unidaddepartamental/unidaddepartamental_controller.php?op=get_unit_by_name',
-      method: 'GET',
+      method: 'POST',
       dataType: 'json',
       data: { search: depart },
       success: function (response) {
+        if (response.length == 0) {
+          clearFields();
+          $(".mr-auto").text("Procesos Fallido");
+          $(".toast").css("z-index", "1000");
+          $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
+          $(".toast").css("color", "white");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text("Departamento No Encontrado");
+          $('.toast').toast('show');
+          return false;
+        }
         $.each(response, function (idx, opt) {
+          $('#id_u').val(opt.uid);
+          $('#id_c').val(opt.cid);
           $('#n_dpto').val(opt.unit);
           $('#name_client').val(opt.name);
           $('#l_dpto').val(opt.level);
@@ -213,6 +241,14 @@ $(document).ready(function () {
     }
     getTotals(cont);
   })
+  $('.x').click(function (e) {
+    e.preventDefault();
+    clearFields();
+    $('#content_fixed_body').empty();
+    $('#content_non_fixed_body').empty();
+    $('#content_fixed').addClass('d-none');
+    $('#content_non_fixed').addClass('d-none');
+  });
   $('#formReceipt').submit(function (e) {
     e.preventDefault();
     let dataexpense = []
@@ -230,6 +266,25 @@ $(document).ready(function () {
       const amount = gv_amount[i].value;
       dataexpense.push({ type: type, code: code, expense: expense, amount: amount })
     }
-    console.log(dataexpense);
+    const data = {
+      nrecibo: $('#n_rc').text(),
+      periodo: $('#p_cobro').val(),
+      vence: $('#f_vence').val(),
+      depart: $('#id_u').val(),
+      inquilino: $('#id_c').val(),
+      nivel: $('#l_dpto').val(),
+      aliquot: $('#a_dpto').val(),
+      email: $('#e_dpto').val(),
+      monto_gf: $('#amout_gf').val(),
+      monto_gv: $('#amout_gv').val(),
+      monto_p: $('#amout_p').val(),
+      monto_i: $('#amout_i').val(),
+      monto_tg: $('#amout_tg').val(),
+      dataexpense: dataexpense
+    }
+    console.log(data);
+    
   });
+
+
 });
