@@ -1,6 +1,9 @@
 $(document).ready(function () {
   const DateNow = new Date();
   const opciones = { year: 'numeric', month: 'long' };
+  const period = DateNow.toLocaleDateString('es-VE', opciones).toUpperCase();
+  const vencimento = new Date(DateNow.getTime() + 15 * 24 * 60 * 60 * 1000); // 15 Representa La cantidad de dias a sumar, 24 * 60 * 60 * 1000 Representa la cantidad de milisegundos en un dia
+  const vence = vencimento.getFullYear() + '-' + String(vencimento.getMonth() + 1).padStart(2, '0') + '-' + String(vencimento.getDate()).padStart(2, '0');
   /* Definiendo elementos para obtener valores de los gastos fijos y almacenarlos en un arreglo */
   const codef = document.getElementsByName('codef')
   const typef = document.getElementsByName('typef')
@@ -11,8 +14,63 @@ $(document).ready(function () {
   const typenf = document.getElementsByName('typenf')
   const expensenf = document.getElementsByName('expensenf')
   const gv_amount = document.getElementsByName('gv_amount')
+  const loadDataTableReceipts = async () => {
+    const table = $('#receipt_table').DataTable({
+      responsive: true,
+      scrollX: true,
+      autoWidth: true,
+      paging: true,
+      lengthChange: true,
+      searching: true,
+      ordering: true,
+      displayLength: 10,
+      lengthMenu: [10, 25, 50, 100],
+      pageLength: 10,
+      info: true,
+      language: {
+        lengthMenu: "Mostrar _MENU_ registros por pagina",
+        zeroRecords: "No se encontraron registros",
+        info: "Mostrando pagina _PAGE_ de _PAGES_",
+        infoEmpty: "No hay registros disponibles",
+        infoFiltered: "(filtrado de _MAX_ registros totales)",
+        search: "Buscar:",
+        paginate: {
+          first: "Primero",
+          last: "Ultimo",
+          next: "Siguiente",
+          previous: "Anterior"
+        },
+        loadingRecords: "Cargando...",
+        processing: "Procesando..."
+      },
+      ajax: {
+        url: "recibocobro_controller.php?op=get_list_receipts",
+        type: "GET",
+        dataType: "json",
+        dataSrc: "",
+      },
+      columns: [
+        { data: "date" },
+        { data: "number" },
+        { data: "concept" },
+        { data: "expiration" },
+        { data: "name" },
+        { data: "aumont" },
+        {
+          data: "id", render: (data, _, __, meta) =>
+            `<button id="b_delete_receipt" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
+        }
+      ],
+      order: [[0, "desc"]],
+    });
+
+  }
   const clearFields = function () {
     $('#formReceipt')[0].reset();
+    $('#content_fixed_body').empty();
+    $('#content_non_fixed_body').empty();
+    $('#content_fixed').addClass('d-none');
+    $('#content_non_fixed').addClass('d-none');
   }
   const getNewNumberRC = function () {
     $.ajax({
@@ -55,11 +113,7 @@ $(document).ready(function () {
   }
   $('#rc_indivual').click(function (e) {
     e.preventDefault();
-    const period = DateNow.toLocaleDateString('es-VE', opciones).toUpperCase();
-    const vencimento = new Date(DateNow.getTime() + 15 * 24 * 60 * 60 * 1000); // 15 Representa La cantidad de dias a sumar, 24 * 60 * 60 * 1000 Representa la cantidad de milisegundos en un dia
-    const vence = vencimento.getFullYear() + '-' + String(vencimento.getMonth() + 1).padStart(2, '0') + '-' + String(vencimento.getDate() ).padStart(2, '0');   
-    $('#p_cobro').val(period);
-    $('#f_vence').val(vence);
+    loadDataDateReceipt();
     getNewNumberRC();
     $('.modal-title').text('Nuevo Recibo de Cobro');
     $('#p_cobro').attr('disabled', true);
@@ -98,6 +152,8 @@ $(document).ready(function () {
           $('.toast').toast('show');
           return false;
         }
+        clearFields();
+        loadDataDateReceipt();
         $.each(response, function (idx, opt) {
           $('#id_u').val(opt.uid);
           $('#id_c').val(opt.cid);
@@ -244,10 +300,6 @@ $(document).ready(function () {
   $('.x').click(function (e) {
     e.preventDefault();
     clearFields();
-    $('#content_fixed_body').empty();
-    $('#content_non_fixed_body').empty();
-    $('#content_fixed').addClass('d-none');
-    $('#content_non_fixed').addClass('d-none');
   });
   $('#formReceipt').submit(function (e) {
     e.preventDefault();
@@ -266,25 +318,129 @@ $(document).ready(function () {
       const amount = gv_amount[i].value;
       dataexpense.push({ type: type, code: code, expense: expense, amount: amount })
     }
-    const data = {
-      nrecibo: $('#n_rc').text(),
-      periodo: $('#p_cobro').val(),
-      vence: $('#f_vence').val(),
-      depart: $('#id_u').val(),
-      inquilino: $('#id_c').val(),
-      nivel: $('#l_dpto').val(),
-      aliquot: $('#a_dpto').val(),
-      email: $('#e_dpto').val(),
-      monto_gf: $('#amout_gf').val(),
-      monto_gv: $('#amout_gv').val(),
-      monto_p: $('#amout_p').val(),
-      monto_i: $('#amout_i').val(),
-      monto_tg: $('#amout_tg').val(),
-      dataexpense: dataexpense
+    nrecibo = $('#n_rc').text();
+    cid = $('#id_c').val();
+    uid = $('#id_u').val();
+    inquilino = $('#name_client').val();
+    concepto = $('#p_cobro').val();
+    fvence = $('#f_vence').val();
+    nivel = $('#l_dpto').val();
+    aliquot = $('#a_dpto').val();
+    email = $('#e_dpto').val();
+    monto_gf = $('#amout_gf').val();
+    monto_gv = $('#amout_gv').val();
+    monto_p = $('#amout_p').val();
+    monto_i = $('#amout_i').val();
+    monto_tg = $('#amout_tg').val();
+    dataexpense = dataexpense;
+    data = new FormData();
+    data.append('nrecibo', nrecibo);
+    data.append('cid', cid);
+    data.append('uid', uid);
+    data.append('inquilino', inquilino);
+    data.append('concepto', concepto);
+    data.append('vence', fvence);
+    data.append('nivel', nivel);
+    data.append('aliquot', aliquot);
+    data.append('email', email);
+    data.append('monto_gf', monto_gf);
+    data.append('monto_gv', monto_gv);
+    data.append('monto_p', monto_p);
+    data.append('monto_i', monto_i);
+    data.append('monto_tg', monto_tg);
+    data.append('dataexpense', JSON.stringify(dataexpense));
+    if (monto_tg == 0 || monto_tg == '') {
+      $(".mr-auto").text("Procesos Fallido");
+      $(".toast").css("background-color", "rgb(36 113 163 / 85%)");
+      $(".toast").css("color", "white");
+      $("#toastText").text("No Se Puede Totalizar Con Monto Total Cero");
+      $('.toast').toast('show');
+      return false;
     }
-    console.log(data);
-    
+    $.ajax({
+      url: 'recibocobro_controller.php?op=new_receipt',
+      method: 'POST',
+      dataType: "json",
+      data: data,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response.status == true) {
+          Swal.fire({
+            icon: "success",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          $('#receipt_table').DataTable().ajax.reload();
+          clearFields();
+          $('#rcIndividualModal').modal('hide');
+        } else {
+          if (response.httpstatus == '400') {
+            $(".mr-auto").text("Procesos Fallido");
+            $(".toast").css("background-color", "rgb(36 113 163 / 85%)");
+            $(".toast").css("color", "white");
+            $("#toastText").text(response.message);
+            $('.toast').toast('show');
+            return false;
+          }
+          Swal.fire({
+            icon: "error",
+            title: response.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+
+      }
+    })
+
   });
+   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
+  $(document).on('click', '#b_delete_receipt', function () {
+    var id = $(this).data('value');
+    Swal.fire({
+      title: 'Estas seguro de eliminar este recibo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Eliminar!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: 'recibocobro_controller.php?op=delete_receipt',
+          method: 'POST',
+          dataType: 'json',
+          data: { id: id },
+          success: function (response) {
+            if (response.status == true) {
+              Swal.fire({
+                icon: "success",
+                title: response.message,
+                showConfirmButton: false,
+                timer: 1500
+              });
+              $('#receipt_table').DataTable().ajax.reload();
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: response.message,
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          }
+        });
+      }
+    })
 
-
+  })
+  function loadDataDateReceipt() {
+    $('#p_cobro').val(period);
+    $('#f_vence').val(vence);
+  }
+  loadDataTableReceipts();
 });
+
+

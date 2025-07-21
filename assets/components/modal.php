@@ -411,7 +411,7 @@ Modal Nueva Tasa de Cambio
       </button>
     </div>
     <div class="toast-body">
-      <p><span id="toastText"></span></p>
+      <p><span id="toastText" class="text-center"></span></p>
     </div>
   </div>
 </div>
@@ -645,6 +645,7 @@ Modal Nueva Tasa de Cambio
           <input type="hidden" id="id_rc">
           <input type="hidden" id="id_u">
           <input type="hidden" id="id_c">
+          <!-- Inicio de contenedor de cabezera de Recibo de Cobro -->
           <div class="container-sm !justify !spacing">
             <div class="form-row mb-3 mt-3 justify-content-between">
               <div class="col-sm-8 mb-3 text-right text-uppercase text-monospace">N° de Recibo de Cobro: </div>
@@ -718,8 +719,9 @@ Modal Nueva Tasa de Cambio
               <!-- Fin de contenedor de totales de Recibo de Cobro -->
             </div>
           </div>
+          <!-- Fin de contenedor de cabezera de Recibo de Cobro -->
           <!-- Inicio de contenedor de los Items del Recibo de Cobro -->
-          <div >
+          <div>
             <!-- Inicio de contenedor de los Items Gastos Fijos -->
             <div id="content_fixed" class="card mb-2 d-none">
               <div id="title_fixed" class="card-header text-muted text-center p-0"></div>

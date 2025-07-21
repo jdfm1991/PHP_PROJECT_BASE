@@ -130,7 +130,6 @@ $(document).ready(function () {
             timer: 1500
           });
         }
-
       }
     });
 

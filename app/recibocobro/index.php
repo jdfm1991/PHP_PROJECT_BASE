@@ -22,11 +22,31 @@ require_once(PATH_APP . "/head.php");
         <div class="container-fluid">
           <!-- Page Heading -->
           <h4 class="text-gray-800 text-center">Modulo de Recibos de Cobro <br> .::Creacion y Modificacion::.</h4>
-          <div class="card mb-2">
+          <div class="card">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
                 <button id="rc_indivual" type="button" class="btn btn-outline-success btn-group-sm"> Generar Recibo de Cobro Individual </button>
               </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <table id="receipt_table" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>N° Recibo</th>
+                    <th>Periodo</th>
+                    <th>Vencimiento</th>
+                    <th>Inqulino</th>
+                    <th>Saldo</th>
+                    <th>Opcion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+              <!-- El Contenido  se carga a traves de Ajax -->
             </div>
           </div>
         </div>
