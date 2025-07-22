@@ -20,6 +20,29 @@ class AccountsReceivable extends Conectar
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+
+  public function createPayAccountsReceivableDB($account, $date, $refer, $rate, $payd, $balance, $remaining)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("INSERT INTO receipt_pay_data_table(idrec, datereg, ratepay, referpay, pay, balance, remaining) VALUES (:rec, :date, :rate, :refer, :pay, :balance, :remaining)");
+    $stmt->execute(['rec' => $account, 'date' => $date, 'rate' => $rate, 'refer' => $refer, 'pay' => $payd, 'balance' => $balance, 'remaining' => $remaining]);
+    return $stmt->rowCount();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public function deleteDataSuplierDB($id)
   {
     $conectar = parent::conexion();
@@ -28,14 +51,7 @@ class AccountsReceivable extends Conectar
     return $stmt->rowCount();
   }
 
-  public function createRelationClientSuplierDB($suplier, $client)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO client_suplier_data_table(client, suplier) VALUES (:client, :suplier)");
-    $stmt->execute(['client' => $client, 'suplier' => $suplier]);
-    return $stmt->rowCount();
-  }
+  
 
   public function deleteRelationClientSuplierDB($id)
   {

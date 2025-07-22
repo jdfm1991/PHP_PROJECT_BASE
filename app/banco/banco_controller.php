@@ -142,7 +142,7 @@ switch ($_GET['op']) {
       $sub_array['date'] = $row['datemov'];
       $rate = $exchange->getDataRateByDateDB($row['datemov']);
       $sub_array['rate'] = $rate;
-      $sub_array['amountd'] = number_format(($row['amountmov']/$rate),2, '.','');
+      $sub_array['amountd'] = number_format(($row['balencemov']/$rate),2, '.','');
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

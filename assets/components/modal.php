@@ -589,7 +589,7 @@ Modal Nueva Tasa de Cambio
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Datos de Cuentas Por Pagar</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -639,7 +639,7 @@ Modal Nueva Tasa de Cambio
                 <input type="text" class="form-control" id="amountpaycxcd" name="onlynumber" disabled>
               </div>
               <div class="form-group col-md-12">
-                <label id="notecxc" for="amountpaycxc">Monto de Pago:</label>
+                <span id="notecxc"></span>
               </div>
             </div>
 
@@ -648,7 +648,7 @@ Modal Nueva Tasa de Cambio
             <p id="m_unit_text" class="mb-0">Alert Description</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-secondary x" data-dismiss="modal">Cerrar</button>
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>

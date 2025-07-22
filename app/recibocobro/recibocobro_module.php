@@ -36,7 +36,7 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT id, expenseName, IFNULL(quotasExpense, montExpense) AS aumont 
+    $stmt = $conectar->prepare("SELECT id, expenseName, LL(quotasExpense, montExpense) AS aumont 
                                   FROM expense_data_table 
                                   WHERE idExpenseAccount=:id AND statusExpense=1");
     $stmt->execute(['id' => $id]);
@@ -84,6 +84,14 @@ class Receipts extends Conectar
     $conectar = parent::conexion();
     $stmt = $conectar->prepare("UPDATE receipts_data_table SET statusrec = :status WHERE id = :id");
     $stmt->execute(['status' => 0, 'id' => $id]);
+    return $stmt->rowCount();
+  }
+
+  public function updateBalanceReceiptDB($account, $payd)
+  {
+    $conectar = parent::conexion();
+    $stmt = $conectar->prepare("UPDATE receipts_data_table SET balencereceipt = (balencereceipt - :balence) WHERE id = :id");
+    $stmt->execute(['balence' => $payd, 'id' => $account]);
     return $stmt->rowCount();
   }
 }

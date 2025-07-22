@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  const DateNow = new Date();
+  let remaining = 0;
   /* Arrow Function Que se Encarga de Cargar los Datos de las Cuentas por Cobrar en la Tabla */
   const loadDataTableAccountsReceivable = async () => {
     const table = $('#cxc_table').DataTable({
@@ -57,12 +59,13 @@ $(document).ready(function () {
       dataType: 'json',
       data: { id: id },
       success: function (response) {
-        const DateNow = new Date();
+        console.log(response);
+        
         const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const date = DateNow.toLocaleDateString('es-VE', opciones);
         $('#idcx').val(response.id);
         $('.modal-title').text('Datos de Cuentas');
-        $('#l_date').text('Fecha de pago: ');
+        $('#l_date').text('Fecha de Registro: ');
         $('#t_date').text(date);
         $('#l_name').text('Nombre de Inquilino: ');
         $('#t_name').text(response.name);
@@ -92,6 +95,10 @@ $(document).ready(function () {
       }
     });
   });
+  $('.x').click(function (e) {
+    e.preventDefault();
+    $('#formExpensePay')[0].reset();
+  });
 
   $('#refercxc').click(function (e) {
     e.preventDefault();
@@ -105,13 +112,20 @@ $(document).ready(function () {
       dataType: 'json',
       data: { refer: refer },
       success: function (response) {
+        balance = $('#t_balance').val();
         $.each(response, function (idx, opt) {
           $('#refercxc').val(opt.refer);
           $('#datepaycxc').val(opt.date);
           $('#amountpaycxc').val(opt.amount);
           $('#ratepaycxc').val(opt.rate);
           $('#amountpaycxcd').val(opt.amountd);
+          remaining = (balance - opt.amountd).toFixed(2)
         });
+        if (remaining > 0) {
+          $('#notecxc').text('Despues Del Pago Quedara Un Saldo Pendiente de :'+remaining+'$ ');
+        } else {
+          $('#notecxc').text('Despues Del Pago Quedara Un Saldo A Favor de :'+(remaining*-1)+'$ ');
+        }        
       }
     });
   });
@@ -119,15 +133,22 @@ $(document).ready(function () {
   /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
   $('#formExpensePay').submit(function (e) {
     e.preventDefault();
-    id = $('#idSuplier').val();
-    name = $('#nameSuplier').val();
-    link = $('#selectClient').val();
+    account = $('#idcx').val();
+    date = DateNow.getFullYear() + '-' + String(DateNow.getMonth() + 1).padStart(2, '0') + '-' + String(DateNow.getDate()).padStart(2, '0');
+    refer = $('#refercxc').val();
+    rate = $('#ratepaycxc').val();
+    payd = $('#amountpaycxcd').val();
+    balance = $('#t_balance').val();
     dato = new FormData();
-    dato.append('id', id);
-    dato.append('name', name);
-    dato.append('link', link);
+    dato.append('account', account);
+    dato.append('date', date);
+    dato.append('refer', refer);
+    dato.append('rate', rate);
+    dato.append('payd', payd);
+    dato.append('balance', balance);
+    dato.append('remaining', remaining);
     $.ajax({
-      url: 'proveedores_controller.php?op=new_supplier',
+      url: 'cxc_controller.php?op=new_pay_ar',
       method: 'POST',
       dataType: "json",
       data: dato,
@@ -141,9 +162,9 @@ $(document).ready(function () {
             showConfirmButton: false,
             timer: 1500
           });
-          $('#supplier_table').DataTable().ajax.reload();
-          $('#formNewSuplier')[0].reset();
-          $('#newSuplierModal').modal('hide');
+          $('#cxc_table').DataTable().ajax.reload();
+          $('#formExpensePay')[0].reset();
+          $('#cxpPayModal').modal('hide');
         } else {
           Swal.fire({
             icon: "error",
@@ -154,7 +175,7 @@ $(document).ready(function () {
         }
 
       }
-    });
+    }); 
 
   });
 
