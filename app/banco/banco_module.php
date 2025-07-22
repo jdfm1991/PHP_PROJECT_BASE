@@ -19,6 +19,14 @@ class BankingMovements extends Conectar
     $stmt = $conectar->prepare("SELECT * FROM bank_movements_data_table WHERE referencemov = :refenc");
     $stmt->execute(['refenc' => $refenc]);
     return $stmt->rowCount();
-    
+  }
+
+  public function getDataBankingMovementDB($refer)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT * FROM bank_movements_data_table WHERE referencemov LIKE '%$refer%'");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 }

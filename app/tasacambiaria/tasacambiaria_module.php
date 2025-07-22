@@ -52,4 +52,13 @@ class Exchange extends Conectar
     $stmt->execute(['date' => $date]);
     return $stmt->rowCount();
   }
+
+  public function getDataRateByDateDB($date)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT exchRate FROM rate_data_table WHERE dateRate = :date");
+    $stmt->execute(['date' => $date]);
+    return $stmt->fetchColumn();
+  }
 }

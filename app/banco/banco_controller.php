@@ -2,11 +2,15 @@
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
 require_once(PATH_VENDOR . "/autoload.php");
+require_once(PATH_APP . "/tasacambiaria/tasacambiaria_module.php");
+
 require_once("banco_module.php");
 
 $bankmov = new BankingMovements();
+$exchange = new Exchange();
 
 $path = PATH_ASSETS . "/uploads";
+$refer = (isset($_POST['refer'])) ? $_POST['refer'] : '';
 $monthNames = [
   "enero" => 1,
   "febrero" => 2,
@@ -127,7 +131,22 @@ switch ($_GET['op']) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-
+  case 'get_banking_movement':
+    $dato = array();
+    $data = $bankmov->getDataBankingMovementDB($refer);
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['refer'] = $row['referencemov'];
+      $sub_array['amount'] = number_format($row['amountmov'],2, '.','');
+      $sub_array['date'] = $row['datemov'];
+      $rate = $exchange->getDataRateByDateDB($row['datemov']);
+      $sub_array['rate'] = $rate;
+      $sub_array['amountd'] = number_format(($row['amountmov']/$rate),2, '.','');
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
   default:
 
     break;

@@ -595,24 +595,54 @@ Modal Nueva Tasa de Cambio
       </div>
       <div class="modal-body ">
         <form id="formExpensePay">
-          <input type="hidden" id="idCsp">
+          <input type="hidden" id="idcx">
           <div class="form-group row">
-            <span class="text-uppercase text-monospace col-sm-5">Fecha de Gasto: </span>
+            <label id="l_date" for="t_date" class="text-uppercase text-monospace col-sm-5">Fecha de Gasto: </label>
             <p id="t_date" class="font-weight-bold text-uppercase col-sm-7"> </p>
-            <span class="text-uppercase text-monospace col-sm-5">Proveedor: </span>
-            <p id="t_suplier" class="font-weight-bold text-uppercase col-sm-7"> </p>
-            <span class="text-uppercase text-monospace col-sm-5">Cuenta de Gasto: </span>
+            <label id="l_name" class="text-uppercase text-monospace col-sm-5">Proveedor: </label>
+            <p id="t_name" class="font-weight-bold text-uppercase col-sm-7"> </p>
+            <label id="l_account" class="text-uppercase text-monospace col-sm-5">Cuenta de Gasto: </label>
             <p id="t_account" class="font-weight-bold text-uppercase col-sm-7"> </p>
-            <span class="text-uppercase text-monospace col-sm-5">Detalle del Gasto: </span>
+            <label id="l_detail" class="text-uppercase text-monospace col-sm-5">Detalle del Gasto: </label>
             <p id="t_detail" class="font-weight-bold text-uppercase col-sm-7"> </p>
             <span class="text-uppercase text-monospace col-sm-5">Saldo del Gasto: </span>
-            <div class="col-sm-3 mb-2">
+            <div class="col-sm-3">
               <input type="text" class="form-control" id="t_balance" disabled>
             </div>
-            <div class="form-group col-md-4">
+            <div class="col-sm-4"></div>
+            <div id="cont_amunt_cxp" class="form-group col-md-4">
               <label for="payment">Monto Del Pago</label>
-              <input type="text" class="form-control" id="payment" name="onlynumber" required>
+              <input type="text" class="form-control" id="payment" name="onlynumber">
             </div>
+            <div id="cont_amunt_cxc" class="form-row col-md-12 d-none">
+              <div class="form-group col-md-4">
+                <label for="refercxc">Numero de Ref:</label>
+                <input type="text" class="form-control" id="refercxc" name="onlynumber" list="listrefer">
+                <datalist id="listrefer">
+                  <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
+                </datalist>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="datepaycxc">Fecha de Pago:</label>
+                <input type="date" class="form-control" id="datepaycxc" disabled>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="amountpaycxc">Monto de Pago:</label>
+                <input type="text" class="form-control" id="amountpaycxc" name="onlynumber" disabled>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="ratepaycxc">Tasa del Dia:</label>
+                <input type="text" class="form-control" id="ratepaycxc" name="onlynumber" disabled>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="amountpaycxcd">Monto de Pago $:</label>
+                <input type="text" class="form-control" id="amountpaycxcd" name="onlynumber" disabled>
+              </div>
+              <div class="form-group col-md-12">
+                <label id="notecxc" for="amountpaycxc">Monto de Pago:</label>
+              </div>
+            </div>
+
           </div>
           <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
             <p id="m_unit_text" class="mb-0">Alert Description</p>
@@ -631,7 +661,7 @@ Modal Nueva Tasa de Cambio
  Modal Registro de Pago de Cuenta Por Pagar
 ****************************************************************************
  -->
-<div class="modal fade" id="rcIndividualModal" tabindex="-1" aria-labelledby="cxpPayModalLabel" aria-hidden="true">
+<div class="modal fade" id="rcIndividualModal" tabindex="-1" aria-labelledby="rcIndividualModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
