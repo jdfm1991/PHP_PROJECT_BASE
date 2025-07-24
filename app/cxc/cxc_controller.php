@@ -9,7 +9,6 @@ $receivable = new AccountsReceivable();
 $colrec = new Receipts();
 $bankmov = new BankingMovements();
 
-
 $id = (isset($_POST['id'])) ? $_POST['id'] : '';
 $account = (isset($_POST['account'])) ? $_POST['account'] : '';
 $date = (isset($_POST['date'])) ? $_POST['date'] : '';
@@ -18,7 +17,7 @@ $rate = (isset($_POST['rate'])) ? $_POST['rate'] : '';
 $payd = (isset($_POST['payd'])) ? $_POST['payd'] : '';
 $balance = (isset($_POST['balance'])) ? $_POST['balance'] : '';
 $remaining = (isset($_POST['remaining'])) ? $_POST['remaining'] : '';
-
+$check = (isset($_POST['check'])) ? $_POST['check'] : 'false';
 
 switch ($_GET["op"]) {
   case 'get_list_accounts_receivable':
@@ -51,13 +50,14 @@ switch ($_GET["op"]) {
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
   case 'new_pay_ar':
-    $data = $receivable->createPayAccountsReceivableDB($account, $date, $refer, $rate, $payd, $balance, $remaining);
+    $dollar = ($check == 'true') ? 1 : 0;
+    $data = $receivable->createPayAccountsReceivableDB($account, $date, $refer, $rate, $payd, $balance, $remaining, $dollar);
     if ($data) {
       if ($remaining >= 0) {
         $amount = ceil($payd * $rate);
         $updr = $colrec->updateBalanceReceiptDB($account, $payd);
         $updb = $bankmov->updateBankingMovementDB($refer, $amount);
-      }else{
+      } else {
         $amount = $balance * $rate;
         $updr = $colrec->updateBalanceReceiptDB($account, $balance);
         $updb = $bankmov->updateBankingMovementDB($refer, $amount);

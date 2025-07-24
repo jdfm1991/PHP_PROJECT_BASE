@@ -434,22 +434,22 @@ Modal Nueva Tasa de Cambio
           <input type="hidden" id="idExpense">
           <div class="form-row">
             <div class="form-group col-md-5">
-              <label for="typeExpense" class="form-label">Tipo de Gasto</label>
+              <label id="l_select" for="typeExpense" class="form-label">Tipo de Gasto</label>
               <select class="form-control" id="typeExpense" required>
                 <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
               </select>
             </div>
             <div class="form-group col-md-4">
-              <label for="codeExpense" class="form-label">Codigo de Gasto</label>
+              <label id="l_codigo" for="codeExpense" class="form-label">Codigo de Gasto</label>
               <input type="text" class="form-control" id="codeExpense" placeholder="Codigo de Gasto" disabled>
             </div>
-            <div class="form-check form-check-inline col-md-2 text-center">
+            <div class="form-check form-check-inline col-md-2 text-center income">
               <input class="form-check-input" type="checkbox" id="fixedExpense">
               <label class="form-check-label" for="fixedExpense">Gasto Fijo</label>
             </div>
             <div class="form-group col-md-12">
-              <label for="nameExpense">Cuenta del Gasto</label>
-              <input class="form-control" id="nameExpense" aria-describedby="nameExpenseHelp" placeholder="Ingrese el Detalle del Gasto a Realizar" required>
+              <label id="l_cuenta" for="nameExpense">Cuenta del Gasto</label>
+              <input class="form-control" id="nameExpense" aria-describedby="nameExpenseHelp" placeholder="Ingrese el Nombre de la Cuenta de Gasto" required>
               <small id="nameExpenseHelp" class="form-text text-muted">Detalle del Gasto que se va a realizar</small>
             </div>
           </div>
@@ -581,7 +581,7 @@ Modal Nueva Tasa de Cambio
 </div>
 <!--
 ****************************************************************************
- Modal Registro de Pago de Cuenta Por Pagar
+ Modal Registro de Pago de Cuenta Por Pagar y Por Cobrar
 ****************************************************************************
  -->
 <div class="modal fade" id="cxpPayModal" tabindex="-1" aria-labelledby="cxpPayModalLabel" aria-hidden="true">
@@ -610,11 +610,7 @@ Modal Nueva Tasa de Cambio
               <input type="text" class="form-control" id="t_balance" disabled>
             </div>
             <div class="col-sm-4"></div>
-            <div id="cont_amunt_cxp" class="form-group col-md-4">
-              <label for="payment">Monto Del Pago</label>
-              <input type="text" class="form-control" id="payment" name="onlynumber">
-            </div>
-            <div id="cont_amunt_cxc" class="form-row col-md-12 d-none">
+            <div id="cont_amunt_cxc" class="form-row col-md-12">
               <div class="form-group col-md-4">
                 <label for="refercxc">Numero de Ref:</label>
                 <input type="text" class="form-control" id="refercxc" name="onlynumber" list="listrefer">
@@ -624,7 +620,7 @@ Modal Nueva Tasa de Cambio
               </div>
               <div class="form-group col-md-4">
                 <label for="datepaycxc">Fecha de Pago:</label>
-                <input type="date" class="form-control" id="datepaycxc" disabled>
+                <input type="date" class="form-control" id="datepaycxc" max="<?php echo date('Y-m-d'); ?>" disabled>
               </div>
               <div class="form-group col-md-4">
                 <label for="amountpaycxc">Monto de Pago:</label>
@@ -637,6 +633,10 @@ Modal Nueva Tasa de Cambio
               <div class="form-group col-md-4">
                 <label for="amountpaycxcd">Monto de Pago $:</label>
                 <input type="text" class="form-control" id="amountpaycxcd" name="onlynumber" disabled>
+              </div>
+              <div class="form-check form-check-inline col-md-3 text-center">
+                <input class="form-check-input" type="checkbox" id="dollarpay">
+                <label class="form-check-label" for="dollarpay">Pago en $</label>
               </div>
               <div class="form-group col-md-12">
                 <span id="notecxc"></span>

@@ -63,13 +63,21 @@ class Expenses extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, dateExpense, B.nameSuplier, C.expense, expenseName, balanceExpense 
+    $stmt = $conectar->prepare("SELECT A.id, dateExpense, B.nameSuplier, C.expenseaccount AS expense, expenseName, balanceExpense 
                                     FROM expense_data_table AS A 
                                   INNER JOIN suplier_data_table AS B ON A.idSuplier=B.id
                                   INNER JOIN expense_accounts_data_table AS C ON A.idExpenseAccount=C.id
                                 WHERE statusExpense=1 AND A.id = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+   public function updateBalanceExpenseDB($account, $payd)
+  {
+    $conectar = parent::conexion();
+    $stmt = $conectar->prepare("UPDATE expense_data_table SET balanceExpense = (balanceExpense - :balence) WHERE id = :id");
+    $stmt->execute(['balence' => $payd, 'id' => $account]);
+    return $stmt->rowCount();
   }
 
 }

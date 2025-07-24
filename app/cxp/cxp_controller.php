@@ -2,15 +2,22 @@
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
 require_once(PATH_APP . "/registrogasto/registrogasto_module.php");
+require_once(PATH_APP . "/banco/banco_module.php");
 require_once("cxp_module.php");
 
 $payable = new AccountsPayable();
 $expenses = new Expenses();
+$bankmov = new BankingMovements();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '6873ad6c02425';
-$name = (isset($_POST['name'])) ? $_POST['name'] : '';
-$client = (isset($_POST['client'])) ? $_POST['client'] : '';
-
+$id = (isset($_POST['id'])) ? $_POST['id'] : '';
+$account = (isset($_POST['account'])) ? $_POST['account'] : '';
+$date = (isset($_POST['date'])) ? $_POST['date'] : '';
+$refer = (isset($_POST['refer'])) ? $_POST['refer'] : '';
+$rate = (isset($_POST['rate'])) ? $_POST['rate'] : '';
+$payd = (isset($_POST['payd'])) ? $_POST['payd'] : '';
+$balance = (isset($_POST['balance'])) ? $_POST['balance'] : '';
+$remaining = (isset($_POST['remaining'])) ? $_POST['remaining'] : '';
+$check = (isset($_POST['check'])) ? $_POST['check'] : 'false';
 
 switch ($_GET["op"]) {
   case 'get_list_accounts_payable':
@@ -22,7 +29,7 @@ switch ($_GET["op"]) {
       $sub_array['date'] = $row['dateExpense'];
       $sub_array['suplier'] = $row['nameSuplier'];
       $sub_array['expense'] = $row['expenseName'];
-      $sub_array['balance'] = $row['balanceExpense'];
+      $sub_array['balance'] = number_format($row['balanceExpense'], 2);
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
@@ -36,73 +43,30 @@ switch ($_GET["op"]) {
       $dato['suplier'] = $data['nameSuplier'];
       $dato['account'] = $data['expense'];
       $dato['expense'] = $data['expenseName'];
-      $dato['balance'] = $data['balanceExpense'];
+      $dato['balance'] = number_format($data['balanceExpense'], 2);
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-
-
-
-
-
-
-
-  case 'get_data_relationship_suplier':
-    $dato = array();
-    $data = $clientes->getRelationshipClientSuplierDB($id);
-    foreach ($data as $row) {
-      $sub_array = array();
-      $sub_array['id'] = $row['id'];
-      $sub_array['suplier'] = $row['suplier'];
-      $sub_array['client'] = $row['nameClient'];
-      $dato[] = $sub_array;
-    }
-    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-    break;
-  case 'delete_supplier':
-    $valided = $supliers->validedRelationClientSuplierDB($id);
-    if ($valided > 0) {
-      $dato['status'] = false;
-      $dato['error'] = '500';
-      $dato['message'] = "No Puede Eliminiar Este Proveedor, Ya que Tiene Relacion Con Un Cliente, Por Favor Intente Con Un Cliente Diferente \n";
-      echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-      return;
-    }
-    $data = $supliers->deleteDataSuplierDB($id);
+  case 'new_pay_ar':
+    $dollar = ($check == 'true') ? 1 : 0;
+    $data = $payable->createPayAccountsReceivableDB($account, $date, $refer, $rate, $payd, $balance, $remaining, $dollar);
     if ($data) {
-      $dato['status'] = true;
-      $dato['error'] = '200';
-      $dato['message'] = "El Cliente Fue Eliminado Satisfactoriamente \n";
-    } else {
-      $dato['status'] = false;
-      $dato['error'] = '500';
-      $dato['message'] = "Error Al Cliente El Usuario, Por Favor Intente Nuevamente \n";
-    }
-    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-    break;
-  case 'new_link':
-    $data = $supliers->createRelationClientSuplierDB($id, $client);
-    if ($data) {
+      if ($remaining >= 0) {
+        $amount = ceil($payd * $rate);
+        $updr = $expenses->updateBalanceExpenseDB($account, $payd);
+        $updb = $bankmov->updateBankingMovementDB($refer, $amount);
+      } else {
+        $amount = $balance * $rate;
+        $updr = $expenses->updateBalanceExpenseDB($account, $balance);
+        $updb = $bankmov->updateBankingMovementDB($refer, $amount);
+      }
       $dato['status'] = true;
       $dato['error'] = '200';
       $dato['message'] = "La Relacion Fue Creado Satisfactoriamente \n";
     } else {
       $dato['status'] = false;
       $dato['error'] = '500';
-      $dato['message'] = "Error Al Crear La Relacion, Por Favor Intente Nuevamente \n";
-    }
-    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
-    break;
-  case 'delete_link':
-    $data = $supliers->deleteRelationClientSuplierDB($id);
-    if ($data) {
-      $dato['status'] = true;
-      $dato['error'] = '200';
-      $dato['message'] = "La Relacion Fue Creado Satisfactoriamente \n";
-    } else {
-      $dato['status'] = false;
-      $dato['error'] = '500';
-      $dato['message'] = "Error Al Crear La Relacion, Por Favor Intente Nuevamente \n";
+      $dato['message'] = "Error Al Registrar el Pago, Por Favor Intente Nuevamente \n";
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;

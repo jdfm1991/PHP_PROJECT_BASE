@@ -59,8 +59,6 @@ $(document).ready(function () {
       dataType: 'json',
       data: { id: id },
       success: function (response) {
-        console.log(response);
-        
         const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const date = DateNow.toLocaleDateString('es-VE', opciones);
         $('#idcx').val(response.id);
@@ -74,7 +72,6 @@ $(document).ready(function () {
         $('#l_detail').text('Fecha de Vencimiento: ');
         $('#t_detail').text(response.expiration);
         $('#cont_amunt_cxp').hide();
-        $('#cont_amunt_cxc').removeClass('d-none');
         $('#t_balance').val(response.balance);
         $('#cxpPayModal').modal('show');
       }
@@ -95,11 +92,30 @@ $(document).ready(function () {
       }
     });
   });
+  /* Accion para marcar la casilla de los gastos fijos */
+  $("#dollarpay").change(function () {
+    if ($(this).is(":checked")) {
+      $("#dollarpay").prop('checked', true);
+      $('#amountpaycxcd').attr('disabled', false);
+      $('#refercxc').attr('disabled', true);
+      $('#refercxc').val('DIVISA');
+      $('#ratepaycxc').val(0.00);
+      $('#amountpaycxc').val('');
+
+    } else {
+      $("#dollarpay").prop('checked', false);
+      $('#amountpaycxcd').attr('disabled', true);
+      $('#refercxc').attr('disabled', false);
+      $('#refercxc').val('');
+      $('#datepaycxc').val('');
+      $('#amountpaycxcd').val('');
+      $('#ratepaycxc').val('');
+    }
+  });
   $('.x').click(function (e) {
     e.preventDefault();
     $('#formExpensePay')[0].reset();
   });
-
   $('#refercxc').click(function (e) {
     e.preventDefault();
     refer = $(this).val();
@@ -122,12 +138,23 @@ $(document).ready(function () {
           remaining = (balance - opt.amountd).toFixed(2)
         });
         if (remaining > 0) {
-          $('#notecxc').text('Despues Del Pago Quedara Un Saldo Pendiente de :'+remaining+'$ ');
+          $('#notecxc').text('Despues Del Pago Quedara Un Saldo Pendiente de :' + remaining + '$ ');
         } else {
-          $('#notecxc').text('Despues Del Pago Quedara Un Saldo A Favor de :'+(remaining*-1)+'$ ');
-        }        
+          $('#notecxc').text('Despues Del Pago Quedara Un Saldo A Favor de :' + (remaining * -1) + '$ ');
+        }
       }
     });
+  });
+  $('#amountpaycxcd').keyup(function (e) {
+    payd = $(this).val();
+    $('#amountpaycxcd').val(payd);
+    balance = $('#t_balance').val();
+    remaining = (balance - payd).toFixed(2)
+    if (remaining > 0) {
+      $('#notecxc').text('Despues Del Pago Quedara Un Saldo Pendiente de :' + remaining + '$ ');
+    } else {
+      $('#notecxc').text('Despues Del Pago Quedara Un Saldo A Favor de :' + (remaining * -1) + '$ ');
+    }
   });
 
   /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
@@ -139,6 +166,7 @@ $(document).ready(function () {
     rate = $('#ratepaycxc').val();
     payd = $('#amountpaycxcd').val();
     balance = $('#t_balance').val();
+    check = $('#dollarpay').is(':checked');
     dato = new FormData();
     dato.append('account', account);
     dato.append('date', date);
@@ -147,6 +175,7 @@ $(document).ready(function () {
     dato.append('payd', payd);
     dato.append('balance', balance);
     dato.append('remaining', remaining);
+    dato.append('check', check);
     $.ajax({
       url: 'cxc_controller.php?op=new_pay_ar',
       method: 'POST',
@@ -164,6 +193,7 @@ $(document).ready(function () {
           });
           $('#cxc_table').DataTable().ajax.reload();
           $('#formExpensePay')[0].reset();
+          $('#notecxc').text('');
           $('#cxpPayModal').modal('hide');
         } else {
           Swal.fire({
@@ -175,7 +205,7 @@ $(document).ready(function () {
         }
 
       }
-    }); 
+    });
 
   });
 
