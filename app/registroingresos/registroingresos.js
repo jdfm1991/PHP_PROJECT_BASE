@@ -69,8 +69,8 @@ $(document).ready(function () {
         { data: "percent" },
         {
           data: "id", render: (data, _, __, meta) =>
-            `<button id="b_edit_expense" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
-            <button id="b_trash_expense" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="bi bi-trash3"></i></button>`, className: "text-center"
+            `<button id="b_edit_income" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
+            <button id="b_trash_income" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="bi bi-trash3"></i></button>`, className: "text-center"
         }
       ]
     });
@@ -79,6 +79,10 @@ $(document).ready(function () {
   $('#newIncome').click(function () {
     $('#accountIncome').attr('disabled', false);
     $('#formIncome')[0].reset();
+    $('#c_formula').addClass('d-none');
+    $('#c_penal').addClass('d-none');
+    $('#per_content').addClass('d-none');
+    $('#aumot_content').removeClass('d-none');
     loadDataSelectIncomeAccounts();
   });
   $('#accountIncome').change(function (e) {
@@ -167,10 +171,6 @@ $(document).ready(function () {
           });
           $('#income_table').DataTable().ajax.reload();
           $('#formIncome')[0].reset();
-          $('#c_formula').addClass('d-none');
-          $('#c_penal').addClass('d-none');
-          $('#per_content').addClass('d-none');
-          $('#aumot_content').removeClass('d-none');
           $('#newIncomeModal').modal('hide');
         } else {
           if (response.error === '400') {
@@ -194,42 +194,45 @@ $(document).ready(function () {
     });
   });
   /* Accion Para Editar el Gasto Existente En La Lista de Gastos*/
-  $(document).on('click', '#b_edit_expense', function (e) {
+  $(document).on('click', '#b_edit_income', function (e) {
     e.preventDefault();
     var id = $(this).data('value');
     $.ajax({
-      url: 'registrogasto_controller.php?op=get_data_expense',
+      url: 'registroingresos_controller.php?op=get_data_income',
       method: 'POST',
       dataType: 'json',
       data: { id: id },
       success: function (response) {
-        loadDataSelectSupplier(response.suplier);
-        loadDataSelectExpenseAccounts(response.account);
+        loadDataSelectIncomeAccounts(response.suplier);
         $('.modal-title').text('Editar Gasto');
         $('#idinc').val(response.id);
-        $('#datailExpense').val(response.expense);
-        $('#dateExpense').val(response.date);
-        $('#montExpense').val(response.mont);
-        if (response.quota != null) {
-          $("#quotaExpense").prop('checked', true);
-          $('#quota_content').show();
-          $('#montQuota').val(response.quota);
-        } else {
-          $("#quotaExpense").prop('checked', false);
-          $('#quota_content').hide();
+        $('#datailExpense').val(response.account);
+        if (response.byreceipt == 1) {
+          $('#c_penal').removeClass('d-none');
+          $("#penalty").prop('checked', true);
         }
-        $('#suplierExpense').attr('disabled', true);
-        $('#accountExpense').attr('disabled', true);
+        $('#datailIncome').val(response.income);
+        if (response.perc == 1) {
+          $('#c_formula').removeClass('d-none');
+          $('#aumot_content').addClass('d-none');
+          $('#per_content').removeClass('d-none');
+          $("#percent").prop('checked', true);
+          $('#m_percent').val(response.percent);
+        }
+        $('#montIncome').val(response.aumont);
+        $('#accountIncome').attr('disabled', true);
+        $('#penalty').attr('disabled', true);
+        $('#percent').attr('disabled', true);
         $('#newIncomeModal').modal('show');
       }
     });
   })
   /* Accion para cambiar el estado de la disponibilidad de unidad departamental */
-  $(document).on('click', '#b_trash_expense', function (e) {
+  $(document).on('click', '#b_trash_income', function (e) {
     e.preventDefault();
     var id = $(this).data('value');
     Swal.fire({
-      title: 'Estas seguro de eliminar el gasto?',
+      title: 'Estas seguro de eliminar el ingreso?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -238,7 +241,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: 'registrogasto_controller.php?op=delete_expense',
+          url: 'registroingresos_controller.php?op=delete_income',
           method: 'POST',
           dataType: 'json',
           data: { id: id },

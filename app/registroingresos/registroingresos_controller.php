@@ -5,7 +5,7 @@ require_once("registroingresos_module.php");
 
 $incomes = new Incomes();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '688257338a0c1';
 $income = (isset($_POST['income'])) ? $_POST['income'] : '';
 $penalty = (isset($_POST['penalty'])) ? $_POST['penalty'] : 'false';
 $detail = (isset($_POST['detail'])) ? $_POST['detail'] : '';
@@ -24,22 +24,22 @@ switch ($_GET["op"]) {
       if ($data) {
         $dato['status'] = true;
         $dato['error'] = '200';
-        $dato['message'] = "El Gasto Fue Creada Satisfactoriamente \n";
+        $dato['message'] = "El Ingreso Fue Creada Satisfactoriamente \n";
       } else {
         $dato['status'] = false;
         $dato['error'] = '500';
-        $dato['message'] = "Error Al Crear El Gasto, Por Favor Intente Nuevamente \n";
+        $dato['message'] = "Error Al Crear El Ingreso, Por Favor Intente Nuevamente \n";
       }
     } else {
-      $data = $expenses->updateDataExpenseDB($id, $date, $detail, $mont, $quota);
+      $data = $incomes->updateDataIncomeDB($id, $detail, $mont, $montp);
       if ($data) {
         $dato['status'] = true;
         $dato['error'] = '200';
-        $dato['message'] = "El Gasto Fue Actiualizado Satisfactoriamente \n";
+        $dato['message'] = "El Ingreso Fue Actiualizado Satisfactoriamente \n";
       } else {
         $dato['status'] = false;
         $dato['error'] = '500';
-        $dato['message'] = "Error Al Actualizar el Gasto, Por Favor Intente Nuevamente \n";
+        $dato['message'] = "Error Al Actualizar el Ingreso, Por Favor Intente Nuevamente \n";
       }
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
@@ -59,24 +59,24 @@ switch ($_GET["op"]) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-  case 'get_data_expense':
+  case 'get_data_income':
     $dato = array();
-    $data = $expenses->getDataExpenseDB($id);
+    $data = $incomes->getDataIncomeDB($id);
     foreach ($data as $data) {
       $dato['id'] = $data['id'];
-      $dato['date'] = $data['dateExpense'];
-      $dato['suplier'] = $data['idSuplier'];
-      $dato['account'] = $data['idExpenseAccount'];
-      $dato['expense'] = $data['expenseName'];
-      $dato['mont'] = number_format($data['montExpense'], 2);
-      $dato['quota'] = ($data['quotasExpense']!=null) ? number_format($data['quotasExpense'], 2) : NULL; 
-      $dato['dater'] = $data['dateRegExp'];
+      $dato['date'] = $data['datereg'];
+      $dato['account'] = $data['incomeaccount'];
+      $dato['byreceipt'] = $data['byreceipt'];
+      $dato['income'] = $data['incomename'];
+      $dato['perc'] = $data['percent'];
+      $dato['percent'] = ($data['amountpercent']!=null) ? number_format($data['amountpercent'], 2) : ''; 
+      $dato['aumont'] = ($data['incomeaumont']!=null) ? number_format($data['incomeaumont'], 2) : ''; 
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
 
-  case 'delete_expense':
-    $data = $expenses->deleteClideleteExpenseDB($id);
+  case 'delete_income':
+    $data = $incomes->deleteDataIncomeDB($id);
     if ($data) {
       $dato['status'] = true;
       $dato['error'] = '200';

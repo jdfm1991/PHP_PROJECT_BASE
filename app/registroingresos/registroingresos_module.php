@@ -24,20 +24,20 @@ class Incomes extends Conectar
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
    /* FUNCION PARA EJECUTAR CONSULTAS SQL PARA TRAER INFORMACION UNA UNIDAD DEPARTAMENTAL EXISTENTE EN LA BASE DE DATOS */
-  public function getDataExpenseDB($id)
+  public function getDataIncomeDB($id)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM expense_data_table WHERE id = :id");
+    $stmt = $conectar->prepare("SELECT * FROM income_data_table WHERE id = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function updateDataExpenseDB($id, $date, $detail, $mont, $quota)
+  public function updateDataIncomeDB($id, $detail, $mont, $montp)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE expense_data_table SET dateExpense=:date, expenseName=:expense, montExpense=:mont, quotasExpense=:quota WHERE id = :id");
-    $stmt->execute(['date' => $date, 'expense' => $detail, 'mont' => $mont, 'quota' => $quota, 'id' => $id]);
+    $stmt = $conectar->prepare("UPDATE income_data_table SET incomename=:income, amountpercent=:percent, incomeaumont=:aumont WHERE id = :id");
+    $stmt->execute(['income' => $detail, 'percent' => $montp, 'aumont' => $mont, 'id' => $id]);
     return $stmt->rowCount();
   }
 
@@ -50,13 +50,21 @@ class Incomes extends Conectar
     return $stmt->rowCount();
     
   }
-  public function deleteClideleteExpenseDB($id)
+  public function deleteDataIncomeDB($id)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE expense_data_table SET statusExpense = :status WHERE id = :id");
+    $stmt = $conectar->prepare("UPDATE income_data_table SET statusincome = :status WHERE id = :id");
     $stmt->execute(['status' => 0, 'id' => $id]);
     return $stmt->rowCount();
   }
+
+
+
+
+
+
+
+
 
    public function getDataExpenseDB2($id)
   {
