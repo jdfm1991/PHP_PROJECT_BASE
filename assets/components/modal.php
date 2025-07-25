@@ -534,13 +534,13 @@ Modal Nueva Tasa de Cambio
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="suplierExpense" class="form-label">Proveedor</label>
-              <select class="form-control" id="suplierExpense" required>
+              <select class="form-control" id="suplierExpense" size="3" required>
                 <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
               </select>
             </div>
             <div class="form-group col-md-6">
               <label for="accountExpense" class="form-label">Cuenta de Gasto</label>
-              <select class="form-control" id="accountExpense" required>
+              <select class="form-control" id="accountExpense" size="3" required>
                 <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
               </select>
             </div>
@@ -565,6 +565,64 @@ Modal Nueva Tasa de Cambio
             <div id="quota_content" class="form-group col-md-4">
               <label for="montQuota">Cuota de Pago</label>
               <input type="text" class="form-control" id="montQuota" name="onlynumber">
+            </div>
+          </div>
+          <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
+            <p id="m_unit_text" class="mb-0">Alert Description</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--
+****************************************************************************
+ Modal Nueva Registro de Ingresos Penalizaciones
+****************************************************************************
+ -->
+<div class="modal fade" id="newIncomeModal" tabindex="-1" aria-labelledby="newIncomeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cuenta de Ingreso o Penalizacion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <form id="formIncome">
+          <input type="hidden" id="idinc">
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <label for="accountIncome" class="form-label">Cuenta de Ingreso</label>
+              <select class="form-control" id="accountIncome" required>
+                <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->
+              </select>
+            </div>
+            <div id="c_penal" class="form-check form-check-inline col-md-3 text-center d-none">
+              <input class="form-check-input" type="checkbox" id="penalty">
+              <label class="form-check-label" for="penalty">Por Recibo de Cobro</label>
+            </div>
+            <div class="form-group col-md-8">
+              <label for="datailIncome">Detalle del Ingreso</label>
+              <input type="text" class="form-control" id="datailIncome"  placeholder="Ingrese el Detalle del Gasto a Realizar" maxlength="50" required>
+              <label id="count2" class="float-right"></label>
+            </div>
+            <div id="c_formula" class="form-check form-check-inline col-md-3 text-center d-none">
+              <input class="form-check-input" type="checkbox" id="percent">
+              <label class="form-check-label" for="percent">Aplicar %</label>
+            </div>
+            <div id="aumot_content" class="form-group col-md-4">
+              <label for="montIncome">Monto Del Ingreso</label>
+              <input type="text" class="form-control" id="montIncome" name="onlynumber">
+            </div>
+            <div id="per_content" class="form-group col-md-3 d-none">
+              <label for="m_percent">% de Cobro</label>
+              <input type="text" class="form-control" id="m_percent" name="onlynumber">
             </div>
           </div>
           <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">

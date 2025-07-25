@@ -1,46 +1,23 @@
 $(document).ready(function () {
-  $('#quota_content').hide();
-  /* Funcion para Cargar Select de los proveedores */
-  const loadDataSelectSupplier = async (id) => {
-    try {
-      const response = await fetch(URI + 'proveedores/proveedores_controller.php?op=get_list_suppliers');
-      const data = await response.json();
-      const container = document.getElementById('suplierExpense');
-      container.innerHTML = '';
-      data.forEach((opt, idx) => {
-        const option = document.createElement('option');
-        if (id == opt.id) {
-          option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.name}`;
-          option.setAttribute('selected', 'selected');
-          container.appendChild(option);
-        } else {
-          option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.name}`;
-          container.appendChild(option);
-        }
-      })
-    } catch (error) {
-      console.log('Error', error);
-    }
-  }
+  const account = document.getElementById('accountIncome')
+
   /* Funcion para Cargar Select de las cuentas de gastos */
-  const loadDataSelectExpenseAccounts = async (id) => {
+  const loadDataSelectIncomeAccounts = async (id) => {
     try {
-      const response = await fetch(URI + 'cuentagasto/cuentagasto_controller.php?op=get_list_expense_accounts');
+      const response = await fetch(URI + 'cuentaingresos/cuentaingresos_controller.php?op=get_list_income_accounts');
       const data = await response.json();
-      const container = document.getElementById('accountExpense');
+      const container = document.getElementById('accountIncome');
       container.innerHTML = '';
       data.forEach((opt, idx) => {
         const option = document.createElement('option');
         if (id == opt.id) {
           option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.expense}`;
+          option.innerHTML = `${opt.income}`;
           option.setAttribute('selected', 'selected');
           container.appendChild(option);
         } else {
           option.setAttribute('value', opt.id);
-          option.innerHTML = `${opt.expense}`;
+          option.innerHTML = `${opt.income}`;
           container.appendChild(option);
         }
       })
@@ -49,8 +26,8 @@ $(document).ready(function () {
     }
   }
   /* Funcion para listar todos los unidades departamentales existentes en la base de datos */
-  const LoadDataTableExpenses = async () => {
-    const table = $('#expense_table').DataTable({
+  const LoadDataTableIncomes = async () => {
+    const table = $('#income_table').DataTable({
       responsive: true,
       scrollX: true,
       autoWidth: false,
@@ -79,17 +56,17 @@ $(document).ready(function () {
         processing: "Procesando..."
       },
       ajax: {
-        url: "registrogasto_controller.php?op=get_list_expenses",
+        url: "registroingresos_controller.php?op=get_list_income",
         type: "GET",
         dataType: "json",
         dataSrc: "",
       },
       columns: [
         { data: "date" },
-        { data: "suplier" },
         { data: "account" },
-        { data: "expense" },
-        { data: "mont" },
+        { data: "income" },
+        { data: "aumont" },
+        { data: "percent" },
         {
           data: "id", render: (data, _, __, meta) =>
             `<button id="b_edit_expense" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
@@ -98,66 +75,83 @@ $(document).ready(function () {
       ]
     });
   }
-  /* Funcion Para Cargar El Contenido del Selectores del Modal "newExpenseModal" */
-  $('#newExpense').click(function (e) {
+  /* Funcion Para Cargar El Contenido del Selectores del Modal "newIncomeModal" */
+  $('#newIncome').click(function () {
+    $('#accountIncome').attr('disabled', false);
+    $('#formIncome')[0].reset();
+    loadDataSelectIncomeAccounts();
+  });
+  $('#accountIncome').change(function (e) {
     e.preventDefault();
-    $('.modal-title').text('Nuevo Gasto');
-    $('#suplierExpense').attr('disabled', false);
-    $('#accountExpense').attr('disabled', false);
-    $('#idExp').val('');
-    $('#formExpense')[0].reset();
-    loadDataSelectSupplier();
-    loadDataSelectExpenseAccounts();
+    const text = account.options[account.selectedIndex].text;
+    if (text.includes('PENAL')) {
+      $('#c_penal').removeClass('d-none');
+
+    } else {
+      $('#c_penal').addClass('d-none');
+    }
   });
   /* Accion para contar los caracteres de la descripcion */
-  $('#datailExpense').keyup(function (e) {
+  $('#datailIncome').keyup(function (e) {
     letters = $(this).val().length;
-    $('#count').removeClass('bg-success bg-warning bg-danger test-black');
-    $('#count').addClass('badge');
-    $('#count').addClass('text-white');
-    $('#count').addClass('font-weight-bold');
-    if (letters > 0 && letters <= 80) {
-      $('#count').addClass('bg-success');
-      $('#count').text(letters + ' / 150');
+    $('#count2').removeClass('bg-success bg-warning bg-danger test-black');
+    $('#count2').addClass('badge');
+    $('#count2').addClass('text-white');
+    $('#count2').addClass('font-weight-bold');
+    if (letters > 0 && letters <= 30) {
+      $('#count2').addClass('bg-success');
+      $('#count2').text(letters + ' / 50');
     }
-    if (letters >= 81 && letters <= 130) {
-      $('#count').addClass('bg-warning');
-      $('#count').addClass('text-black');
-      $('#count').text(letters + ' / 150');
+    if (letters >= 31 && letters <= 45) {
+      $('#count2').addClass('bg-warning');
+      $('#count2').addClass('text-black');
+      $('#count2').text(letters + ' / 50');
     }
-    if (letters >= 131) {
-      $('#count').addClass('bg-danger');
-      $('#count').text('Le queda pocos caracteres ' + letters + ' / 150');
+    if (letters >= 45) {
+      $('#count2').addClass('bg-danger');
+      $('#count2').text('Le queda pocos caracteres ' + letters + ' / 50');
     }
   });
+
   /* Accion para visualizar el campo para agregar la cuota en caso de ser necesario */
-  $("#quotaExpense").change(function () {
+  $("#penalty").change(function () {
     if ($(this).is(":checked")) {
-      $('#quota_content').show();
+      $('#c_formula').removeClass('d-none');
     } else {
-      $('#quota_content').hide();
+      $('#c_formula').addClass('d-none');
+    }
+  });
+  $("#percent").change(function () {
+    if ($(this).is(":checked")) {
+      $('#per_content').removeClass('d-none');
+      $('#aumot_content').addClass('d-none');
+      $('#montIncome').val('');
+    } else {
+      $('#per_content').addClass('d-none');
+      $('#aumot_content').removeClass('d-none');
+      $('#m_percent').val('');
     }
   });
   /* Accion para Guardar o Actualizar Informacion de los Gastos en la Base de Datos */
-  $('#formExpense').submit(function (e) {
+  $('#formIncome').submit(function (e) {
     e.preventDefault();
-    id = $('#idExp').val();
-    suplier = $('#suplierExpense').val();
-    account = $('#accountExpense').val();
-    detail = $('#datailExpense').val().toUpperCase();
-    mont = $('#montExpense').val();
-    quota = $('#montQuota').val();
-    date = $('#dateExpense').val();
+    id = $('#idinc').val();
+    income = $('#accountIncome').val();
+    penalty = $('#penalty').is(':checked');
+    detail = $('#datailIncome').val().toUpperCase();
+    percent = $('#percent').is(':checked');
+    mont = $('#montIncome').val();
+    montp = $('#m_percent').val();
     dato = new FormData();
     dato.append('id', id);
-    dato.append('suplier', suplier);
-    dato.append('account', account);
+    dato.append('income', income);
+    dato.append('penalty', penalty);
     dato.append('detail', detail);
+    dato.append('percent', percent);
     dato.append('mont', mont);
-    dato.append('quota', quota);
-    dato.append('date', date);
+    dato.append('montp', montp);
     $.ajax({
-      url: 'registrogasto_controller.php?op=new_expense',
+      url: 'registroingresos_controller.php?op=new_income',
       method: 'POST',
       dataType: "json",
       data: dato,
@@ -171,9 +165,13 @@ $(document).ready(function () {
             showConfirmButton: false,
             timer: 1500
           });
-          $('#expense_table').DataTable().ajax.reload();
-          $('#formExpense')[0].reset();
-          $('#newExpenseModal').modal('hide');
+          $('#income_table').DataTable().ajax.reload();
+          $('#formIncome')[0].reset();
+          $('#c_formula').addClass('d-none');
+          $('#c_penal').addClass('d-none');
+          $('#per_content').addClass('d-none');
+          $('#aumot_content').removeClass('d-none');
+          $('#newIncomeModal').modal('hide');
         } else {
           if (response.error === '400') {
             console.log(response);
@@ -208,7 +206,7 @@ $(document).ready(function () {
         loadDataSelectSupplier(response.suplier);
         loadDataSelectExpenseAccounts(response.account);
         $('.modal-title').text('Editar Gasto');
-        $('#idExp').val(response.id);
+        $('#idinc').val(response.id);
         $('#datailExpense').val(response.expense);
         $('#dateExpense').val(response.date);
         $('#montExpense').val(response.mont);
@@ -222,7 +220,7 @@ $(document).ready(function () {
         }
         $('#suplierExpense').attr('disabled', true);
         $('#accountExpense').attr('disabled', true);
-        $('#newExpenseModal').modal('show');
+        $('#newIncomeModal').modal('show');
       }
     });
   })
@@ -252,7 +250,7 @@ $(document).ready(function () {
                 showConfirmButton: false,
                 timer: 1500
               });
-              $('#expense_table').DataTable().ajax.reload();
+              $('#income_table').DataTable().ajax.reload();
             } else {
               Swal.fire({
                 icon: "error",
@@ -266,5 +264,5 @@ $(document).ready(function () {
       }
     })
   })
-  LoadDataTableExpenses();
+  LoadDataTableIncomes();
 });
