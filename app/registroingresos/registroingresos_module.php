@@ -41,11 +41,11 @@ class Incomes extends Conectar
     return $stmt->rowCount();
   }
 
-  public function validateAccountsRelatedExpensesDB($id)
+  public function validateAccountsRelatedIncomeDB($id)
   {
      $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM expense_data_table WHERE idExpenseAccount = :account AND statusExpense = 1");
+    $stmt = $conectar->prepare("SELECT * FROM income_data_table WHERE incomeaccount = :account AND statusincome = 1");
     $stmt->execute(['account' => $id]);
     return $stmt->rowCount();
     

@@ -1,11 +1,11 @@
 <?php
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
-require_once(PATH_APP . "/registrogasto/registrogasto_module.php");
+require_once(PATH_APP . "/registroingresos/registroingresos_module.php");
 require_once("cuentaingresos_module.php");
 
 $incomeaccounts = new IncomeAccounts();
-$expenses = new Expenses();
+$incomes = new Incomes();
 
 $id = (isset($_POST['id'])) ? $_POST['id'] : '68817fcedd832';
 $type = (isset($_POST['type'])) ? $_POST['type'] : '';
@@ -83,14 +83,14 @@ switch ($_GET["op"]) {
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
   case 'delete_income_account':
-    /* $valided = $expenses->validateAccountsRelatedExpensesDB($id);
+    $valided = $incomes->validateAccountsRelatedIncomeDB($id);
     if ($valided > 0) {
       $dato['status'] = false;
       $dato['error'] = '500';
-      $dato['message'] = "No Puede Eliminiar Esta Cuenta, Ya que Tiene Relacion Con Un Gasto, Por Favor Intente Con Un Cliente Diferente \n";
+      $dato['message'] = "No Puede Eliminiar Esta Cuenta, Ya que Tiene Relacion Con Un Ingreso, Por Favor Intente Con Una Cuenta Diferente \n";
       echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       return;
-    }  */
+    } 
     $data = $incomeaccounts->deleteIncomeAccountDB($id);
     if ($data) {
       $dato['status'] = true;
