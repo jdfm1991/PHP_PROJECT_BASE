@@ -67,4 +67,22 @@ class ExpenseAccounts extends Conectar
     return $stmt->rowCount();
   }
 
+  public function getDataExpenseAcountFixedDB()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id, codeaccount, expenseaccount FROM expense_accounts_data_table WHERE fixedaccount = 1");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function getDataExpenseAcountNonFixedDB()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id, codeaccount, expenseaccount FROM expense_accounts_data_table WHERE fixedaccount = 0");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
 }

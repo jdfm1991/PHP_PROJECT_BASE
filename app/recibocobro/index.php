@@ -25,7 +25,8 @@ require_once(PATH_APP . "/head.php");
           <div class="card">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
-                <button id="rc_indivual" type="button" class="btn btn-outline-success btn-group-sm"> Generar Recibo de Cobro Individual </button>
+                <button id="rc_all" type="button" class="btn btn-outline-primary btn-group-sm"> Generar Todos los Recibos de Cobro </button>
+                <button id="rc_indivual" type="button" class="btn btn-outline-info btn-group-sm"> Generar Recibo de Cobro Individual </button>
               </div>
             </div>
           </div>
@@ -36,9 +37,10 @@ require_once(PATH_APP . "/head.php");
                   <tr>
                     <th>Fecha</th>
                     <th>N° Recibo</th>
+                    <th>Departamento</th>
+                    <th>Inqulino</th>
                     <th>Periodo</th>
                     <th>Vencimiento</th>
-                    <th>Inqulino</th>
                     <th>Saldo</th>
                     <th>Opcion</th>
                   </tr>

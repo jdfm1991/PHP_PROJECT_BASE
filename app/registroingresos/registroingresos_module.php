@@ -58,33 +58,15 @@ class Incomes extends Conectar
     return $stmt->rowCount();
   }
 
-
-
-
-
-
-
-
-
-   public function getDataExpenseDB2($id)
+  public function getDataDetailsIncomeDB($id)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, dateExpense, B.nameSuplier, C.expenseaccount AS expense, expenseName, balanceExpense 
-                                    FROM expense_data_table AS A 
-                                  INNER JOIN suplier_data_table AS B ON A.idSuplier=B.id
-                                  INNER JOIN expense_accounts_data_table AS C ON A.idExpenseAccount=C.id
-                                WHERE statusExpense=1 AND A.id = :id");
+    $stmt = $conectar->prepare("SELECT id, incomename, incomeaccount, incomebalance 
+                                  FROM income_data_table 
+                                  WHERE incomeaccount=:id AND statusincome=1 AND incomebalance>0");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-
-   public function updateBalanceExpenseDB($account, $payd)
-  {
-    $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE expense_data_table SET balanceExpense = (balanceExpense - :balence) WHERE id = :id");
-    $stmt->execute(['balence' => $payd, 'id' => $account]);
-    return $stmt->rowCount();
   }
 
 }

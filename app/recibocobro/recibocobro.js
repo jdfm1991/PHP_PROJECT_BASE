@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  /* Definiendo variables para calcular, obtener, almacenar y formatear fechas */
   const DateNow = new Date();
   const opciones = { year: 'numeric', month: 'long' };
   const period = DateNow.toLocaleDateString('es-VE', opciones).toUpperCase();
@@ -14,6 +15,17 @@ $(document).ready(function () {
   const typenf = document.getElementsByName('typenf')
   const expensenf = document.getElementsByName('expensenf')
   const gv_amount = document.getElementsByName('gv_amount')
+  /* Definiendo elementos para obtener valores de los ingresos y almacenarlos en un arreglo */
+  const codei = document.getElementsByName('codei')
+  const typei = document.getElementsByName('typei')
+  const incomef = document.getElementsByName('incomef')
+  const i_amount = document.getElementsByName('i_amount')
+  /* Definiendo elementos para obtener valores de las penalidades y almacenarlos en un arreglo */
+  const typep = document.getElementsByName('typep')
+  const codep = document.getElementsByName('codep')
+  const incomep = document.getElementsByName('incomep')
+  const p_amount = document.getElementsByName('p_amount')
+  /* Funcion para cargar la tabla de recibos que se encuentran en la base de datos */
   const loadDataTableReceipts = async () => {
     const table = $('#receipt_table').DataTable({
       responsive: true,
@@ -52,19 +64,31 @@ $(document).ready(function () {
       columns: [
         { data: "date" },
         { data: "number" },
+        { data: "unit" },
+        { data: "name" },
         { data: "concept" },
         { data: "expiration" },
-        { data: "name" },
         { data: "aumont" },
         {
           data: "id", render: (data, _, __, meta) =>
             `<button id="b_delete_receipt" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
         }
       ],
+      rowCallback: function (row, data, index) {
+        if (data.type === 'PENAL') {
+          $(row).css('background-color', 'rgba(252, 100, 100, 0.452)');
+          $(row).css('color', 'black');
+          $(row).css('font-weight', 'bold');
+        } else {
+          $(row).css('color', 'black');
+          $(row).css('font-weight', 'bold');
+        }
+      },
       order: [[0, "desc"]],
     });
 
   }
+  /* Funcion para limpiar los campos */
   const clearFields = function () {
     $('#formReceipt')[0].reset();
     $('#content_fixed_body').empty();
@@ -72,6 +96,7 @@ $(document).ready(function () {
     $('#content_fixed').addClass('d-none');
     $('#content_non_fixed').addClass('d-none');
   }
+  /* Funcion para obtener el numero de recibo */
   const getNewNumberRC = function () {
     $.ajax({
       url: "recibocobro_controller.php?op=get_new_number",
@@ -82,13 +107,22 @@ $(document).ready(function () {
       }
     });
   }
+  /* Funcion para obtener el monto de cada item para tener dos decimales */
+  const getFormatting = function (amount) {
+    const x = Number.parseFloat(amount);
+    return x.toFixed(2);
+  }
+  /* Funcion para calcular el monto de cada item */
   const getCalcFormatting = function (amount, aliquot) {
     const x = (Number.parseFloat(amount) * Number.parseFloat(aliquot)) / 100;
     return x.toFixed(2);
   }
+  /* Funcion para obtener el total de cada seccion del recibo */
   const getTotals = function () {
     let suma_gf = 0;
     let suma_gv = 0;
+    let suma_i = 0;
+    let suma_p = 0;
     let suma = 0;
     for (let i = 0; i < gf_amount.length; i++) {
       const amount = parseFloat(gf_amount[i].value);
@@ -102,15 +136,32 @@ $(document).ready(function () {
         suma_gv += amount;
       }
     }
+    for (let i = 0; i < i_amount.length; i++) {
+      const amount = parseFloat(i_amount[i].value);
+      if (!isNaN(amount)) {
+        suma_i += amount;
+      }
+    }
+    for (let i = 0; i < p_amount.length; i++) {
+      const amount = parseFloat(p_amount[i].value);
+      if (!isNaN(amount)) {
+        suma_p += amount;
+      }
+    }
     $('#amout_gf').val(suma_gf.toFixed(2));
     $('#amout_gv').val(suma_gv.toFixed(2));
+    $('#amout_i').val(suma_i.toFixed(2));
+    $('#amout_p').val(suma_p.toFixed(2));
+
     $('#total_fixed').text(suma_gf.toFixed(2));
     $('#total_non_fixed').text(suma_gv.toFixed(2));
-    $('#amout_i').val(0);
-    $('#amout_p').val(0);
-    suma = parseFloat(suma_gf + suma_gv).toFixed(2)
+    $('#total_income').text(suma_i.toFixed(2));
+    $('#total_penalty').text(suma_p.toFixed(2));
+
+    suma = parseFloat(suma_gf + suma_gv + suma_i + suma_p).toFixed(2)
     $('#amout_tg').val(suma);
   }
+  /* Funcion para crear un nuevo recibo */
   $('#rc_indivual').click(function (e) {
     e.preventDefault();
     loadDataDateReceipt();
@@ -120,8 +171,95 @@ $(document).ready(function () {
     $('#l_dpto').attr('disabled', true);
     $('#a_dpto').attr('disabled', true);
     $('#e_dpto').attr('disabled', true);
+    $('.btnd').addClass('d-none');
+    $('.btnp').addClass('d-none');
     $('#rcIndividualModal').modal('show');
   });
+  /* Funcion para crear todos los nuevos recibos */
+  $('#rc_all').click(function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: 'Estas seguro de Generar Todos los recibo de cobro de manera automatica?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Generar Todos!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Loading...',
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading();
+          }
+        });
+        $.ajax({
+          url: 'recibocobro_controller.php?op=generate_receipt_automatic',
+          method: 'POST',
+          dataType: 'json',
+          success: function (response) {
+            Swal.close();
+            if (response.status == true) {
+              Swal.fire({
+                icon: "success",
+                title: response.message,
+                showConfirmButton: false,
+                timer: 1500
+              });
+              $('#receipt_table').DataTable().ajax.reload();
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: response.message,
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          }
+        });
+      }
+    })
+  });
+  /* Funcion para habilitar los botones segun el tipo de recibo */
+  $('#typereceiot').change(function (e) {
+    e.preventDefault();
+    select = $(this).val();
+    if (select == 'COBRO') {
+      $('.btnd').removeClass('d-none');
+      $('.btnp').addClass('d-none');
+      $('#content_penalty').addClass('d-none');
+      $("#content_penalty_body").empty();
+      getTotals();
+    }
+    if (select == 'PENAL') {
+      $('.btnp').removeClass('d-none');
+      $('.btnd').addClass('d-none');
+      $('#content_income').addClass('d-none');
+      $("#content_income_body").empty();
+      $('#content_non_fixed').addClass('d-none');
+      $("#content_non_fixed_body").empty();
+      $('#content_fixed').addClass('d-none');
+      $("#content_fixed_body").empty();
+      getTotals();
+    }
+    if (select == '') {
+      $('.btnp').addClass('d-none');
+      $('.btnd').addClass('d-none');
+      $('#content_penalty').addClass('d-none');
+      $("#content_penalty_body").empty();
+      $('#content_income').addClass('d-none');
+      $("#content_income_body").empty();
+      $('#content_non_fixed').addClass('d-none');
+      $("#content_non_fixed_body").empty();
+      $('#content_fixed').addClass('d-none');
+      $("#content_fixed_body").empty();
+      getTotals();
+    }
+  });
+  /* Funcion para obtener la unidad departamental y cargar los datos en el recibo */
   $('#name_client').click(function () {
     depart = $('#n_dpto').val();
     if (depart == '') {
@@ -135,6 +273,7 @@ $(document).ready(function () {
       $('.toast').toast('show');
       return false;
     }
+
     $.ajax({
       url: URI + 'unidaddepartamental/unidaddepartamental_controller.php?op=get_unit_by_name',
       method: 'POST',
@@ -143,6 +282,7 @@ $(document).ready(function () {
       success: function (response) {
         if (response.length == 0) {
           clearFields();
+          getTotals();
           $(".mr-auto").text("Procesos Fallido");
           $(".toast").css("z-index", "1000");
           $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
@@ -153,6 +293,7 @@ $(document).ready(function () {
           return false;
         }
         clearFields();
+        getTotals();
         loadDataDateReceipt();
         $.each(response, function (idx, opt) {
           $('#id_u').val(opt.uid);
@@ -166,6 +307,7 @@ $(document).ready(function () {
       }
     });
   });
+  /* Funcion para obtener los gastos fijos */
   $('#b_gastos_f').click(function (e) {
     e.preventDefault();
     aliquot = $('#a_dpto').val();
@@ -202,9 +344,9 @@ $(document).ready(function () {
                 <div class="col-sm-1" >
                 <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
                 </div>
-                <label name="expensef" class="col-sm-8 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
-                <span class="col-sm-2 font-weight-bold text-right" name="amount">${detail.aumont}</span>
-                <input name="gf_amount" type="text" class="form-control col-sm-1" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
+                <label name="expensef" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
+                <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.aumont)}</span>
+                <input name="gf_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
               </div>
                `
             }) +
@@ -216,6 +358,7 @@ $(document).ready(function () {
       }
     });
   });
+  /* Funcion para obtener los gastos variables */
   $('#b_gastos_v').click(function (e) {
     e.preventDefault();
     aliquot = $('#a_dpto').val();
@@ -252,9 +395,9 @@ $(document).ready(function () {
                     <div class="col-sm-1" >
                     <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
                     </div>
-                    <label name="expensenf" class="col-sm-8 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
-                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${detail.aumont}</span>
-                    <input name="gv_amount" type="text" class="form-control col-sm-1" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
+                    <label name="expensenf" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
+                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.aumont)}</span>
+                    <input name="gv_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
                   </div>
                `
             }) +
@@ -266,6 +409,109 @@ $(document).ready(function () {
       }
     });
   });
+  /* Funcion para obtener los ingresos */
+  $('#b_ingreso').click(function (e) {
+    e.preventDefault();
+    aliquot = $('#a_dpto').val();
+    if (aliquot == '') {
+      $(".mr-auto").text("Procesos Fallido");
+      $(".toast").css("z-index", "1000");
+      $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
+      $(".toast").css("color", "white");
+      $(".toast").attr("background-color", "");
+      $("#toastText").text("Debe Seleccionar un Departamento Para Continuar");
+      $('.toast').toast('show');
+      return false;
+    }
+    $('#title_income').text('Relacion de Ingresos');
+    $('#content_income').removeClass('d-none');
+    $.ajax({
+      url: 'recibocobro_controller.php?op=get_data_income',
+      method: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        $("#content_income_body").empty();
+        $.each(response, function (idx, opt) {
+          $("#content_income_body").append(`
+                <div id="cont_${opt.id}" class="row d-flex justify-content-between">
+                  <small class="col-2 text-body-secondary">${opt.code} </small>
+                  <span class="col-8 font-weight-bold">${opt.account}</span>
+                  <hr>
+                  <div class="col-12">`+
+            opt.details.map((detail) => {
+              return `
+              <div id="detail_${detail.id}" name="cont_${opt.id}" class="row">
+                    <input type="hidden" name="typei" value="${opt.id}">
+                    <input type="hidden" name="codei" value="${detail.id}">
+                    <div class="col-sm-1" >
+                    <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
+                    </div>
+                    <label name="incomef" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.incomename} </label>
+                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.incomebalance)}</span>
+                    <input name="i_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.incomebalance, aliquot)}" disabled>
+                  </div>
+               `
+            }) +
+            `</div>
+                </div>
+          `);
+        });
+        getTotals();
+      }
+    });
+  });
+  /* Funcion para obtener los panalizaciones */
+  $('#b_penal').click(function (e) {
+    e.preventDefault();
+    aliquot = $('#a_dpto').val();
+    if (aliquot == '') {
+      $(".mr-auto").text("Procesos Fallido");
+      $(".toast").css("z-index", "1000");
+      $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
+      $(".toast").css("color", "white");
+      $(".toast").attr("background-color", "");
+      $("#toastText").text("Debe Seleccionar un Departamento Para Continuar");
+      $('.toast').toast('show');
+      return false;
+    }
+    $('#title_penalty').text('Relacion de Penalizaciones');
+    $('#content_penalty').removeClass('d-none');
+    $.ajax({
+      url: 'recibocobro_controller.php?op=get_data_penalty',
+      method: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        $("#content_penalty_body").empty();
+        $.each(response, function (idx, opt) {
+          $("#content_penalty_body").append(`
+                <div id="cont_${opt.id}" class="row d-flex justify-content-between">
+                  <small class="col-2 text-body-secondary">${opt.code} </small>
+                  <span class="col-8 font-weight-bold">${opt.account}</span>
+                  <hr>
+                  <div class="col-12">`+
+            opt.details.map((detail) => {
+              return `
+              <div id="detail_${detail.id}" name="cont_${opt.id}" class="row">
+                    <input type="hidden" name="typep" value="${opt.id}">
+                    <input type="hidden" name="codep" value="${detail.id}">
+                    <div class="col-sm-1" >
+                    <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
+                    </div>
+                    <label name="incomep" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.incomename} </label>
+                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.incomebalance)}</span>
+                    <input name="p_amount" type="text" class="form-control col-sm-1 inpjs" value="${getFormatting(detail.incomebalance)}" disabled>
+                  </div>
+               `
+            }) +
+            `</div>
+                </div>
+          `);
+        });
+        getTotals();
+      }
+    });
+  });
+
   $(document).on('click', '#b_trash', function () {
     const id = $(this).data('value');
     const cont = $(this).attr('value');
@@ -318,9 +564,25 @@ $(document).ready(function () {
       const amount = gv_amount[i].value;
       dataexpense.push({ type: type, code: code, expense: expense, amount: amount })
     }
+    for (let i = 0; i < incomef.length; i++) {
+      const type = typei[i].value;
+      const code = codei[i].value;
+      const income = incomef[i].textContent;
+      const amount = i_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: income, amount: amount })
+    }
+    for (let i = 0; i < incomep.length; i++) {
+      const type = typep[i].value;
+      const code = codep[i].value;
+      const income = incomep[i].textContent;
+      const amount = p_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: income, amount: amount })
+    }
     nrecibo = $('#n_rc').text();
     cid = $('#id_c').val();
     uid = $('#id_u').val();
+    typerec = $('#typereceiot').val();
+    depart = $('#n_dpto').val();
     inquilino = $('#name_client').val();
     concepto = $('#p_cobro').val();
     fvence = $('#f_vence').val();
@@ -337,6 +599,8 @@ $(document).ready(function () {
     data.append('nrecibo', nrecibo);
     data.append('cid', cid);
     data.append('uid', uid);
+    data.append('typerec', typerec);
+    data.append('depart', depart);
     data.append('inquilino', inquilino);
     data.append('concepto', concepto);
     data.append('vence', fvence);
@@ -374,6 +638,7 @@ $(document).ready(function () {
           });
           $('#receipt_table').DataTable().ajax.reload();
           clearFields();
+          $('#typereceiot').val('');
           $('#rcIndividualModal').modal('hide');
         } else {
           if (response.httpstatus == '400') {
@@ -396,7 +661,7 @@ $(document).ready(function () {
     })
 
   });
-   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
+  /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
   $(document).on('click', '#b_delete_receipt', function () {
     var id = $(this).data('value');
     Swal.fire({
@@ -434,13 +699,13 @@ $(document).ready(function () {
         });
       }
     })
-
   })
   function loadDataDateReceipt() {
     $('#p_cobro').val(period);
     $('#f_vence').val(vence);
   }
   loadDataTableReceipts();
+
 });
 
 

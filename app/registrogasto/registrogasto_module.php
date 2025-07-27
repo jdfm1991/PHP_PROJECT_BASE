@@ -80,4 +80,15 @@ class Expenses extends Conectar
     return $stmt->rowCount();
   }
 
+  public function getDataDetailsExpenseDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id, expenseName, IFNULL(quotasExpense, montExpense) AS aumont 
+                                  FROM expense_data_table 
+                                  WHERE idExpenseAccount=:id AND statusExpense=1 AND balanceExpense>0");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
 }

@@ -609,7 +609,7 @@ Modal Nueva Tasa de Cambio
             </div>
             <div class="form-group col-md-8">
               <label for="datailIncome">Detalle del Ingreso</label>
-              <input type="text" class="form-control" id="datailIncome"  placeholder="Ingrese el Detalle del Gasto a Realizar" maxlength="50" required>
+              <input type="text" class="form-control" id="datailIncome" placeholder="Ingrese el Detalle del Gasto a Realizar" maxlength="50" required>
               <label id="count2" class="float-right"></label>
             </div>
             <div id="c_formula" class="form-check form-check-inline col-md-3 text-center d-none">
@@ -729,15 +729,22 @@ Modal Nueva Tasa de Cambio
         </button>
       </div>
       <div class="modal-body">
-        <form id="formReceipt">
+        <div class="col-sm-4">
+          <select class="custom-select mb-3" id="typereceiot" required>
+            <option value="">Seleccione el Tipo de Recibo</option>
+            <option value="COBRO">COBRO MENSUAL</option>
+            <option value="PENAL">PENALIZACION</option>
+          </select>
+        </div>
+        <form id="formReceipt" class="formreceipt">
           <input type="hidden" id="id_rc">
           <input type="hidden" id="id_u">
           <input type="hidden" id="id_c">
           <!-- Inicio de contenedor de cabezera de Recibo de Cobro -->
           <div class="container-sm !justify !spacing">
             <div class="form-row mb-3 mt-3 justify-content-between">
-              <div class="col-sm-8 mb-3 text-right text-uppercase text-monospace">N° de Recibo de Cobro: </div>
-              <div class="col-sm-4 mb-3 text-left text-uppercase text-monospace"><i class="bi bi-geo"></i> <span id="n_rc" class="h4 font-weight-bold text-info"></span> <i class="bi bi-geo"></i></div>
+              <div class="col-sm-8 mb-3 text-right text-uppercase text-monospace mb-3">N° de Recibo: </div>
+              <div class="col-sm-4 mb-3 text-left text-uppercase text-monospace mb-3"><i class="bi bi-geo"></i> <span id="n_rc" class="h4 font-weight-bold text-info"></span> <i class="bi bi-geo"></i></div>
               <!-- Inicio de contenedor de datos de Recibo de Cobro -->
               <div class="form-row col-sm-8">
                 <label class="form-label col-sm-3 mb-2" for="p_cobro">Periodo de Cobro</label>
@@ -762,12 +769,6 @@ Modal Nueva Tasa de Cambio
                 </div>
                 <div class="col-sm-6 mb-2">
                   <input id="e_dpto" type="text" class="form-control" placeholder="Email Inquilino">
-                </div>
-                <div class="col-sm-12 align-items-end btn-group" role="group">
-                  <button id="b_gastos_f" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Fijos </button>
-                  <button id="b_gastos_v" type="button" class="btn btn-outline-success btn-group w-25"> Gastos Varios </button>
-                  <button id="2" type="button" class="btn btn-outline-success btn-group w-25"> Penalizaciones </button>
-                  <button id="3" type="button" class="btn btn-outline-success btn-group w-25"> Ingresos </button>
                 </div>
               </div>
               <!-- Fin de contenedor de datos de Recibo de Cobro -->
@@ -809,57 +810,66 @@ Modal Nueva Tasa de Cambio
           </div>
           <!-- Fin de contenedor de cabezera de Recibo de Cobro -->
           <!-- Inicio de contenedor de los Items del Recibo de Cobro -->
-          <div>
-            <!-- Inicio de contenedor de los Items Gastos Fijos -->
-            <div id="content_fixed" class="card mb-2 d-none">
-              <div id="title_fixed" class="card-header text-muted text-center p-0"></div>
-              <div id="content_fixed_body" class="card-body pb-1 pt-1">
+          <div class="form-row col-sm-12 p-0 mt-0">
+            <div class="col-sm-8">
+              <!-- Inicio de contenedor de los Items Gastos Fijos -->
+              <div id="content_fixed" class="card mb-2 d-none">
+                <div id="title_fixed" class="card-header text-muted text-center p-0"></div>
+                <div id="content_fixed_body" class="card-body pb-1 pt-1">
 
+                </div>
+                <div class="card-footer text-muted text-right p-0">
+                  <p class="card-text mr-5">Total: <span id="total_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+                </div>
               </div>
-              <div class="card-footer text-muted text-right p-0">
-                <p class="card-text mr-5">Total: <span id="total_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
-              </div>
-            </div>
-            <!-- Fin de contenedor de los Items Gastos Fijos -->
-            <!-- Inicio de contenedor de los Items Gastos Variables -->
-            <div id="content_non_fixed" class="card mb-2 d-none">
-              <div id="title_non_fixed" class="card-header text-muted text-center p-0"></div>
-              <div id="content_non_fixed_body" class="card-body pb-1 pt-1">
+              <!-- Fin de contenedor de los Items Gastos Fijos -->
+              <!-- Inicio de contenedor de los Items Gastos Variables -->
+              <div id="content_non_fixed" class="card mb-2 d-none">
+                <div id="title_non_fixed" class="card-header text-muted text-center p-0"></div>
+                <div id="content_non_fixed_body" class="card-body pb-1 pt-1">
 
+                </div>
+                <div class="card-footer text-muted text-right p-0">
+                  <p class="card-text mr-5">Total: <span id="total_non_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+                </div>
               </div>
-              <div class="card-footer text-muted text-right p-0">
-                <p class="card-text mr-5">Total: <span id="total_non_fixed" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
-              </div>
-            </div>
-            <!-- Fin de contenedor de los Items Gastos Variables -->
-            <!-- Inicio de contenedor de los Items Penalizaciones -->
-            <div id="content_penalty" class="card mb-2 d-none">
-              <div id="title_penalty" class="card-header text-muted text-center p-0"></div>
-              <div id="content_penalty_body" class="card-body pb-1 pt-1">
+              <!-- Fin de contenedor de los Items Gastos Variables -->
+              <!-- Inicio de contenedor de los Items Penalizaciones -->
+              <div id="content_penalty" class="card mb-2 d-none">
+                <div id="title_penalty" class="card-header text-muted text-center p-0"></div>
+                <div id="content_penalty_body" class="card-body pb-1 pt-1">
 
+                </div>
+                <div class="card-footer text-muted text-right p-0">
+                  <p class="card-text mr-5">Total: <span id="total_penalty" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+                </div>
               </div>
-              <div class="card-footer text-muted text-right p-0">
-                <p class="card-text mr-5">Total: <span id="total_penalty" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
-              </div>
-            </div>
-            <!-- Fin de contenedor de los Items Penalizaciones -->
-            <!-- Inicio de contenedor de los Items Ingresos -->
-            <div id="content_income" class="card mb-2 d-none">
-              <div id="title_income" class="card-header text-muted text-center p-0"></div>
-              <div id="content_income_body" class="card-body pb-1 pt-1">
+              <!-- Fin de contenedor de los Items Penalizaciones -->
+              <!-- Inicio de contenedor de los Items Ingresos -->
+              <div id="content_income" class="card mb-2 d-none">
+                <div id="title_income" class="card-header text-muted text-center p-0"></div>
+                <div id="content_income_body" class="card-body pb-1 pt-1">
 
+                </div>
+                <div class="card-footer text-muted text-right p-0">
+                  <p class="card-text mr-5">Total: <span id="total_income" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+                </div>
               </div>
-              <div class="card-footer text-muted text-right p-0">
-                <p class="card-text mr-5">Total: <span id="total_income" class="font-weight-bold text-uppercase text-monospace text-right text-info h5"></span></p>
+              <!-- Fin de contenedor de los Items Ingresos -->
+            </div>
+            <div class="col-sm-4 p-0 mt-0 d-block">
+              <div class="btn-group justify-content-center" role="group" aria-label="Botones de opciones">
+                <button id="b_gastos_f" type="button" class="btn btn-outline-info col-sm btnd"> Gastos Fijos </button>
+                <button id="b_gastos_v" type="button" class="btn btn-outline-info col-sm btnd"> Gastos Varios </button>
+                <button id="b_ingreso" type="button" class="btn btn-outline-info col-sm btnd"> Ingresos </button>
               </div>
-            </div>
-            <!-- Fin de contenedor de los Items Ingresos -->
-            <div id="m_unit_cont" class="alert alert-warning d-none" role="alert">
-              <p id="m_unit_text" class="mb-0">Alert Description</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary x" data-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Totalizar</button>
+              <div class="btn-group justify-content-center" role="group" aria-label="Botones de opciones">
+                <button id="b_penal" type="button" class="btn btn-outline-info col-sm btnp"> Penalizaciones </button>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary x" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Totalizar</button>
+              </div>
             </div>
 
           </div>

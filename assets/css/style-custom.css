@@ -17,3 +17,12 @@
   padding: 10px;
 }
 
+.inpjs {
+  position: relative; 
+  top: -10px; 
+}
+
+.penalies {
+  background: rgba(252, 100, 100, 0.863);
+}
+

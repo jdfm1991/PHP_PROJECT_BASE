@@ -68,4 +68,21 @@ class IncomeAccounts extends Conectar
     return $stmt->rowCount();
   }
 
+  public function getDataIncomeAcountDB()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id, codeaccount, incomeaccount FROM income_accounts_data_table WHERE statusaccount = 1 AND typeaccount != 2");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function getDataPenaltyAcountDB()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id, codeaccount, incomeaccount FROM income_accounts_data_table WHERE statusaccount = 1 AND typeaccount = 2");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }
