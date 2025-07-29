@@ -66,11 +66,29 @@ class Receipts extends Conectar
     return $stmt->rowCount();
   }
 
-  public function updateReceiptBalancestDB($id, $monto_gf , $monto_gv , $monto_i, $monto_tg)
+  public function updateReceiptBalancestDB($id, $monto_gf, $monto_gv, $monto_i, $monto_tg)
   {
     $conectar = parent::conexion();
     $stmt = $conectar->prepare("UPDATE receipts_data_table SET aumontgf	= :aumontgf, aumontgv = :aumontgv, aumonti = :aumonti, aumont = :aumont, balencereceipt = :balence WHERE id = :id");
-    $stmt->execute(['aumontgf' => $monto_gf, 'aumontgv' => $monto_gv,'aumonti' => $monto_i, 'aumont' => $monto_tg, 'balence' => $monto_tg, 'id' => $id]);
+    $stmt->execute(['aumontgf' => $monto_gf, 'aumontgv' => $monto_gv, 'aumonti' => $monto_i, 'aumont' => $monto_tg, 'balence' => $monto_tg, 'id' => $id]);
     return $stmt->rowCount();
+  }
+
+  public function getDataHeaderReceiptDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id, daterec, numrec, unitdep, conceptreceipt, levelrec, aliquotrec, aumontgf, aumontgv, aumontp, aumonti, aumont, expirationdate FROM receipts_data_table WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function getDataExpenseFixedByReceiptDB($receipt, $expense)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT * FROM receipts_items_data_table WHERE idreceipt = :receipt AND typeexpense = :expense");
+    $stmt->execute(['receipt' => $receipt, 'expense' => $expense]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 }
