@@ -50,16 +50,39 @@ const loadSidebarMenu = async () => {
     container.appendChild(li);
   })
 };
+
+const loadPenaltiesFreeInterest = async () => {
+  const response = await fetch(URI + 'recibocobro/recibocobro_controller.php?op=get_interest_free_penalties');
+  const data = await response.json();
+  $(".mr-auto").text("Procesos Exitoso");
+  $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+  $(".toast").css("color", "black");
+  $(".toast").attr("background-color", "");
+  $("#toastText").text(data.message);
+  $('.toast').toast('show');
+}
+
+const loadPenaltiesWhithInterest = async () => {
+  const response = await fetch(URI + 'recibocobro/recibocobro_controller.php?op=get_interest_whith_penalties');
+  const data = await response.json();
+  $(".mr-auto").text("Procesos Exitoso");
+  $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+  $(".toast").css("color", "black");
+  $(".toast").attr("background-color", "");
+  $("#toastText").text(data.message);
+  $('.toast').toast('show');
+}
+
 /* Funcion para Ingresar Solo los Numeros en el Input de Telefono */
-  $(function () {
-    $("input[name='onlynumber']").on("input", function (e) {
-      $(this).val(
-        $(this)
-          .val()
-          .replace(/[^0-9.]/g, "")
-      );
-    });
+$(function () {
+  $("input[name='onlynumber']").on("input", function (e) {
+    $(this).val(
+      $(this)
+        .val()
+        .replace(/[^0-9.]/g, "")
+    );
   });
+});
 $(document).ready(function () {
   $('#btnLogin').click(function (e) {
     e.preventDefault();
@@ -101,7 +124,7 @@ $(document).ready(function () {
     })
 
   });
-  
+
   loadSidebarMenu();
 });
 

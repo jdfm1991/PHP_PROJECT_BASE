@@ -208,6 +208,6 @@ $(document).ready(function () {
     });
 
   });
-
   loadDataTableAccountsReceivable();
+  loadPenaltiesWhithInterest();
 });

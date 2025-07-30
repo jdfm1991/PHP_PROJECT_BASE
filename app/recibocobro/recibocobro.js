@@ -9,21 +9,25 @@ $(document).ready(function () {
   const codef = document.getElementsByName('codef')
   const typef = document.getElementsByName('typef')
   const expensef = document.getElementsByName('expensef')
+  const ef_amount = document.getElementsByName('ef_amount')
   const gf_amount = document.getElementsByName('gf_amount')
   /* Definiendo elementos para obtener valores de los gastos variables y almacenarlos en un arreglo */
   const codenf = document.getElementsByName('codenf')
   const typenf = document.getElementsByName('typenf')
   const expensenf = document.getElementsByName('expensenf')
+  const enf_amount = document.getElementsByName('enf_amount')
   const gv_amount = document.getElementsByName('gv_amount')
   /* Definiendo elementos para obtener valores de los ingresos y almacenarlos en un arreglo */
   const codei = document.getElementsByName('codei')
   const typei = document.getElementsByName('typei')
   const incomef = document.getElementsByName('incomef')
+  const ii_amount = document.getElementsByName('ii_amount')
   const i_amount = document.getElementsByName('i_amount')
   /* Definiendo elementos para obtener valores de las penalidades y almacenarlos en un arreglo */
   const typep = document.getElementsByName('typep')
   const codep = document.getElementsByName('codep')
   const incomep = document.getElementsByName('incomep')
+  const ip_amount = document.getElementsByName('ip_amount')
   const p_amount = document.getElementsByName('p_amount')
   /* Funcion para cargar la tabla de recibos que se encuentran en la base de datos */
   const loadDataTableReceipts = async () => {
@@ -71,12 +75,13 @@ $(document).ready(function () {
         { data: "aumont" },
         {
           data: "id", render: (data, _, __, meta) =>
-            `<button id="b_delete_receipt" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>`, className: "text-center"
+            `<button id="b_delete_receipt" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>
+            <button id="b_view_receipt" class="btn btn-outline-info btn-sm" data-value="${data}"><i class="bi bi-eye-fill"></i></button> `, className: "text-center"
         }
       ],
       rowCallback: function (row, data, index) {
         if (data.type === 'PENAL') {
-          $(row).css('background-color', 'rgba(252, 100, 100, 0.452)');
+          $(row).css('background-color', 'rgba(252, 138, 138, 0.31)');
           $(row).css('color', 'black');
           $(row).css('font-weight', 'bold');
         } else {
@@ -93,8 +98,13 @@ $(document).ready(function () {
     $('#formReceipt')[0].reset();
     $('#content_fixed_body').empty();
     $('#content_non_fixed_body').empty();
+    $('#content_penalty_body').empty();
+    $('#content_income_body').empty();
     $('#content_fixed').addClass('d-none');
     $('#content_non_fixed').addClass('d-none');
+    $('#content_penalty').addClass('d-none');
+    $('#content_income').addClass('d-none');
+
   }
   /* Funcion para obtener el numero de recibo */
   const getNewNumberRC = function () {
@@ -345,7 +355,7 @@ $(document).ready(function () {
                 <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
                 </div>
                 <label name="expensef" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
-                <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.aumont)}</span>
+                <span class="col-sm-2 font-weight-bold text-right" name="ef_amount">${getFormatting(detail.aumont)}</span>
                 <input name="gf_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
               </div>
                `
@@ -390,15 +400,15 @@ $(document).ready(function () {
             opt.details.map((detail) => {
               return `
               <div id="detail_${detail.id}" name="cont_${opt.id}" class="row">
-                    <input type="hidden" name="typenf" value="${opt.id}">
-                    <input type="hidden" name="codenf" value="${detail.id}">
-                    <div class="col-sm-1" >
-                    <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
-                    </div>
-                    <label name="expensenf" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
-                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.aumont)}</span>
-                    <input name="gv_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
-                  </div>
+                <input type="hidden" name="typenf" value="${opt.id}">
+                <input type="hidden" name="codenf" value="${detail.id}">
+                <div class="col-sm-1" >
+                <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
+                </div>
+                <label name="expensenf" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.expenseName} </label>
+                <span class="col-sm-2 font-weight-bold text-right" name="enf_amount">${getFormatting(detail.aumont)}</span>
+                <input name="gv_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.aumont, aliquot)}" disabled>
+              </div>
                `
             }) +
             `</div>
@@ -441,16 +451,16 @@ $(document).ready(function () {
             opt.details.map((detail) => {
               return `
               <div id="detail_${detail.id}" name="cont_${opt.id}" class="row">
-                    <input type="hidden" name="typei" value="${opt.id}">
-                    <input type="hidden" name="codei" value="${detail.id}">
-                    <div class="col-sm-1" >
-                    <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
-                    </div>
-                    <label name="incomef" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.incomename} </label>
-                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.incomebalance)}</span>
-                    <input name="i_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.incomebalance, aliquot)}" disabled>
-                  </div>
-               `
+                <input type="hidden" name="typei" value="${opt.id}">
+                <input type="hidden" name="codei" value="${detail.id}">
+                <div class="col-sm-1" >
+                <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
+                </div>
+                <label name="incomef" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.incomename} </label>
+                <span class="col-sm-2 font-weight-bold text-right" name="ii_amount">${getFormatting(detail.incomebalance)}</span>
+                <input name="i_amount" type="text" class="form-control col-sm-1 inpjs" value="${getCalcFormatting(detail.incomebalance, aliquot)}" disabled>
+              </div>
+            `
             }) +
             `</div>
                 </div>
@@ -492,15 +502,15 @@ $(document).ready(function () {
             opt.details.map((detail) => {
               return `
               <div id="detail_${detail.id}" name="cont_${opt.id}" class="row">
-                    <input type="hidden" name="typep" value="${opt.id}">
-                    <input type="hidden" name="codep" value="${detail.id}">
-                    <div class="col-sm-1" >
-                    <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
-                    </div>
-                    <label name="incomep" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.incomename} </label>
-                    <span class="col-sm-2 font-weight-bold text-right" name="amount">${getFormatting(detail.incomebalance)}</span>
-                    <input name="p_amount" type="text" class="form-control col-sm-1 inpjs" value="${getFormatting(detail.incomebalance)}" disabled>
-                  </div>
+                <input type="hidden" name="typep" value="${opt.id}">
+                <input type="hidden" name="codep" value="${detail.id}">
+                <div class="col-sm-1" >
+                <button id="b_trash" type="button" class="btn btn-outline-danger btn-group-sm" data-value="${detail.id}" value="${opt.id}" title="Eliminar"><i class="bi bi-dash"></i></button>
+                </div>
+                <label name="incomep" class="col-sm-7 text-body-secondary text-monospace font-weight-bold">${detail.incomename} </label>
+                <span class="col-sm-2 font-weight-bold text-right" name="ip_amount">${getFormatting(detail.incomebalance)}</span>
+                <input name="p_amount" type="text" class="form-control col-sm-1 inpjs" value="${getFormatting(detail.incomebalance)}" disabled>
+              </div>
                `
             }) +
             `</div>
@@ -554,29 +564,33 @@ $(document).ready(function () {
       const type = typef[i].value;
       const code = codef[i].value;
       const expense = expensef[i].textContent;
-      const amount = gf_amount[i].value;
-      dataexpense.push({ type: type, code: code, expense: expense, amount: amount })
+      const amount = ef_amount[i].textContent;
+      const aliquot = gf_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: expense, amount: amount, aliquot: aliquot })
     }
     for (let i = 0; i < expensenf.length; i++) {
       const type = typenf[i].value;
       const code = codenf[i].value;
       const expense = expensenf[i].textContent;
-      const amount = gv_amount[i].value;
-      dataexpense.push({ type: type, code: code, expense: expense, amount: amount })
+      const amount = enf_amount[i].textContent;
+      const aliquot = gv_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: expense, amount: amount, aliquot: aliquot })
     }
     for (let i = 0; i < incomef.length; i++) {
       const type = typei[i].value;
       const code = codei[i].value;
       const income = incomef[i].textContent;
-      const amount = i_amount[i].value;
-      dataexpense.push({ type: type, code: code, expense: income, amount: amount })
+      const amount = ii_amount[i].textContent;
+      const aliquot = i_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: income, amount: amount, aliquot: aliquot })
     }
     for (let i = 0; i < incomep.length; i++) {
       const type = typep[i].value;
       const code = codep[i].value;
       const income = incomep[i].textContent;
-      const amount = p_amount[i].value;
-      dataexpense.push({ type: type, code: code, expense: income, amount: amount })
+      const amount = ip_amount[i].textContent;
+      const aliquot = p_amount[i].value;
+      dataexpense.push({ type: type, code: code, expense: income, amount: amount, aliquot: aliquot })
     }
     nrecibo = $('#n_rc').text();
     cid = $('#id_c').val();
@@ -656,7 +670,6 @@ $(document).ready(function () {
             timer: 1500
           });
         }
-
       }
     })
 
@@ -700,12 +713,18 @@ $(document).ready(function () {
       }
     })
   })
+    /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
+  $(document).on('click', '#b_view_receipt', function () {
+    var id = $(this).data('value');
+    window.open("pdf.php?id=" + id, "_blank");
+  })
   function loadDataDateReceipt() {
     $('#p_cobro').val(period);
     $('#f_vence').val(vence);
   }
   loadDataTableReceipts();
-
+  loadPenaltiesFreeInterest();
+  loadPenaltiesWhithInterest();
 });
 
 

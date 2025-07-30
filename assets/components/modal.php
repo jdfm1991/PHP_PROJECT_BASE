@@ -401,7 +401,7 @@ Modal Nueva Tasa de Cambio
   *************************************************
 -->
 <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 9999; right: 0; bottom: 0;">
-  <div id="bodyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+  <div id="bodyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
     <div class="toast-header">
       <img src="<?php echo  URL_ASSETS; ?>/img/undraw_rocket.svg" class="rounded mr-2" alt="alt" width="20">
       <strong class="mr-auto"></strong>

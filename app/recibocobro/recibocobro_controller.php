@@ -33,6 +33,10 @@ $monto_p = (isset($_POST['monto_p'])) ? $_POST['monto_p'] : '';
 $monto_i = (isset($_POST['monto_i'])) ? $_POST['monto_i'] : '';
 $monto_tg = (isset($_POST['monto_tg'])) ? $_POST['monto_tg'] : '';
 $itemreceipt = (isset($_POST['dataexpense'])) ? $_POST['dataexpense'] : '';
+$now = new DateTime(date('Y-m-d'));
+$year = date('Y');
+$month = date('n');
+$daysxmonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
 switch ($_GET["op"]) {
   case 'get_new_number':
@@ -118,7 +122,7 @@ switch ($_GET["op"]) {
     if ($data) {
       $i = 0;
       foreach (json_decode($itemreceipt, true) as $row) {
-        $dataitems = $colrec->createDataReceiptItemsDB($id, $row['type'], $row['code'], $row['expense'], $row['amount']);
+        $dataitems = $colrec->createDataReceiptItemsDB($id, $row['type'], $row['code'], $row['expense'], $row['amount'], $row['aliquot']);
         if ($dataitems) {
           $i++;
         }
@@ -169,7 +173,7 @@ switch ($_GET["op"]) {
             $details = $expenses->getDataDetailsExpenseDB($row2['id']);
             if (!empty($details)) {
               foreach ($details as $row3) {
-                $dataitems = $colrec->createDataReceiptItemsDB($id, $row2['id'], $row3['id'], $row3['expenseName'], (($row3['aumont'] * $row['aliquot']) / 100));
+                $dataitems = $colrec->createDataReceiptItemsDB($id, $row2['id'], $row3['id'], $row3['expenseName'], $row3['aumont'], (($row3['aumont'] * $row['aliquot']) / 100));
                 if ($dataitems) {
                   $monto_gf = $monto_gf + (($row3['aumont'] * $row['aliquot']) / 100);
                 }
@@ -181,7 +185,7 @@ switch ($_GET["op"]) {
             $details = $expenses->getDataDetailsExpenseDB($row2['id']);
             if (!empty($details)) {
               foreach ($details as $row3) {
-                $dataitems = $colrec->createDataReceiptItemsDB($id, $row2['id'], $row3['id'], $row3['expenseName'], (($row3['aumont'] * $row['aliquot']) / 100));
+                $dataitems = $colrec->createDataReceiptItemsDB($id, $row2['id'], $row3['id'], $row3['expenseName'], $row3['aumont'], (($row3['aumont'] * $row['aliquot']) / 100));
                 if ($dataitems) {
                   $monto_gv = $monto_gv + (($row3['aumont'] * $row['aliquot']) / 100);
                 }
@@ -193,7 +197,7 @@ switch ($_GET["op"]) {
             $details = $incomes->getDataDetailsIncomeDB($row2['id']);
             if (!empty($details)) {
               foreach ($details as $row3) {
-                $dataitems = $colrec->createDataReceiptItemsDB($id, $row2['id'], $row3['id'], $row3['incomename'], (($row3['incomebalance'] * $row['aliquot']) / 100));
+                $dataitems = $colrec->createDataReceiptItemsDB($id, $row2['id'], $row3['id'], $row3['incomename'], $row3['incomebalance'], (($row3['incomebalance'] * $row['aliquot']) / 100));
                 if ($dataitems) {
                   $monto_i = $monto_i + (($row3['incomebalance'] * $row['aliquot']) / 100);
                 }
@@ -248,6 +252,105 @@ switch ($_GET["op"]) {
       $dato['status'] = false;
       $dato['error'] = '500';
       $dato['message'] = "Error Al Cliente El Usuario, Por Favor Intente Nuevamente \n";
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'get_interest_free_penalties':
+    $dato = array();
+    $nr = 0;
+    $j = 0;
+    $k = 0;
+    $data = $colrec->getDataReceiptsExpiredDB();
+    foreach ($data as $row) {
+      $expiredate = new DateTime($row['expirationdate']);
+      $difference = $now->diff($expiredate);
+      if ($difference->days > 0) {
+        $penalty = $incomeaccounts->getDataPenaltyAcountDB();
+        foreach ($penalty as $penalty) {
+          $vence = '0000-00-00';
+          $aliquot = 0;
+          $monto_gf = 0;
+          $monto_gv = 0;
+          $monto_i = 0;
+          $monto_tg = 0;
+          $typerec = 'PENAL';
+          $items = $incomes->getDataDetailsIncomeDB($penalty['id']);
+          foreach ($items as $items) {
+            $nr++;
+            $id = uniqid();
+            $nreceipt = $colrec->getNewNumberReceiptDB();
+            $concepto = $items['incomename'] . ' APTO N°: ' . $row['unitdep'] . ' ' . $row['conceptreceipt'];
+            $check = $colrec->checkPenaliesReceiptDB($row['cid'], $row['uid'], $concepto);
+            if ($check == 0) {
+              $receipt = $colrec->createDataReceiptsDB($id, $row['cid'], $row['uid'], $nreceipt, $row['nametenant'], $concepto, $vence, $row['levelrec'], $aliquot, $row['emailrec'], $monto_gf, $monto_gv, $items['incomebalance'], $monto_i, $items['incomebalance'], $typerec, $row['unitdep']);
+              if ($receipt) {
+                $i++;
+                $dataitems = $colrec->createDataReceiptItemsDB($id, $penalty['id'], $items['id'], $items['incomename'], $items['incomebalance'], $items['incomebalance']);
+                if ($dataitems) {
+                  $j++;
+                }
+              } else {
+                $dato['status'] = false;
+                $dato['httpstatus'] = '500';
+                $dato['message'] = "Error Al Generar la Penalidad en el Recibo de Cobro" . $row['unitdep'] . $row['conceptreceipt'] . ", Por Favor Intente Nuevamente \n";
+                echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+                return;
+              }
+            }
+          }
+        }
+        if ($i == $j && $j == $nr) {
+          $dato['status'] = true;
+          $dato['httpstatus'] = '200';
+          $dato['message'] = "Las penalidades en los Recibos de Cobro vencidos Fueron Creadas Satisfactoriamente \n";
+        }
+      } else {
+        $dato['status'] = true;
+        $dato['httpstatus'] = '200';
+        $dato['message'] = "Actualmente No Hay Recibos Vencidos \n";
+      }
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'get_interest_whith_penalties':
+    $dato = array();
+    $data = $colrec->getDataReceiptsExpiredDB();
+    foreach ($data as $row) {
+      $expiredate = new DateTime($row['expirationdate']);
+      $difference = $now->diff($expiredate);
+      if ($difference->days > 0) {
+        $penalty = $incomeaccounts->getDataPenaltyAcountDB();
+        foreach ($penalty as $penalty) {
+          $items = $incomes->getDataIncomeWithInterestDB($penalty['id']);
+          foreach ($items as $items) {
+            $late = (((($row['balencereceipt'] * $items['amountpercent']) / 100) / $daysxmonth) * $difference->days);
+            $validate = $colrec->validatePenaltyReceiptDB($row['id'], $penalty['id'], $items['id']);
+            if ($validate > 0) {
+              $penal = $colrec->updateDataPenaltyReceiptsDB($row['id'], $penalty['id'], $items['id'], $late);
+              if ($penal) {
+                $dato['status'] = true;
+                $dato['httpstatus'] = '200';
+                $dato['message'] = "Las penalidades en los Recibos de Cobro vencidos Fueron Actualizadas Satisfactoriamente \n";
+              } else {
+                $dato['status'] = false;
+                $dato['httpstatus'] = '500';
+                $dato['message'] = "Error al intentar actualizar las penalidades en los Recibos de Cobro vencidos, Por Favor Intente Nuevamente \n";
+              }
+            } else {
+              $penal = $colrec->createDataPenaltyReceiptsDB($row['id'], $penalty['id'], $items['id'], $items['incomename'], $late);
+              if ($penal) {
+                $dato['status'] = true;
+                $dato['httpstatus'] = '200';
+                $dato['message'] = "Las penalidades en los Recibos de Cobro vencidos Fueron Creadas Satisfactoriamente \n";
+              } else {
+                $dato['status'] = false;
+                $dato['httpstatus'] = '500';
+                $dato['message'] = "Error al intentar crear las penalidades en los Recibos de Cobro vencidos, Por Favor Intente Nuevamente \n";
+              }
+            }
+          }
+        }
+      }
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;

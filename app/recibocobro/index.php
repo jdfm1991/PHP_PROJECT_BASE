@@ -39,7 +39,7 @@ require_once(PATH_APP . "/head.php");
                     <th>N° Recibo</th>
                     <th>Departamento</th>
                     <th>Inqulino</th>
-                    <th>Periodo</th>
+                    <th>Concepto</th>
                     <th>Vencimiento</th>
                     <th>Saldo</th>
                     <th>Opcion</th>

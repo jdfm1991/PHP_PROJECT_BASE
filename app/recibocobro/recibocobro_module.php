@@ -23,12 +23,12 @@ class Receipts extends Conectar
     return $stmt->rowCount();
   }
 
-  public function createDataReceiptItemsDB($id, $type, $code, $expense, $amount)
+  public function createDataReceiptItemsDB($id, $type, $code, $expense, $amount, $aliquot)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO receipts_items_data_table(idreceipt, typeexpense, idexpense, detailexpense, amountexpense) VALUES (:idr, :type, :code, :expense, :amount)");
-    $stmt->execute(['idr' => $id, 'type' => $type, 'code' => $code, 'expense' => $expense, 'amount' => $amount]);
+    $stmt = $conectar->prepare("INSERT INTO receipts_items_data_table(idreceipt, typeexpense, idexpense, detailexpense, amountexpense, aumontaliquot) VALUES (:idr, :type, :code, :expense, :amount, :aliquot)");
+    $stmt->execute(['idr' => $id, 'type' => $type, 'code' => $code, 'expense' => $expense, 'amount' => $amount, 'aliquot' => $aliquot]);
     return $stmt->rowCount();
   }
 
@@ -47,6 +47,15 @@ class Receipts extends Conectar
     parent::set_names();
     $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE MONTH(daterec)=MONTH(NOW()) AND statusrec = 1 AND cid = :cid AND uid = :uid AND typerec = 'COBRO'");
     $stmt->execute(['cid' => $cid, 'uid' => $uid]);
+    return $stmt->rowCount();
+  }
+
+  public function checkPenaliesReceiptDB($cid, $uid, $concepto)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE MONTH(daterec)=MONTH(NOW()) AND statusrec = 1 AND cid = :cid AND uid = :uid AND conceptreceipt = :concept AND typerec = 'PENAL'");
+    $stmt->execute(['cid' => $cid, 'uid' => $uid, 'concept' => $concepto]);
     return $stmt->rowCount();
   }
 
@@ -78,12 +87,12 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT id, daterec, numrec, unitdep, conceptreceipt, levelrec, aliquotrec, aumontgf, aumontgv, aumontp, aumonti, aumont, expirationdate FROM receipts_data_table WHERE id = :id");
+    $stmt = $conectar->prepare("SELECT id, daterec, numrec, nametenant, unitdep, conceptreceipt, levelrec, aliquotrec, aumontgf, aumontgv, aumontp, aumonti, aumont, expirationdate, typerec FROM receipts_data_table WHERE id = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function getDataExpenseFixedByReceiptDB($receipt, $expense)
+  public function getDataItemsByReceiptDB($receipt, $expense)
   {
     $conectar = parent::conexion();
     parent::set_names();
@@ -91,4 +100,41 @@ class Receipts extends Conectar
     $stmt->execute(['receipt' => $receipt, 'expense' => $expense]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+
+  public function getDataReceiptsExpiredDB()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE MONTH(daterec)=MONTH(NOW()) AND statusrec = 1 AND expirationdate < NOW() AND typerec = 'COBRO' ORDER BY daterec DESC");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function createDataPenaltyReceiptsDB($receipt, $account, $income, $penalty, $amount)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("INSERT INTO income_penalty_data_table(datep, receipt, account, income, namepenalty, amount) VALUES (:datep, :receipt, :account, :income, :penalty, :amount)");
+    $stmt->execute(['datep' => date('Y-m-d'), 'receipt' => $receipt, 'account' => $account, 'income' => $income, 'penalty' => $penalty, 'amount' => $amount]);
+    return $stmt->rowCount();
+  }
+
+  public function validatePenaltyReceiptDB($receipt, $account, $income)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT * FROM income_penalty_data_table WHERE receipt = :receipt and account = :account AND income = :income AND status = 1 AND MONTH(datep)=MONTH(NOW()) AND YEAR(datep)=YEAR(NOW())");
+    $stmt->execute(['receipt' => $receipt, 'account' => $account, 'income' => $income]);
+    return $stmt->rowCount();
+  }
+
+  public function updateDataPenaltyReceiptsDB($receipt, $account, $income, $amount)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("UPDATE income_penalty_data_table SET amount = :amount, dateupt = NOW() WHERE receipt = :receipt AND account = :account AND income = :income");
+    $stmt->execute(['amount' => $amount, 'receipt' => $receipt, 'account' => $account, 'income' => $income]);
+    return $stmt->rowCount();
+  }
+
 }
