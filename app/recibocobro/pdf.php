@@ -145,6 +145,28 @@ function getInfoBodyReceipt($id, $account, $item, $type)
   return $infobody;
 }
 
+function getTotalOfReceiptById($data)
+{
+
+  $infobody = '
+    <table style="text-align:justify; width:100%">
+      <tr>
+        <th style="padding-bottom: -15px; width:15%">CODIGO</th>
+        <th style="padding-bottom: -15px; width:65%">jkj</th>
+        <th style="padding-bottom: -15px;">MONTO</th>
+        <th style="padding-bottom: -15px;">CUOTA</th>
+      </tr>
+          <tr style="background-color: #dde3f1da; border: 1px solid #747474;">
+						<td style="text-align:center; font-weight: bold; padding-top: 30px;"> lmm</td>
+						<td style="text-align:center; font-weight: bold; padding-top: 30px;"> TOTAL DE </td>
+						<td style="text-align:center; font-weight: bold; padding-top: 30px;"> kjhj</td>
+						<td style="text-align:center; font-weight: bold; padding-top: 30px;"> kui</td>
+					</tr>
+      </table>
+      <hr>';
+  return $infobody;
+}
+
 $data = $colrec->getDataHeaderReceiptDB($id);
 $name = getNameReceipt($data);
 $type = getTypeReceipt($data);
@@ -152,23 +174,34 @@ $type = getTypeReceipt($data);
 $head .= getInfoHeadCondominium($logo, $type);
 $head .= getInfoHeadReceipt($data);
 
-$body .= '<br><br><div class="content-body">';
 if ($type == 'COBRO') {
   $body .= getInfoBodyReceipt($id, $expaccount, $colrec, 'EAF');
+  $body .= '<br>';
   $body .= getInfoBodyReceipt($id, $expaccount, $colrec, 'EANF');
+  $body .= '<br>';
   $body .= getInfoBodyReceipt($id, $incomeaccounts, $colrec, 'IAF');
 }
 if ($type == 'PENAL') {
   $body .= getInfoBodyReceipt($id, $incomeaccounts, $colrec, 'PAF');
 }
-$body .= '</div>';
+$body .= getTotalOfReceiptById($data);
 
 if ($type == 'COBRO') {
-  $mpdf = new \Mpdf\Mpdf();
+  $mpdf = new \Mpdf\Mpdf([
+    'mode' => 'utf-8',
+    'format' => 'letter',
+    'margin_header' => 10,
+    'margin_footer' => 10,
+    'margin_left' => 10,
+    'margin_right' => 10,
+    'margin_top' => 65,
+    'margin_bottom' => 15
+    ]);
 }
 if ($type == 'PENAL') {
   $mpdf = new \Mpdf\Mpdf(['format' => [215, 139]]);
 }
+$mpdf->margin_header = 5;
 $mpdf->SetHeader($head);
 $mpdf->SetFooter(' Numero de Pagina: {PAGENO}| Fecha de impresion: {DATE j-m-Y}');
 $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);

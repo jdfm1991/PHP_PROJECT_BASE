@@ -104,7 +104,6 @@ $(document).ready(function () {
     $('#content_non_fixed').addClass('d-none');
     $('#content_penalty').addClass('d-none');
     $('#content_income').addClass('d-none');
-
   }
   /* Funcion para obtener el numero de recibo */
   const getNewNumberRC = function () {
@@ -315,21 +314,21 @@ $(document).ready(function () {
         }
         clearFields();
         loadDataDateReceipt();
-        $.each(response, function (idx, opt) {
-          $('#id_u').val(opt.uid);
-          $('#id_c').val(opt.cid);
-          $('#n_dpto').val(opt.unit);
-          $('#name_client').val(opt.name);
-          $('#l_dpto').val(opt.level);
-          $('#a_dpto').val(opt.aliquot);
-          $('#e_dpto').val(opt.email);
-          $('#amout_a').val(opt.balance);
-          $('#amout_m').val(opt.mora);
-          $('#amout_g').val(opt.gastos);
-        });
+        $('#id_u').val(response.uid);
+        $('#id_c').val(response.cid);
+        $('#id_rc').val(response.receipt);
+        $('#n_dpto').val(response.unit);
+        $('#name_client').val(response.name);
+        $('#l_dpto').val(response.level);
+        $('#a_dpto').val(response.aliquot);
+        $('#e_dpto').val(response.email);
+        $('#amout_a').val(response.balance);
+        $('#amout_m').val(response.mora);
+        $('#amout_g').val(response.gastos);
         getTotals(select);
       }
     });
+
   });
   /* Funcion para obtener los gastos fijos */
   $('#b_gastos_f').click(function (e) {
@@ -609,6 +608,7 @@ $(document).ready(function () {
     nrecibo = $('#n_rc').text();
     cid = $('#id_c').val();
     uid = $('#id_u').val();
+    receipt = $('#id_rc').val();
     typerec = $('#typereceiot').val();
     depart = $('#n_dpto').val();
     inquilino = $('#name_client').val();
@@ -622,6 +622,9 @@ $(document).ready(function () {
     monto_p = $('#amout_p').val();
     monto_i = $('#amout_i').val();
     monto_tg = $('#amout_tg').val();
+    amout_a = $('#amout_a').val();
+    amout_m = $('#amout_m').val();
+    amout_g = $('#amout_g').val();
     dataexpense = dataexpense;
     data = new FormData();
     data.append('nrecibo', nrecibo);
@@ -640,6 +643,10 @@ $(document).ready(function () {
     data.append('monto_p', monto_p);
     data.append('monto_i', monto_i);
     data.append('monto_tg', monto_tg);
+    data.append('amout_a', amout_a);
+    data.append('amout_m', amout_m);
+    data.append('amout_g', amout_g);
+    data.append('receipt', receipt);
     data.append('dataexpense', JSON.stringify(dataexpense));
     if (monto_tg == 0 || monto_tg == '') {
       $(".mr-auto").text("Procesos Fallido");

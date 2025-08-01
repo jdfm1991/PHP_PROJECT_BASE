@@ -14,12 +14,12 @@ class Receipts extends Conectar
     return $stmt->fetchColumn();
   }
 
-  public function createDataReceiptsDB($id, $cid, $uid, $nreceipt, $inquilino, $concepto, $vence, $nivel, $aliquot, $email, $monto_gf, $monto_gv, $monto_p, $monto_i, $monto_tg, $typerec, $depart)
+  public function createDataReceiptsDB($id, $cid, $uid, $nreceipt, $inquilino, $concepto, $vence, $nivel, $aliquot, $email, $monto_gf, $monto_gv, $monto_p, $monto_i, $amout_a, $amout_m, $amout_g, $monto_tg, $typerec, $depart)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO receipts_data_table (id, cid, uid, daterec, numrec, nametenant, conceptreceipt, levelrec, aliquotrec, emailrec, aumontgf, aumontgv, aumontp, aumonti, aumont, expirationdate, balencereceipt, typerec, unitdep) VALUES (:id, :cid, :uid, :date, :number, :tenant, :concept, :level, :aliquot, :email, :aumontgf, :aumontgv, :aumontp, :aumonti, :aumont, :expiration, :balence, :typerec, :depart)");
-    $stmt->execute(['id' => $id, 'cid' => $cid, 'uid' => $uid, 'date' => date('Y-m-d'), 'number' => $nreceipt, 'tenant' => $inquilino, 'concept' => $concepto, 'level' => $nivel, 'aliquot' => $aliquot, 'email' => $email, 'aumontgf' => $monto_gf, 'aumontgv' => $monto_gv, 'aumontp' => $monto_p, 'aumonti' => $monto_i, 'aumont' => $monto_tg, 'expiration' => $vence, 'balence' => $monto_tg, 'typerec' => $typerec, 'depart' => $depart]);
+    $stmt = $conectar->prepare("INSERT INTO receipts_data_table (id, cid, uid, daterec, numrec, nametenant, conceptreceipt, levelrec, aliquotrec, emailrec, aumontgf, aumontgv, aumontp, aumonti, amouta, amoutm, amoutg, aumont, expirationdate, balencereceipt, typerec, unitdep) VALUES (:id, :cid, :uid, :date, :number, :tenant, :concept, :level, :aliquot, :email, :aumontgf, :aumontgv, :aumontp, :aumonti, :amouta, :amoutm, :amoutg, :aumont, :expiration, :balence, :typerec, :depart)");
+    $stmt->execute(['id' => $id, 'cid' => $cid, 'uid' => $uid, 'date' => date('Y-m-d'), 'number' => $nreceipt, 'tenant' => $inquilino, 'concept' => $concepto, 'level' => $nivel, 'aliquot' => $aliquot, 'email' => $email, 'aumontgf' => $monto_gf, 'aumontgv' => $monto_gv, 'aumontp' => $monto_p, 'aumonti' => $monto_i, 'amouta' => $amout_a, 'amoutm' => $amout_m, 'amoutg' => $amout_g,  'aumont' => $monto_tg, 'expiration' => $vence, 'balence' => $monto_tg, 'typerec' => $typerec, 'depart' => $depart]);
     return $stmt->rowCount();
   }
 
@@ -87,7 +87,7 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT id, daterec, numrec, nametenant, unitdep, conceptreceipt, levelrec, aliquotrec, aumontgf, aumontgv, aumontp, aumonti, aumont, expirationdate, typerec FROM receipts_data_table WHERE id = :id");
+    $stmt = $conectar->prepare("SELECT id, daterec, numrec, nametenant, unitdep, conceptreceipt, levelrec, aliquotrec, aumontgf, aumontgv, aumontp, aumonti, amouta, amoutm, amoutg, aumont, expirationdate, typerec FROM receipts_data_table WHERE id = :id");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -105,7 +105,7 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE MONTH(daterec)=MONTH(NOW()) AND statusrec = 1 AND expirationdate < NOW() AND typerec = 'COBRO' ORDER BY daterec DESC");
+    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE balencereceipt > 0 AND expirationdate < NOW() AND typerec = 'COBRO' AND statusrec = 1 ORDER BY daterec DESC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -114,7 +114,7 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO income_penalty_data_table(datep, unit, receipt, account, income, namepenalty, amount) VALUES (NOW(), :unit, :receipt, :account, :income, :penalty, :amount)");
+    $stmt = $conectar->prepare("INSERT INTO income_penalty_data_table(datep, unit, receipt, account, income, namepenalty, amount, dateupt) VALUES (NOW(), :unit, :receipt, :account, :income, :penalty, :amount, NOW())");
     $stmt->execute(['unit' => $unit, 'receipt' => $receipt, 'account' => $account, 'income' => $income, 'penalty' => $penalty, 'amount' => $amount]);
     return $stmt->rowCount();
   }
@@ -123,7 +123,7 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM income_penalty_data_table WHERE receipt = :receipt AND account = :account AND income = :income AND status = 1 AND MONTH(datep)=MONTH(NOW()) AND YEAR(datep)=YEAR(NOW())");
+    $stmt = $conectar->prepare("SELECT * FROM income_penalty_data_table WHERE receipt = :receipt AND account = :account AND income = :income AND status = 1 AND datep < NOW() and dateupt < NOW()");
     $stmt->execute(['receipt' => $receipt, 'account' => $account, 'income' => $income]);
     return $stmt->rowCount();
   }
@@ -145,4 +145,23 @@ class Receipts extends Conectar
     $stmt->execute(['receipt' => $receipt]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+
+  public function updatePenaltiesReceiptByUnitDB($receipt)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("UPDATE income_penalty_data_table SET status = 0 WHERE receipt = :receipt AND datep < NOW()"); 
+    $stmt->execute(['receipt' => $receipt]);
+    return $stmt->rowCount();    
+  }
+
+  public function updateBalanceReceiptExpiredDB($id)
+  {
+    $conectar = parent::conexion();
+    $stmt = $conectar->prepare("UPDATE receipts_data_table SET balencereceipt = - :balence WHERE id = :id");
+    $stmt->execute(['balence' => 0 , 'id' => $id]);
+    return $stmt->rowCount();
+  }
+
+
 }

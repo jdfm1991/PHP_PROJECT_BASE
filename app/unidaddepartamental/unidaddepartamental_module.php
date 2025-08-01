@@ -93,7 +93,8 @@ class Unitdepartmental extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, B.id AS uid, B.unit, D.level, E.aliquot, A.id AS cid, C.nameClient, C.emailClient, 
+    $stmt = $conectar->prepare("SELECT A.id, B.id AS uid, B.unit, D.level, E.aliquot, A.id AS cid, C.nameClient, C.emailClient,
+    (SELECT F.id FROM receipts_data_table AS F WHERE F.daterec < NOW() AND F.balencereceipt > 0 AND F.uid=B.id AND F.typerec='cobro' LIMIT 1) AS receipt,
     (SELECT E.amount FROM income_penalty_data_table AS E WHERE E.unit=B.id AND E.namepenalty='mora' LIMIT 1) AS mora,
     (SELECT E.amount FROM income_penalty_data_table AS E WHERE E.unit=B.id AND E.namepenalty LIKE '%gastos ad%' LIMIT 1) AS gastos,
     (SELECT F.balencereceipt FROM receipts_data_table AS F WHERE F.daterec < NOW() AND F.balencereceipt > 0 AND F.uid=B.id AND F.typerec='cobro' LIMIT 1) AS balance
@@ -102,8 +103,8 @@ class Unitdepartmental extends Conectar
                                   INNER JOIN unit_level_data_table AS D ON B.level=D.id
                                   INNER JOIN unit_aliquot_data_table AS E ON B.aliquot=E.id
                                   INNER JOIN client_data_table AS C ON A.client=C.id
-                                WHERE B.unit LIKE '%$search%'");
-    $stmt->execute();
+                                WHERE B.unit = :search");
+    $stmt->execute(['search' => $search ]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 

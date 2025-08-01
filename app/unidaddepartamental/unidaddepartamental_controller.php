@@ -11,6 +11,7 @@ $id = (isset($_POST['id'])) ? $_POST['id'] : '';
 $unit = (isset($_POST['unit'])) ? $_POST['unit'] : '';
 $level = (isset($_POST['levelu'])) ? $_POST['levelu'] : '';
 $aliquot = (isset($_POST['aliquot'])) ? $_POST['aliquot'] : '';
+$search = (isset($_POST['search'])) ? $_POST['search'] : 'p01-a01';
 
 switch ($_GET["op"]) {
   case 'get_unit_levels':
@@ -114,21 +115,19 @@ switch ($_GET["op"]) {
     break;
   case 'get_unit_by_name':
     $dato = array();
-    $search = (isset($_POST['search'])) ? $_POST['search'] : '';
     $data = $unitdep->getDataUnitByNameDB($search);
     foreach ($data as $row) {
-      $sub_array = array();
-      $sub_array['uid'] = $row['uid'];
-      $sub_array['cid'] = $row['cid'];
-      $sub_array['unit'] = $row['unit'];
-      $sub_array['level'] = $row['level'];
-      $sub_array['aliquot'] = $row['aliquot'];
-      $sub_array['name'] = $row['nameClient'];
-      $sub_array['email'] = $row['emailClient'];
-      $sub_array['mora'] = number_format($row['mora'], 2);
-      $sub_array['gastos'] = number_format($row['gastos'], 2);
-      $sub_array['balance'] = number_format($row['balance'], 2);
-      $dato[] = $sub_array;
+      $dato['uid'] = $row['uid'];
+      $dato['cid'] = $row['cid'];
+      $dato['unit'] = $row['unit'];
+      $dato['level'] = $row['level'];
+      $dato['aliquot'] = $row['aliquot'];
+      $dato['name'] = $row['nameClient'];
+      $dato['email'] = $row['emailClient'];
+      $dato['receipt'] = $row['receipt'];
+      $dato['mora'] = number_format($row['mora'], 2);
+      $dato['gastos'] = number_format($row['gastos'], 2);
+      $dato['balance'] = number_format($row['balance'], 2);
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;

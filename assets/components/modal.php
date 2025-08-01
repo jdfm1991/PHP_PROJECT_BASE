@@ -802,8 +802,6 @@ Modal Nueva Tasa de Cambio
                   </label>
                   <input type="text" id="amout_i" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
                 </div>
-
-
                 <div class="row col-sm-12">
                   <label class="col-sm-8 text-uppercase text-monospace">
                     Saldo Anterior
@@ -822,10 +820,6 @@ Modal Nueva Tasa de Cambio
                   </label>
                   <input type="text" id="amout_g" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
                 </div>
-
-
-
-
                 <div class="row col-sm-12">
                   <label class="col-sm-8 text-uppercase text-monospace">
                     Total General

@@ -31,8 +31,8 @@ switch ($_GET["op"]) {
       $sub_array['unit'] = $row['unitdep'];
       $sub_array['number'] = $row['numrec'];
       $sub_array['name'] = $row['nametenant'];
-      $sub_array['mora'] = number_format($row['mora'], 2);
-      $sub_array['gastos'] = number_format($row['gastos'], 2);
+      $sub_array['mora'] = is_null($row['mora']) ? 0 : number_format($row['mora'], 2);
+      $sub_array['gastos'] = is_null($row['gastos']) ? 0 : number_format($row['gastos'], 2);
       $sub_array['balance'] = number_format($row['balencereceipt'], 2);
       $dato[] = $sub_array;
     }
