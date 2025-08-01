@@ -125,6 +125,9 @@ switch ($_GET["op"]) {
       $sub_array['aliquot'] = $row['aliquot'];
       $sub_array['name'] = $row['nameClient'];
       $sub_array['email'] = $row['emailClient'];
+      $sub_array['mora'] = number_format($row['mora'], 2);
+      $sub_array['gastos'] = number_format($row['gastos'], 2);
+      $sub_array['balance'] = number_format($row['balance'], 2);
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

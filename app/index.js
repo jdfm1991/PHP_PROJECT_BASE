@@ -73,6 +73,11 @@ const loadPenaltiesWhithInterest = async () => {
   $('.toast').toast('show');
 }
 
+const getPenaltiesByReceipt = async (id) => {
+  const response = await fetch(URI + 'recibocobro/recibocobro_controller.php?op=get_penalties_receipt&id='+id);
+  const data = await response.json();
+}
+
 /* Funcion para Ingresar Solo los Numeros en el Input de Telefono */
 $(function () {
   $("input[name='onlynumber']").on("input", function (e) {

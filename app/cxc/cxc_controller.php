@@ -18,6 +18,7 @@ $payd = (isset($_POST['payd'])) ? $_POST['payd'] : '';
 $balance = (isset($_POST['balance'])) ? $_POST['balance'] : '';
 $remaining = (isset($_POST['remaining'])) ? $_POST['remaining'] : '';
 $check = (isset($_POST['check'])) ? $_POST['check'] : 'false';
+$check2 = (isset($_POST['check2'])) ? $_POST['check2'] : 'false';
 
 switch ($_GET["op"]) {
   case 'get_list_accounts_receivable':
@@ -27,9 +28,11 @@ switch ($_GET["op"]) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
       $sub_array['date'] = $row['daterec'];
-      $sub_array['expiration'] = $row['expirationdate'];
+      $sub_array['unit'] = $row['unitdep'];
       $sub_array['number'] = $row['numrec'];
       $sub_array['name'] = $row['nametenant'];
+      $sub_array['mora'] = number_format($row['mora'], 2);
+      $sub_array['gastos'] = number_format($row['gastos'], 2);
       $sub_array['balance'] = number_format($row['balencereceipt'], 2);
       $dato[] = $sub_array;
     }
@@ -58,7 +61,7 @@ switch ($_GET["op"]) {
         $updr = $colrec->updateBalanceReceiptDB($account, $payd);
         $updb = $bankmov->updateBankingMovementDB($refer, $amount);
       } else {
-        $amount = $balance * $rate;
+        $amount = ceil($balance * $rate);
         $updr = $colrec->updateBalanceReceiptDB($account, $balance);
         $updb = $bankmov->updateBankingMovementDB($refer, $amount);
       }

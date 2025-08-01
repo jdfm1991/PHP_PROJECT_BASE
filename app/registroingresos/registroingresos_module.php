@@ -64,6 +64,16 @@ class Incomes extends Conectar
     parent::set_names();
     $stmt = $conectar->prepare("SELECT id, incomename, incomeaccount, incomebalance 
                                   FROM income_data_table 
+                                  WHERE incomeaccount=:id AND statusincome=1 AND byreceipt=0");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+  public function getDataIncomeWithoutInterestDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id, incomename, incomeaccount, incomebalance 
+                                  FROM income_data_table 
                                   WHERE incomeaccount=:id AND statusincome=1 AND byreceipt=1 AND percent=0");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

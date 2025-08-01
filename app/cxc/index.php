@@ -28,10 +28,13 @@ require_once(PATH_APP . "/head.php");
                 <thead>
                   <tr>
                     <th>Fecha</th>
-                    <th>Vencimiento</th>
+                    <th>Departamento</th>
                     <th>Recibo</th>
                     <th>Inquilino</th>
-                    <th>Saldo</th>
+                    <th>Monto Deuda</th>
+                    <th>Monto Mora</th>
+                    <th>Monto Admtvo.</th>
+                    <th>Monto Total</th>
                     <th>Opcion</th>
                   </tr>
                 </thead>

@@ -110,12 +110,12 @@ class Receipts extends Conectar
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function createDataPenaltyReceiptsDB($receipt, $account, $income, $penalty, $amount)
+  public function createDataPenaltyReceiptsDB($receipt, $unit, $account, $income, $penalty, $amount)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO income_penalty_data_table(datep, receipt, account, income, namepenalty, amount) VALUES (:datep, :receipt, :account, :income, :penalty, :amount)");
-    $stmt->execute(['datep' => date('Y-m-d'), 'receipt' => $receipt, 'account' => $account, 'income' => $income, 'penalty' => $penalty, 'amount' => $amount]);
+    $stmt = $conectar->prepare("INSERT INTO income_penalty_data_table(datep, unit, receipt, account, income, namepenalty, amount) VALUES (NOW(), :unit, :receipt, :account, :income, :penalty, :amount)");
+    $stmt->execute(['unit' => $unit, 'receipt' => $receipt, 'account' => $account, 'income' => $income, 'penalty' => $penalty, 'amount' => $amount]);
     return $stmt->rowCount();
   }
 
@@ -123,7 +123,7 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM income_penalty_data_table WHERE receipt = :receipt and account = :account AND income = :income AND status = 1 AND MONTH(datep)=MONTH(NOW()) AND YEAR(datep)=YEAR(NOW())");
+    $stmt = $conectar->prepare("SELECT * FROM income_penalty_data_table WHERE receipt = :receipt AND account = :account AND income = :income AND status = 1 AND MONTH(datep)=MONTH(NOW()) AND YEAR(datep)=YEAR(NOW())");
     $stmt->execute(['receipt' => $receipt, 'account' => $account, 'income' => $income]);
     return $stmt->rowCount();
   }
@@ -137,4 +137,12 @@ class Receipts extends Conectar
     return $stmt->rowCount();
   }
 
+  public function getDataPenaltiesByReceivableDB($receipt)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT namepenalty, amount FROM income_penalty_data_table WHERE receipt = :receipt");
+    $stmt->execute(['receipt' => $receipt]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }

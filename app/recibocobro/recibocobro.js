@@ -128,12 +128,15 @@ $(document).ready(function () {
     return x.toFixed(2);
   }
   /* Funcion para obtener el total de cada seccion del recibo */
-  const getTotals = function () {
+  const getTotals = function (select) {
     let suma_gf = 0;
     let suma_gv = 0;
     let suma_i = 0;
     let suma_p = 0;
     let suma = 0;
+    let saldo = 0;
+    let mora = 0;
+    let gastos = 0;
     for (let i = 0; i < gf_amount.length; i++) {
       const amount = parseFloat(gf_amount[i].value);
       if (!isNaN(amount)) {
@@ -158,18 +161,26 @@ $(document).ready(function () {
         suma_p += amount;
       }
     }
+    if (select == 'PENAL' || select == 'PENAL') {
+      $('#amout_a').val(saldo.toFixed(2));
+      $('#amout_m').val(mora.toFixed(2));
+      $('#amout_g').val(gastos.toFixed(2));
+    }
     $('#amout_gf').val(suma_gf.toFixed(2));
     $('#amout_gv').val(suma_gv.toFixed(2));
     $('#amout_i').val(suma_i.toFixed(2));
     $('#amout_p').val(suma_p.toFixed(2));
+    saldo = $('#amout_a').val();
+    mora = $('#amout_m').val();
+    gastos = $('#amout_g').val();
 
     $('#total_fixed').text(suma_gf.toFixed(2));
     $('#total_non_fixed').text(suma_gv.toFixed(2));
     $('#total_income').text(suma_i.toFixed(2));
     $('#total_penalty').text(suma_p.toFixed(2));
 
-    suma = parseFloat(suma_gf + suma_gv + suma_i + suma_p).toFixed(2)
-    $('#amout_tg').val(suma);
+    suma = Number.parseFloat(suma_gf) + Number.parseFloat(suma_gv) + Number.parseFloat(suma_i) + Number.parseFloat(suma_p) + Number.parseFloat(saldo) + Number.parseFloat(mora) + Number.parseFloat(gastos)
+    $('#amout_tg').val(suma.toFixed(2));
   }
   /* Funcion para crear un nuevo recibo */
   $('#rc_indivual').click(function (e) {
@@ -217,7 +228,7 @@ $(document).ready(function () {
                 icon: "success",
                 title: response.message,
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3000
               });
               $('#receipt_table').DataTable().ajax.reload();
             } else {
@@ -242,7 +253,7 @@ $(document).ready(function () {
       $('.btnp').addClass('d-none');
       $('#content_penalty').addClass('d-none');
       $("#content_penalty_body").empty();
-      getTotals();
+      getTotals(select);
     }
     if (select == 'PENAL') {
       $('.btnp').removeClass('d-none');
@@ -253,7 +264,7 @@ $(document).ready(function () {
       $("#content_non_fixed_body").empty();
       $('#content_fixed').addClass('d-none');
       $("#content_fixed_body").empty();
-      getTotals();
+      getTotals(select);
     }
     if (select == '') {
       $('.btnp').addClass('d-none');
@@ -266,12 +277,13 @@ $(document).ready(function () {
       $("#content_non_fixed_body").empty();
       $('#content_fixed').addClass('d-none');
       $("#content_fixed_body").empty();
-      getTotals();
+      getTotals(select);
     }
   });
   /* Funcion para obtener la unidad departamental y cargar los datos en el recibo */
   $('#name_client').click(function () {
     depart = $('#n_dpto').val();
+    select = $('#typereceiot').val();
     if (depart == '') {
       clearFields();
       $(".mr-auto").text("Procesos Fallido");
@@ -283,7 +295,6 @@ $(document).ready(function () {
       $('.toast').toast('show');
       return false;
     }
-
     $.ajax({
       url: URI + 'unidaddepartamental/unidaddepartamental_controller.php?op=get_unit_by_name',
       method: 'POST',
@@ -291,8 +302,6 @@ $(document).ready(function () {
       data: { search: depart },
       success: function (response) {
         if (response.length == 0) {
-          clearFields();
-          getTotals();
           $(".mr-auto").text("Procesos Fallido");
           $(".toast").css("z-index", "1000");
           $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
@@ -300,10 +309,11 @@ $(document).ready(function () {
           $(".toast").attr("background-color", "");
           $("#toastText").text("Departamento No Encontrado");
           $('.toast').toast('show');
+          clearFields();
+          getTotals(select);
           return false;
         }
         clearFields();
-        getTotals();
         loadDataDateReceipt();
         $.each(response, function (idx, opt) {
           $('#id_u').val(opt.uid);
@@ -313,7 +323,11 @@ $(document).ready(function () {
           $('#l_dpto').val(opt.level);
           $('#a_dpto').val(opt.aliquot);
           $('#e_dpto').val(opt.email);
+          $('#amout_a').val(opt.balance);
+          $('#amout_m').val(opt.mora);
+          $('#amout_g').val(opt.gastos);
         });
+        getTotals(select);
       }
     });
   });
@@ -713,7 +727,7 @@ $(document).ready(function () {
       }
     })
   })
-    /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
+  /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
   $(document).on('click', '#b_view_receipt', function () {
     var id = $(this).data('value');
     window.open("pdf.php?id=" + id, "_blank");

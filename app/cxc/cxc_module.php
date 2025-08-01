@@ -7,7 +7,11 @@ class AccountsReceivable extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE statusrec = 1 AND balencereceipt > 0");
+    $stmt = $conectar->prepare("SELECT id, daterec, unitdep, numrec, nametenant, 
+    (SELECT B.amount FROM income_penalty_data_table AS B WHERE b.receipt=A.id AND B.namepenalty='mora') AS mora,
+    (SELECT B.amount FROM income_penalty_data_table AS B WHERE b.receipt=A.id AND B.namepenalty LIKE '%gastos ad%') AS gastos, A.balencereceipt  
+    FROM receipts_data_table AS A 
+    WHERE A.statusrec = 1 AND A.balencereceipt > 0  AND A.typerec='cobro'");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }

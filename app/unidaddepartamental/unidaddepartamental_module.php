@@ -93,7 +93,10 @@ class Unitdepartmental extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, B.id AS uid, B.unit, D.level, E.aliquot, A.id AS cid, C.nameClient, C.emailClient 
+    $stmt = $conectar->prepare("SELECT A.id, B.id AS uid, B.unit, D.level, E.aliquot, A.id AS cid, C.nameClient, C.emailClient, 
+    (SELECT E.amount FROM income_penalty_data_table AS E WHERE E.unit=B.id AND E.namepenalty='mora' LIMIT 1) AS mora,
+    (SELECT E.amount FROM income_penalty_data_table AS E WHERE E.unit=B.id AND E.namepenalty LIKE '%gastos ad%' LIMIT 1) AS gastos,
+    (SELECT F.balencereceipt FROM receipts_data_table AS F WHERE F.daterec < NOW() AND F.balencereceipt > 0 AND F.uid=B.id AND F.typerec='cobro' LIMIT 1) AS balance
                                     FROM unit_client_data_table AS A 
                                   INNER JOIN unit_data_table AS B ON A.unit=B.id
                                   INNER JOIN unit_level_data_table AS D ON B.level=D.id

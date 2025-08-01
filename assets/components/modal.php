@@ -667,7 +667,11 @@ Modal Nueva Tasa de Cambio
             <div class="col-sm-3">
               <input type="text" class="form-control" id="t_balance" disabled>
             </div>
-            <div class="col-sm-4"></div>
+            <div id="c_inte" class="form-check form-check-inline col-md-3 text-center d-none">
+              <input class="form-check-input" type="checkbox" id="interes">
+              <label class="form-check-label" for="interes">Incluir Penalizaciones</label>
+            </div>
+            <div class="col-sm-4 mb-2"></div>
             <div id="cont_amunt_cxc" class="form-row col-md-12">
               <div class="form-group col-md-4">
                 <label for="refercxc">Numero de Ref:</label>
@@ -798,6 +802,30 @@ Modal Nueva Tasa de Cambio
                   </label>
                   <input type="text" id="amout_i" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
                 </div>
+
+
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Saldo Anterior
+                  </label>
+                  <input type="text" id="amout_a" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Monto Por Mora
+                  </label>
+                  <input type="text" id="amout_m" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+                <div class="row col-sm-12">
+                  <label class="col-sm-8 text-uppercase text-monospace">
+                    Monto Por Gastos Admtvo.
+                  </label>
+                  <input type="text" id="amout_g" class="form-control form-control-sm col-sm-4 text-uppercase text-monospace" disabled>
+                </div>
+
+
+
+
                 <div class="row col-sm-12">
                   <label class="col-sm-8 text-uppercase text-monospace">
                     Total General

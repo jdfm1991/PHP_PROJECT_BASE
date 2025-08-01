@@ -1,6 +1,7 @@
 $(document).ready(function () {
   const DateNow = new Date();
   let remaining = 0;
+  let fila = 0;
   /* Arrow Function Que se Encarga de Cargar los Datos de las Cuentas por Cobrar en la Tabla */
   const loadDataTableAccountsReceivable = async () => {
     const table = $('#cxc_table').DataTable({
@@ -39,10 +40,16 @@ $(document).ready(function () {
       },
       columns: [
         { data: "date" },
-        { data: "expiration" },
+        { data: "unit" },
         { data: "number" },
         { data: "name" },
         { data: "balance" },
+        { data: "mora" },
+        { data: "gastos" },
+        {
+          data: null, render: (data, type, row) =>
+            remaining = (Number.parseFloat(row.balance) + Number.parseFloat(row.mora) + Number.parseFloat(row.gastos)).toFixed(2)
+        },
         {
           data: "id", render: (data, _, __, meta) =>
             `<button id="b_reg_payment" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="bi bi-credit-card-2-back"></i></button>`, className: "text-center"
@@ -53,6 +60,7 @@ $(document).ready(function () {
   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
   $(document).on('click', '#b_reg_payment', function () {
     var id = $(this).data('value');
+    fila = this.parentNode.parentNode.rowIndex
     $.ajax({
       url: 'cxc_controller.php?op=get_data_account_receivable',
       method: 'POST',
@@ -73,6 +81,7 @@ $(document).ready(function () {
         $('#t_detail').text(response.expiration);
         $('#cont_amunt_cxp').hide();
         $('#t_balance').val(response.balance);
+        $('#c_inte').removeClass('d-none');
         $('#cxpPayModal').modal('show');
       }
     });
@@ -111,6 +120,29 @@ $(document).ready(function () {
       $('#amountpaycxcd').val('');
       $('#ratepaycxc').val('');
     }
+  });
+
+  $("#interes").change(function () {
+    id = $('#idcx').val();
+    balance = $('#t_balance').val();
+    let penalties = 0;
+    $.ajax({
+      url: URI + 'recibocobro/recibocobro_controller.php?op=get_penalties_receipt',
+      method: 'POST',
+      dataType: 'json',
+      data: { id: id },
+      success: function (response) {
+        $.each(response, function (idx, opt) {
+          penalties += Number.parseFloat(opt.amount)
+        });
+        if ($('#interes').is(":checked")) {
+          total = Number.parseFloat(balance) + Number.parseFloat(penalties)
+        } else {
+          total = Number.parseFloat(balance) - Number.parseFloat(penalties)
+        }
+        $('#t_balance').val(total);
+      }
+    });
   });
   $('.x').click(function (e) {
     e.preventDefault();
@@ -160,6 +192,7 @@ $(document).ready(function () {
   /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
   $('#formExpensePay').submit(function (e) {
     e.preventDefault();
+
     account = $('#idcx').val();
     date = DateNow.getFullYear() + '-' + String(DateNow.getMonth() + 1).padStart(2, '0') + '-' + String(DateNow.getDate()).padStart(2, '0');
     refer = $('#refercxc').val();
@@ -167,6 +200,15 @@ $(document).ready(function () {
     payd = $('#amountpaycxcd').val();
     balance = $('#t_balance').val();
     check = $('#dollarpay').is(':checked');
+    check2 = $('#interes').is(':checked');
+    if (balance != payd) {
+      $(".mr-auto").text("Procesos Fallido");
+      $(".toast").css("background-color", "rgb(36 113 163 / 85%)");
+      $(".toast").css("color", "white");
+      $("#toastText").text('El Monto Pagado Es Menor que el monto a Pagar');
+      $('.toast').toast('show');
+      return false
+    }
     dato = new FormData();
     dato.append('account', account);
     dato.append('date', date);
@@ -176,6 +218,7 @@ $(document).ready(function () {
     dato.append('balance', balance);
     dato.append('remaining', remaining);
     dato.append('check', check);
+    dato.append('check2', check2);
     $.ajax({
       url: 'cxc_controller.php?op=new_pay_ar',
       method: 'POST',
