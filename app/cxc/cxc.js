@@ -201,14 +201,14 @@ $(document).ready(function () {
     balance = $('#t_balance').val();
     check = $('#dollarpay').is(':checked');
     check2 = $('#interes').is(':checked');
-    if (balance != payd) {
+    /* if (balance > payd) {
       $(".mr-auto").text("Procesos Fallido");
       $(".toast").css("background-color", "rgb(36 113 163 / 85%)");
       $(".toast").css("color", "white");
       $("#toastText").text('El Monto Pagado Es Menor que el monto a Pagar');
       $('.toast').toast('show');
       return false
-    }
+    } */
     dato = new FormData();
     dato.append('account', account);
     dato.append('date', date);

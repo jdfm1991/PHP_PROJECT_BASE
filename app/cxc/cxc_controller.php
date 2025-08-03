@@ -67,7 +67,7 @@ switch ($_GET["op"]) {
       }
       $dato['status'] = true;
       $dato['error'] = '200';
-      $dato['message'] = "La Relacion Fue Creado Satisfactoriamente \n";
+      $dato['message'] = "El Pago Fue Registrado Satisfactoriamente \n";
     } else {
       $dato['status'] = false;
       $dato['error'] = '500';

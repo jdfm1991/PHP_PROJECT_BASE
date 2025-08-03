@@ -50,12 +50,12 @@ class Receipts extends Conectar
     return $stmt->rowCount();
   }
 
-  public function checkPenaliesReceiptDB($cid, $uid, $concepto)
+  public function checkPenaliesReceiptDB($uid, $concepto)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE MONTH(daterec)=MONTH(NOW()) AND statusrec = 1 AND cid = :cid AND uid = :uid AND conceptreceipt = :concept AND typerec = 'PENAL'");
-    $stmt->execute(['cid' => $cid, 'uid' => $uid, 'concept' => $concepto]);
+    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE statusrec = 1 AND uid = :uid AND conceptreceipt = :concept AND typerec = 'PENAL'");
+    $stmt->execute([ 'uid' => $uid, 'concept' => $concepto]);
     return $stmt->rowCount();
   }
 
@@ -105,63 +105,26 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE balencereceipt > 0 AND expirationdate < NOW() AND typerec = 'COBRO' AND statusrec = 1 ORDER BY daterec DESC");
+    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE balencereceipt > 0 AND expirationdate < NOW() AND expirationdate != '0000-00-00' AND statusrec = 1 ORDER BY daterec DESC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function createDataPenaltyReceiptsDB($receipt, $unit, $account, $income, $penalty, $amount)
+  public function updateBalanceReceiptExpiredDB($id, $affected)
   {
     $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("INSERT INTO income_penalty_data_table(datep, unit, receipt, account, income, namepenalty, amount, dateupt) VALUES (NOW(), :unit, :receipt, :account, :income, :penalty, :amount, NOW())");
-    $stmt->execute(['unit' => $unit, 'receipt' => $receipt, 'account' => $account, 'income' => $income, 'penalty' => $penalty, 'amount' => $amount]);
+    $stmt = $conectar->prepare("UPDATE receipts_data_table SET balencereceipt = (IF(balencereceipt=aumont,0,aumont)), affectedby = :affected WHERE id = :id");
+    $stmt->execute(['affected' => $affected, 'id' => $id]);
     return $stmt->rowCount();
   }
 
-  public function validatePenaltyReceiptDB($receipt, $account, $income)
+  public function getIdReceiptafectedDB($id)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM income_penalty_data_table WHERE receipt = :receipt AND account = :account AND income = :income AND status = 1 AND datep < NOW() and dateupt < NOW()");
-    $stmt->execute(['receipt' => $receipt, 'account' => $account, 'income' => $income]);
-    return $stmt->rowCount();
+    $stmt = $conectar->prepare("SELECT affectedby FROM receipts_data_table WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchColumn();
   }
-
-  public function updateDataPenaltyReceiptsDB($receipt, $account, $income, $amount)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("UPDATE income_penalty_data_table SET amount = :amount, dateupt = NOW() WHERE receipt = :receipt AND account = :account AND income = :income");
-    $stmt->execute(['amount' => $amount, 'receipt' => $receipt, 'account' => $account, 'income' => $income]);
-    return $stmt->rowCount();
-  }
-
-  public function getDataPenaltiesByReceivableDB($receipt)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("SELECT namepenalty, amount FROM income_penalty_data_table WHERE receipt = :receipt");
-    $stmt->execute(['receipt' => $receipt]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-
-  public function updatePenaltiesReceiptByUnitDB($receipt)
-  {
-    $conectar = parent::conexion();
-    parent::set_names();
-    $stmt = $conectar->prepare("UPDATE income_penalty_data_table SET status = 0 WHERE receipt = :receipt AND datep < NOW()"); 
-    $stmt->execute(['receipt' => $receipt]);
-    return $stmt->rowCount();    
-  }
-
-  public function updateBalanceReceiptExpiredDB($id)
-  {
-    $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE receipts_data_table SET balencereceipt = - :balence WHERE id = :id");
-    $stmt->execute(['balence' => 0 , 'id' => $id]);
-    return $stmt->rowCount();
-  }
-
 
 }

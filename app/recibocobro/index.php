@@ -41,7 +41,7 @@ require_once(PATH_APP . "/head.php");
                     <th>Inqulino</th>
                     <th>Concepto</th>
                     <th>Vencimiento</th>
-                    <th>Saldo</th>
+                    <th>Monto</th>
                     <th>Opcion</th>
                   </tr>
                 </thead>
