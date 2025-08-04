@@ -125,7 +125,6 @@ switch ($_GET["op"]) {
     }
     $id = uniqid();
     if ($receipt != '') {
-      $balance = 0;
       $uptpenal = $incomes->updatePenaltiesReceiptByUnitDB($receipt);
       $uptrecexp = $colrec->updateBalanceReceiptExpiredDB($receipt, $id);
     }
@@ -169,6 +168,19 @@ switch ($_GET["op"]) {
       } else {
         $j++;
         $id = uniqid();
+        $previbalance = $colrec->getPrevBalanceReceiptByUnitClientDB($row['cid'], $row['uid']);
+        if ($previbalance > 0) {
+          $receipt = $colrec->getIdPrevReceiptByUnitClientDB($row['cid'], $row['uid']);
+          $amout_a = $previbalance;
+          $amout_m = $incomes->getPrevLateReceiptByUnitDB($row['uid']);
+          $amout_g = $incomes->getPrevAdmExpReceiptByUnitDB($row['uid']);
+          $uptpenal = $incomes->updatePenaltiesReceiptByUnitDB($receipt);
+          $uptrecexp = $colrec->updateBalanceReceiptExpiredDB($receipt, $id);
+        } else {
+          $amout_a = 0;
+          $amout_m = 0;
+          $amout_g = 0;
+        }
         $nreceipt = $colrec->getNewNumberReceiptDB();
         $typerec = 'COBRO';
         $depart = $row['unit'];
@@ -210,8 +222,14 @@ switch ($_GET["op"]) {
               }
             }
           }
-          $monto_tg = $monto_gf + $monto_gv + $monto_i;
+          $monto_tg = $monto_gf + $monto_gv + $monto_i + $amout_a + $amout_m + $amout_g;
           $uptdatereceipt = $colrec->updateReceiptBalancestDB($id, $monto_gf, $monto_gv, $monto_i, $monto_tg);
+          $monto_gf = 0;
+          $monto_gv = 0;
+          $monto_i = 0;
+          $amout_a = 0;
+          $amout_m = 0;
+          $amout_g = 0;
           if ($uptdatereceipt) {
             $dato['status'] = true;
             $dato['httpstatus'] = '200';
@@ -248,7 +266,7 @@ switch ($_GET["op"]) {
       $dato['message'] = "No Puede Eliminiar Este Recibo, Ya que Tiene un pago asociado, Por Favor Intente Con Un Recibo Diferente \n";
       echo json_encode($dato, JSON_UNESCAPED_UNICODE);
       return;
-    } 
+    }
     $receipt = $colrec->getIdReceiptafectedDB($id);
     if ($receipt != '') {
       $uptrecexp = $colrec->updateBalanceReceiptExpiredDB($receipt, $id);
@@ -289,7 +307,7 @@ switch ($_GET["op"]) {
           if ($check == 0) {
             $receipt = $colrec->createDataReceiptsDB($id, $row['cid'], $row['uid'], $nreceipt, $row['nametenant'], $concepto, $vence, $row['levelrec'], $aliquot, $row['emailrec'], $monto_gf, $monto_gv, $items['incomebalance'], $monto_i, $amout_a, $amout_m, $amout_g, $items['incomebalance'], $typerec, $row['unitdep']);
             if ($receipt) {
-              $dataitems = $colrec->createDataReceiptItemsDB($id, $penalty['id'], $items['id'], $items['incomename'], $items['incomebalance'], $items['incomebalance']);
+              $dataitems = $colrec->createDataReceiptItemsDB($id, $penalty, $items['id'], $items['incomename'], $items['incomebalance'], $items['incomebalance']);
               if ($dataitems) {
                 $i++;
               } else {
@@ -336,6 +354,10 @@ switch ($_GET["op"]) {
     break;
   case 'get_interest_whith_penalties':
     $dato = array();
+    $nreceipts = 0;
+    $i = 0;
+    $j = 0;
+    $k = 0;
     $late = 0;
     $data = $colrec->getDataReceiptsExpiredDB();
     foreach ($data as $row) {
@@ -345,6 +367,7 @@ switch ($_GET["op"]) {
         $penalty = $incomeaccounts->getDataPenaltyAcountDB();
         foreach ($penalty as $penalty) {
           $items = $incomes->getDataIncomeWithInterestDB($penalty['id']);
+          $nreceipts = count($data) * count($items);
           foreach ($items as $items) {
             if ($row['balencereceipt'] != $row['aumont']) {
               $late = (((($row['aumont'] * $items['amountpercent']) / 100) / $daysxmonth) * $difference->days) + (((($row['balencereceipt'] * $items['amountpercent']) / 100) / $daysxmonth) * $difference->days);
@@ -356,28 +379,39 @@ switch ($_GET["op"]) {
             if ($validate > 0) {
               $penal = $incomes->updateDataPenaltyReceiptsDB($row['id'], $penalty['id'], $items['id'], $late);
               if ($penal) {
-                $dato['status'] = true;
-                $dato['httpstatus'] = '200';
-                $dato['message'] = "Las penalidades en los Recibos de Cobro vencidos Fueron Actualizadas Satisfactoriamente \n";
+                $i++;
               } else {
-                $dato['status'] = false;
-                $dato['httpstatus'] = '500';
-                $dato['message'] = "Error al intentar actualizar las penalidades en los Recibos de Cobro vencidos, Por Favor Intente Nuevamente \n";
+                $j++;
               }
             } else {
               $penal = $incomes->createDataPenaltyReceiptsDB($row['id'], $row['uid'], $penalty['id'], $items['id'], $items['incomename'], $late);
               if ($penal) {
-                $dato['status'] = true;
-                $dato['httpstatus'] = '200';
-                $dato['message'] = "Las penalidades en los Recibos de Cobro vencidos Fueron Creadas Satisfactoriamente \n";
+                $i++;
               } else {
-                $dato['status'] = false;
-                $dato['httpstatus'] = '500';
-                $dato['message'] = "Error al intentar crear las penalidades en los Recibos de Cobro vencidos, Por Favor Intente Nuevamente \n";
+                $j++;
               }
             }
           }
         }
+        if ($nreceipts == $i) {
+          $dato['status'] = true;
+          $dato['httpstatus'] = '200';
+          $dato['message'] = "Las penalidades en los Recibos de Cobro vencidos Fueron Creadas Satisfactoriamente \n";
+        }
+        if ($nreceipts == $j) {
+          $dato['status'] = false;
+          $dato['httpstatus'] = '200';
+          $dato['message'] = "Las penalidades en los Recibos de Cobro vencidos se crearon anteriormente \n";
+        }
+        if ($nreceipts == ($i + $j)) {
+          $dato['status'] = true;
+          $dato['httpstatus'] = '200';
+          $dato['message'] = "Se crearon " . $i . " Recibos de penalizacion, por vencimiento de recibo de cobro\n";
+        }
+      } else {
+        $dato['status'] = true;
+        $dato['httpstatus'] = '200';
+        $dato['message'] = "No existen Recibos de Cobro Pendiente por Penalizar \n";
       }
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

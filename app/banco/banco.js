@@ -1,6 +1,53 @@
 $(document).ready(function () {
   $('#content_data').hide();
   let sheetexcel = $('#sheetexcel')[0].files[0];
+
+  const loadDataTableBankingMovements = async () => {
+    const table = $('#b_movements_table').DataTable({
+      responsive: true,
+      scrollX: true,
+      autoWidth: false,
+      paging: true,
+      lengthChange: true,
+      searching: true,
+      ordering: true,
+      displayLength: 10,
+      lengthMenu: [10, 25, 50, 100],
+      pageLength: 10,
+      info: true,
+      language: {
+        lengthMenu: "Mostrar _MENU_ registros por pagina",
+        zeroRecords: "No se encontraron registros",
+        info: "Mostrando pagina _PAGE_ de _PAGES_",
+        infoEmpty: "No hay registros disponibles",
+        infoFiltered: "(filtrado de _MAX_ registros totales)",
+        search: "Buscar:",
+        paginate: {
+          first: "Primero",
+          last: "Ultimo",
+          next: "Siguiente",
+          previous: "Anterior"
+        },
+        loadingRecords: "Cargando...",
+        processing: "Procesando..."
+      },
+      ajax: {
+        url: "banco_controller.php?op=get_banking_movements",
+        type: "GET",
+        dataType: "json",
+        dataSrc: "",
+      },
+      columns: [
+        { data: "date" },
+        { data: "descrip" },
+        { data: "refer" },
+        { data: "amount" },
+        { data: "balence" },
+        { data: "change" }
+      ]
+    });
+  }
+  
   /* Funcion para cargar el excel del banco y mostrar la informacion */
   const loadBankStatementByExcel = (sheetexcel) => {
     var datos = new FormData();
@@ -47,6 +94,21 @@ $(document).ready(function () {
       }
     });
   }
+
+
+
+  $('#btn_view').click(function (e) {
+    e.preventDefault();
+    $('#cont_load').addClass('d-none');
+    $('#cont_view').removeClass('d-none');
+$('#b_movements_table').DataTable().destroy();
+    loadDataTableBankingMovements();
+  });
+  $('#btn_load').click(function (e) {
+    e.preventDefault();
+    $('#cont_view').addClass('d-none');
+    $('#cont_load').removeClass('d-none');
+  });
   /* Accion que llama la funcion para cargar el excel */
   $('#sheetexcel').change(function () {
     sheetexcel = $('#sheetexcel')[0].files[0];

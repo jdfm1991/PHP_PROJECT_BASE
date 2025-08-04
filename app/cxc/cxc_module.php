@@ -11,7 +11,7 @@ class AccountsReceivable extends Conectar
     (SELECT B.amount FROM income_penalty_data_table AS B WHERE b.receipt=A.id AND B.namepenalty='mora' LIMIT 1) AS mora,
     (SELECT B.amount FROM income_penalty_data_table AS B WHERE b.receipt=A.id AND B.namepenalty LIKE '%gastos ad%' LIMIT 1) AS gastos, A.balencereceipt  
     FROM receipts_data_table AS A 
-    WHERE A.statusrec = 1 AND A.balencereceipt > 0  AND A.typerec='cobro'");
+    WHERE A.statusrec = 1 AND A.balencereceipt > 0");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -38,7 +38,7 @@ class AccountsReceivable extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM receipt_pay_data_table WHERE idrec = :id");
+    $stmt = $conectar->prepare("SELECT * FROM receipt_pay_data_table WHERE idrec = :id AND statuspay = 1");
     $stmt->execute(['id' => $id]);
     return $stmt->rowCount();
   }

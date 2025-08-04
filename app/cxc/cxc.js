@@ -121,7 +121,6 @@ $(document).ready(function () {
       $('#ratepaycxc').val('');
     }
   });
-
   $("#interes").change(function () {
     id = $('#idcx').val();
     balance = $('#t_balance').val();
@@ -251,6 +250,6 @@ $(document).ready(function () {
     });
 
   });
-  loadDataTableAccountsReceivable();
   loadPenaltiesWhithInterest();
+  loadDataTableAccountsReceivable();
 });

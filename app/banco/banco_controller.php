@@ -101,7 +101,7 @@ switch ($_GET['op']) {
       $refenc = $row['B'];
       $descri = $row['C'];
       $amount = str_replace(",", ".", str_replace(".", "", $row['D']));
-      $motion  = $row['F'];
+      $motion  = ($row['F'] == '') ? '' : (($row['F'] == 'Nota de Débito') ? 'ND' : 'NC');
       $i++;
       $verify = $bankmov->verifyReferenceMovementDB($refenc);
       if ($verify == 0) {
@@ -138,11 +138,29 @@ switch ($_GET['op']) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
       $sub_array['refer'] = $row['referencemov'];
-      $sub_array['amount'] = number_format($row['amountmov'],2, '.','');
+      $sub_array['amount'] = number_format($row['amountmov'], 2, '.', '');
       $sub_array['date'] = $row['datemov'];
       $rate = $exchange->getDataRateByDateDB($row['datemov']);
       $sub_array['rate'] = $rate;
-      $sub_array['amountd'] = number_format(($row['balencemov']/$rate),2, '.','');
+      $sub_array['amountd'] = number_format(($row['balencemov'] / $rate), 2, '.', '');
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'get_banking_movements':
+    $dato = array();
+    $data = $bankmov->getDataBankingMovementsDB();
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['descrip'] = $row['descriptionmov'];
+      $sub_array['refer'] = $row['referencemov'];
+      $sub_array['amount'] = number_format($row['amountmov'], 2);
+      $sub_array['date'] = $row['datemov'];
+      $rate = $exchange->getDataRateByDateDB($row['datemov']);
+      $sub_array['rate'] = $rate;
+      $sub_array['balence'] = number_format(($row['balencemov']), 2);
+      $sub_array['change'] = number_format(($row['balencemov'] / $rate), 2);
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);

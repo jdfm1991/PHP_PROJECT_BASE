@@ -63,18 +63,31 @@ const loadPenaltiesFreeInterest = async () => {
 }
 
 const loadPenaltiesWhithInterest = async () => {
+  Swal.fire({
+    title: 'Loading...',
+    allowEscapeKey: false,
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading();
+    }
+  });
   const response = await fetch(URI + 'recibocobro/recibocobro_controller.php?op=get_interest_whith_penalties');
   const data = await response.json();
-  $(".mr-auto").text("Procesos Exitoso");
-  $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
-  $(".toast").css("color", "black");
-  $(".toast").attr("background-color", "");
-  $("#toastText").text(data.message);
-  $('.toast').toast('show');
+  if (data) {
+    Swal.close();
+    $(".mr-auto").text("Procesos Exitoso");
+    $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+    $(".toast").css("color", "black");
+    $(".toast").attr("background-color", "");
+    $("#toastText").text(data.message);
+    $('.toast').toast('show');
+  }
+
 }
 
 const getPenaltiesByReceipt = async (id) => {
-  const response = await fetch(URI + 'recibocobro/recibocobro_controller.php?op=get_penalties_receipt&id='+id);
+  const response = await fetch(URI + 'recibocobro/recibocobro_controller.php?op=get_penalties_receipt&id=' + id);
   const data = await response.json();
 }
 

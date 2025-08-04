@@ -743,9 +743,9 @@ $(document).ready(function () {
     $('#p_cobro').val(period);
     $('#f_vence').val(vence);
   }
-  loadDataTableReceipts();
-  loadPenaltiesFreeInterest();
   loadPenaltiesWhithInterest();
+  loadPenaltiesFreeInterest();
+  loadDataTableReceipts();
 });
 
 

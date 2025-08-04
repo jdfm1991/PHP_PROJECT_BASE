@@ -127,4 +127,22 @@ class Receipts extends Conectar
     return $stmt->fetchColumn();
   }
 
+  public function getPrevBalanceReceiptByUnitClientDB($cid, $uid)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT balencereceipt FROM receipts_data_table WHERE cid = :cid AND uid = :uid AND typerec = 'COBRO' AND statusrec = 1 AND balencereceipt > 0 AND expirationdate != '0000-00-00' ORDER BY daterec DESC LIMIT 1");
+    $stmt->execute(['cid' => $cid, 'uid' => $uid]);
+    return $stmt->fetchColumn();
+  }
+
+  public function getIdPrevReceiptByUnitClientDB($cid, $uid)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT id FROM receipts_data_table WHERE cid = :cid AND uid = :uid AND typerec = 'COBRO' AND statusrec = 1 AND balencereceipt > 0 AND expirationdate != '0000-00-00' ORDER BY daterec DESC LIMIT 1");
+    $stmt->execute(['cid' => $cid, 'uid' => $uid]);
+    return $stmt->fetchColumn();
+  }
+
 }

@@ -135,6 +135,22 @@ class Incomes extends Conectar
     return $stmt->rowCount();    
   }
 
-  
+  public function getPrevLateReceiptByUnitDB($unit)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT amount FROM income_penalty_data_table WHERE unit = :unit AND namepenalty LIKE '%MORA%' AND status = 1 ORDER BY datep DESC LIMIT 1");
+    $stmt->execute(['unit' => $unit]);
+    return $stmt->fetchColumn();
+  }
+
+  public function getPrevAdmExpReceiptByUnitDB($unit)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT amount FROM income_penalty_data_table WHERE unit = :unit AND namepenalty LIKE '%GASTOS ADMIN%' AND status = 1 ORDER BY datep DESC LIMIT 1");
+    $stmt->execute(['unit' => $unit]);
+    return $stmt->fetchColumn();
+  }
 
 }
