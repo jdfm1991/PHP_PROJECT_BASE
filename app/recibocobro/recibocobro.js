@@ -75,8 +75,9 @@ $(document).ready(function () {
         { data: "aumont" },
         {
           data: "id", render: (data, _, __, meta) =>
-            `<button id="b_delete_receipt" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="fa fa-trash"></i></button>
-            <button id="b_view_receipt" class="btn btn-outline-info btn-sm" data-value="${data}"><i class="bi bi-eye-fill"></i></button> `, className: "text-center"
+            `<button id="b_delete_receipt" class="btn btn-outline-danger btn-sm" data-value="${data}" title="Eliminar Recibo"><i class="fa fa-trash"></i></button>
+            <button id="b_view_receipt" class="btn btn-outline-info btn-sm" data-value="${data}" title="Ver Recibo"><i class="bi bi-eye-fill"></i></button>
+            <button id="b_send_receipt" class="btn btn-outline-success btn-sm" data-value="${data}" title="Enviar Recibo"><i class="bi bi-send"></i></button> `, className: "text-center"
         }
       ],
       rowCallback: function (row, data, index) {
@@ -90,6 +91,7 @@ $(document).ready(function () {
         }
       },
       order: [[0, "desc"]],
+      columnDefs: [{ width: '12%', targets: 7 }],
     });
 
   }
@@ -737,8 +739,50 @@ $(document).ready(function () {
   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
   $(document).on('click', '#b_view_receipt', function () {
     var id = $(this).data('value');
-    window.open("pdf.php?id=" + id, "_blank");
+    $.ajax({
+      url: 'recibocobro_controller.php?op=generate_pdf_receipt',
+      method: 'POST',
+      dataType: 'json',
+      data: { id: id },
+      success: function (response) {
+        $(".mr-auto").text("Procesos Exitoso");
+        $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+        $(".toast").css("color", "black");
+        $(".toast").attr("background-color", "");
+        $("#toastText").text('El Recibo se genero de manera exitosa');
+        $('.toast').toast('show');
+      }
+    });
   })
+
+  $(document).on('click', '#b_send_receipt', function () {
+    var id = $(this).data('value');
+    $.ajax({
+      url: 'recibocobro_controller.php?op=sendmail_pdf_receipt',
+      method: 'POST',
+      dataType: 'json',
+      data: { id: id },
+      success: function (response) {        
+        if (response.status == true) {
+          $(".mr-auto").text("Procesos Exitoso");
+          $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+          $(".toast").css("color", "black");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+        } else {
+          $(".mr-auto").text("Procesos Fallido");
+          $(".toast").css("background-color", "rgba(226, 34, 34, 0.62)");
+          $(".toast").css("color", "black");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+        }
+
+      }
+    });
+  })
+
+
   function loadDataDateReceipt() {
     $('#p_cobro').val(period);
     $('#f_vence').val(vence);

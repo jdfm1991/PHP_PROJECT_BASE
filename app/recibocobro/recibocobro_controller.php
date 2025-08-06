@@ -1,12 +1,15 @@
 <?php
+error_reporting(0);
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
+require_once(PATH_VENDOR . "/autoload.php");
 require_once(PATH_APP . "/cuentagasto/cuentagasto_module.php");
 require_once(PATH_APP . "/registrogasto/registrogasto_module.php");
 require_once(PATH_APP . "/cuentaingresos/cuentaingresos_module.php");
 require_once(PATH_APP . "/registroingresos/registroingresos_module.php");
 require_once(PATH_APP . "/unidaddepartamental/unidaddepartamental_module.php");
 require_once(PATH_APP . "/cxc/cxc_module.php");
+require_once("pdf.php");
 require_once("recibocobro_module.php");
 
 $colrec = new Receipts();
@@ -16,8 +19,16 @@ $incomeaccounts = new IncomeAccounts();
 $unitdep = new Unitdepartmental();
 $incomes = new Incomes();
 $receivable = new AccountsReceivable();
+$generatepdf = new Generatepdf();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '686707b369f10';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once(PATH_VENDOR . "/phpmailer/phpmailer/src/Exception.php");
+require_once(PATH_VENDOR . "/phpmailer/phpmailer/src/PHPMailer.php");
+require_once(PATH_VENDOR . "/phpmailer/phpmailer/src/SMTP.php");
+
+$id = (isset($_POST['id'])) ? $_POST['id'] : '6840b778d8798';
 $cid = (isset($_POST['cid'])) ? $_POST['cid'] : '';
 $uid = (isset($_POST['uid'])) ? $_POST['uid'] : '';
 $typerec = (isset($_POST['typerec'])) ? $_POST['typerec'] : '';
@@ -427,7 +438,111 @@ switch ($_GET["op"]) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
+  case 'generate_pdf_receipt':
+    $dato = array();
+    $head = '';
+    $body = '';
+    $foot = '';
+    $stylesheet = file_get_contents(URL_ASSETS . '/css/style-custom.css');
+    $logo = URL_ASSETS . '/img/logo.png';
+    $name = '';
+    $type = '';
+    $data = $colrec->getDataHeaderReceiptDB($id);
+    $name = $generatepdf->getNameReceipt($data);
+    $type = $generatepdf->getTypeReceipt($data);
+    $head .= $generatepdf->getInfoHeadCondominium($logo, $type);
+    $head .= $generatepdf->getInfoHeadReceipt($data);
+    if ($type == 'COBRO') {
+      $body .= $generatepdf->getInfoBodyReceipt($id, $expaccount, $colrec, 'EAF');
+      $body .= '<br>';
+      $body .= $generatepdf->getInfoBodyReceipt($id, $expaccount, $colrec, 'EANF');
+      $body .= '<br>';
+      $body .= $generatepdf->getInfoBodyReceipt($id, $incomeaccounts, $colrec, 'IAF');
+      $body .= '<br>';
+      $body .= $generatepdf->getTotalOfReceiptById($data, $type);
+    }
+    if ($type == 'PENAL') {
+      $body .= $generatepdf->getInfoBodyReceipt($id, $incomeaccounts, $colrec, 'PAF');
+      $body .= '<br>';
+      $body .= $generatepdf->getTotalOfReceiptById($data, $type);
+    }
+    $body .= $generatepdf->getInformativeNote($type);
+    $mpdf = new \Mpdf\Mpdf([
+      'mode' => 'utf-8',
+      'format' => 'letter',
+      'margin_header' => 10,
+      'margin_footer' => 10,
+      'margin_left' => 10,
+      'margin_right' => 10,
+      'margin_top' => 70,
+      'margin_bottom' => 10
+    ]);
+    $mpdf->SetHeader($head);
+    $mpdf->SetFooter('Numero de Pagina: {PAGENO}| Fecha de impresion: {DATE j-m-Y}');
+    $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+    $mpdf->WriteHTML($body, \Mpdf\HTMLParserMode::HTML_BODY);
+    $mpdf->Output($name . '.pdf', \Mpdf\Output\Destination::DOWNLOAD);
+
+    break;
+  case 'sendmail_pdf_receipt':
+    $dato = array();
+    $head = '';
+    $body = '';
+    $foot = '';
+    $stylesheet = file_get_contents(URL_ASSETS . '/css/style-custom.css');
+    $logo = URL_ASSETS . '/img/logo.png';
+    $name = '';
+    $type = '';
+    $data = $colrec->getDataHeaderReceiptDB($id);
+    $name = $generatepdf->getNameReceipt($data);
+    $type = $generatepdf->getTypeReceipt($data);
+    $head .= $generatepdf->getInfoHeadCondominium($logo, $type);
+    $head .= $generatepdf->getInfoHeadReceipt($data);
+    if ($type == 'COBRO') {
+      $body .= $generatepdf->getInfoBodyReceipt($id, $expaccount, $colrec, 'EAF');
+      $body .= '<br>';
+      $body .= $generatepdf->getInfoBodyReceipt($id, $expaccount, $colrec, 'EANF');
+      $body .= '<br>';
+      $body .= $generatepdf->getInfoBodyReceipt($id, $incomeaccounts, $colrec, 'IAF');
+      $body .= '<br>';
+      $body .= $generatepdf->getTotalOfReceiptById($data, $type);
+    }
+    if ($type == 'PENAL') {
+      $body .= $generatepdf->getInfoBodyReceipt($id, $incomeaccounts, $colrec, 'PAF');
+      $body .= '<br>';
+      $body .= $generatepdf->getTotalOfReceiptById($data, $type);
+    }
+    $body .= $generatepdf->getInformativeNote($type);
+    $mpdf = new \Mpdf\Mpdf([
+      'mode' => 'utf-8',
+      'format' => 'letter',
+      'margin_header' => 10,
+      'margin_footer' => 10,
+      'margin_left' => 10,
+      'margin_right' => 10,
+      'margin_top' => 70,
+      'margin_bottom' => 10
+    ]);
+    $mpdf->SetHeader($head);
+    $mpdf->SetFooter('Numero de Pagina: {PAGENO}| Fecha de impresion: {DATE j-m-Y}');
+    $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+    $mpdf->WriteHTML($body, \Mpdf\HTMLParserMode::HTML_BODY);
+    $document = $mpdf->Output('', \Mpdf\Output\Destination::STRING_RETURN);
+    $content = "Recibo de Cobro";
+    $subject = "Recibo de Cobro";
+    $mail = sendMail("jovannifranco@gmail.com", $subject, $body, $name, $document);
+    if (!$mail['error']) {
+      $dato['status'] = true;
+      $dato['httpstatus'] = '200';
+      $dato['message'] = "El Correo Fue Enviado Satisfactoriamente \n";
+    } else {
+      $dato['status'] = false;
+      $dato['httpstatus'] = '500';
+      $dato['message'] = $mail['error'];
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
   default:
-    header("Location:" . URL_APP);
+    header("Location:" . URL_APP . "recibocobro");
     break;
 }
