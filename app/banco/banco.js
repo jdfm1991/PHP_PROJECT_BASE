@@ -47,7 +47,7 @@ $(document).ready(function () {
       ]
     });
   }
-  
+
   /* Funcion para cargar el excel del banco y mostrar la informacion */
   const loadBankStatementByExcel = (sheetexcel) => {
     var datos = new FormData();
@@ -95,20 +95,20 @@ $(document).ready(function () {
     });
   }
 
-
-
   $('#btn_view').click(function (e) {
     e.preventDefault();
     $('#cont_load').addClass('d-none');
     $('#cont_view').removeClass('d-none');
-$('#b_movements_table').DataTable().destroy();
+    $('#b_movements_table').DataTable().destroy();
     loadDataTableBankingMovements();
   });
+
   $('#btn_load').click(function (e) {
     e.preventDefault();
     $('#cont_view').addClass('d-none');
     $('#cont_load').removeClass('d-none');
   });
+
   /* Accion que llama la funcion para cargar el excel */
   $('#sheetexcel').change(function () {
     sheetexcel = $('#sheetexcel')[0].files[0];

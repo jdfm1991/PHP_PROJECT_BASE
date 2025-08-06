@@ -101,6 +101,18 @@ $(function () {
     );
   });
 });
+const chargeDayRate = async () => {
+  const response = await fetch(URI + 'tasacambiaria/tasacambiaria_controller.php?op=web_scraping');
+  const data = await response.json();
+  if (data.status == false) {
+    $(".mr-auto").text("Procesos Exitoso");
+    $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+    $(".toast").css("color", "black");
+    $(".toast").attr("background-color", "");
+    $("#toastText").text(data.message);
+    $('.toast').toast('show');
+  }
+}
 $(document).ready(function () {
   $('#btnLogin').click(function (e) {
     e.preventDefault();
@@ -144,6 +156,7 @@ $(document).ready(function () {
   });
 
   loadSidebarMenu();
+  //chargeDayRate();
 });
 
 

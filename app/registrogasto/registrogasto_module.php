@@ -16,11 +16,11 @@ class Expenses extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT A.id, dateExpense, B.nameSuplier, C.expenseaccount, expenseName, montExpense, quotasExpense 
+    $stmt = $conectar->prepare("SELECT A.id, dateExpense, B.nameSuplier, C.expenseaccount, expenseName, montExpense, quotasExpense, C.typeaccount
                                     FROM expense_data_table AS A 
                                   INNER JOIN suplier_data_table AS B ON A.idSuplier=B.id
                                   INNER JOIN expense_accounts_data_table AS C ON A.idExpenseAccount=C.id
-                                WHERE statusExpense=1");
+                                WHERE statusExpense=1 ORDER BY A.dateExpense DESC, C.typeaccount ASC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -89,6 +89,23 @@ class Expenses extends Conectar
                                   WHERE idExpenseAccount=:id AND statusExpense=1 AND balanceExpense>0");
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+    public function getNameAccountByIdDB($id)
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT expenseName FROM expense_data_table WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchColumn();
+  }
+
+  public function updateAmountExpenseByIdDB($id, $amount)
+  {
+    $conectar = parent::conexion();
+    $stmt = $conectar->prepare("UPDATE expense_data_table SET balanceExpense = :amount, montExpense = :amount WHERE id = :id");
+    $stmt->execute(['amount' => $amount, 'id' => $id]);
+    return $stmt->rowCount();
   }
 
 }

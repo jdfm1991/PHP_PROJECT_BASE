@@ -22,7 +22,7 @@ class Supliers extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM suplier_data_table WHERE statusSuplier = 1");
+    $stmt = $conectar->prepare("SELECT * FROM suplier_data_table WHERE statusSuplier = 1 ORDER BY nameSuplier ASC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }

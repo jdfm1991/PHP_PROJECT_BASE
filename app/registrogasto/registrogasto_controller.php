@@ -1,11 +1,15 @@
 <?php
 require_once("../../config/abrir_sesion.php");
 require_once("../../config/conexion.php");
+require_once(PATH_APP . "/banco/banco_module.php");
+require_once(PATH_APP . "/tasacambiaria/tasacambiaria_module.php");
 require_once("registrogasto_module.php");
 
 $expenses = new Expenses();
+$bankmov = new BankingMovements();
+$exchange = new Exchange();
 
-$id = (isset($_POST['id'])) ? $_POST['id'] : '6873ad6c02425';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '';
 $date = (isset($_POST['date'])) ? $_POST['date'] : '';
 $suplier = (isset($_POST['suplier'])) ? $_POST['suplier'] : '';
 $account = (isset($_POST['account'])) ? $_POST['account'] : '';
@@ -50,6 +54,7 @@ switch ($_GET["op"]) {
       $sub_array['id'] = $row['id'];
       $sub_array['date'] = $row['dateExpense'];
       $sub_array['suplier'] = $row['nameSuplier'];
+      $sub_array['type'] = $row['typeaccount'];
       $sub_array['account'] = $row['expenseaccount'];
       $sub_array['expense'] = $row['expenseName'];
       $sub_array['mont'] = number_format(($row['quotasExpense'] > 0) ? $row['quotasExpense']  : $row['montExpense'], 2);
@@ -67,13 +72,14 @@ switch ($_GET["op"]) {
       $dato['account'] = $data['idExpenseAccount'];
       $dato['expense'] = $data['expenseName'];
       $dato['mont'] = number_format($data['montExpense'], 2);
-      $dato['quota'] = ($data['quotasExpense']!=null) ? number_format($data['quotasExpense'], 2) : NULL; 
+      $dato['quota'] = ($data['quotasExpense'] != null) ? number_format($data['quotasExpense'], 2) : NULL;
       $dato['dater'] = $data['dateRegExp'];
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
 
   case 'delete_expense':
+    $dato = array();
     $data = $expenses->deleteClideleteExpenseDB($id);
     if ($data) {
       $dato['status'] = true;
@@ -83,6 +89,31 @@ switch ($_GET["op"]) {
       $dato['status'] = false;
       $dato['error'] = '500';
       $dato['message'] = "Error Al Elminar La Cuenta, Por Favor Intente Nuevamente \n";
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+
+  case 'get_sum_movement':
+    $dato = array();
+    $descrip = '';
+    $sum = 0;
+    $mov = $expenses->getNameAccountByIdDB($id);
+    if (strpos($mov, 'TRANSFERECIAS BA') !== false) {
+      $descrip = 'com.';
+    }
+    if (strpos($mov, 'TRANSACCIONES FIN') !== false) {
+      $descrip = 'ITF 20';
+    }
+    $sum = $bankmov->getSumMovementByMovementDB($descrip);
+    $data = $expenses->updateAmountExpenseByIdDB($id, $sum);
+    if ($data) {
+      $dato['status'] = true;
+      $dato['error'] = '200';
+      $dato['message'] = "La Actualizacion se realizo Satisfactoriamente \n";
+    } else {
+      $dato['status'] = false;
+      $dato['error'] = '500';
+      $dato['message'] = "No Hubo Informacion para actualizar \n";
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;

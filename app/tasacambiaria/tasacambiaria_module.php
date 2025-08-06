@@ -16,7 +16,7 @@ class Exchange extends Conectar
     $conectar = parent::conexion();
     parent::set_names();
     $stmt = $conectar->prepare("SELECT A.id, dateRate, exchRate, acronym FROM rate_data_table AS A 
-                                  INNER JOIN rate_types_data_table AS B ON A.typeRate=B.id");
+                                  INNER JOIN rate_types_data_table AS B ON A.typeRate=B.id ORDER BY dateRate DESC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -28,11 +28,11 @@ class Exchange extends Conectar
     $stmt->execute(['id' => $id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-  public function updateRateDataDB($id, $date, $rate, $type)
+  public function updateRateDataDB($date, $rate, $type)
   {
     $conectar = parent::conexion();
-    $stmt = $conectar->prepare("UPDATE rate_data_table SET dateRate=:date, exchRate=:rate, typeRate=:type WHERE id = :id");
-    $stmt->execute(['date' => $date, 'rate' => $rate, 'type' => $type, 'id' => $id]);
+    $stmt = $conectar->prepare("UPDATE rate_data_table SET  exchRate=:rate  WHERE dateRate=:date AND typeRate=:type");
+    $stmt->execute(['rate' => $rate, 'date' => $date, 'type' => $type]);
     return $stmt->rowCount();
   }
 
@@ -44,12 +44,12 @@ class Exchange extends Conectar
     return $stmt->rowCount();
   }
 
-  public function validateDateRateDB($date)
+  public function validateDateRateDB($date, $type)
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM rate_data_table WHERE dateRate = :date");
-    $stmt->execute(['date' => $date]);
+    $stmt = $conectar->prepare("SELECT * FROM rate_data_table WHERE dateRate = :date AND typeRate = :type");
+    $stmt->execute(['date' => $date, 'type' => $type]);
     return $stmt->rowCount();
   }
 
@@ -59,6 +59,15 @@ class Exchange extends Conectar
     parent::set_names();
     $stmt = $conectar->prepare("SELECT exchRate FROM rate_data_table WHERE dateRate = :date");
     $stmt->execute(['date' => $date]);
+    return $stmt->fetchColumn();
+  }
+
+  public function getDataLastRateDB()
+  {
+    $conectar = parent::conexion();
+    parent::set_names();
+    $stmt = $conectar->prepare("SELECT exchRate FROM rate_data_table ORDER BY dateRate DESC LIMIT 1");
+    $stmt->execute();
     return $stmt->fetchColumn();
   }
 }

@@ -12,6 +12,7 @@ $bankmov = new BankingMovements();
 $id = (isset($_POST['id'])) ? $_POST['id'] : '';
 $account = (isset($_POST['account'])) ? $_POST['account'] : '';
 $date = (isset($_POST['date'])) ? $_POST['date'] : '';
+$idrefer = (isset($_POST['idrefer'])) ? $_POST['idrefer'] : '';
 $refer = (isset($_POST['refer'])) ? $_POST['refer'] : '';
 $rate = (isset($_POST['rate'])) ? $_POST['rate'] : '';
 $payd = (isset($_POST['payd'])) ? $_POST['payd'] : '';
@@ -54,11 +55,11 @@ switch ($_GET["op"]) {
       if ($remaining >= 0) {
         $amount = ceil($payd * $rate);
         $updr = $expenses->updateBalanceExpenseDB($account, $payd);
-        $updb = $bankmov->updateBankingMovementDB($refer, $amount);
+        $updb = $bankmov->updateBankingMovementDB($idrefer, $amount);
       } else {
         $amount = $balance * $rate;
         $updr = $expenses->updateBalanceExpenseDB($account, $balance);
-        $updb = $bankmov->updateBankingMovementDB($refer, $amount);
+        $updb = $bankmov->updateBankingMovementDB($idrefer, $amount);
       }
       $dato['status'] = true;
       $dato['error'] = '200';

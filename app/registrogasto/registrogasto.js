@@ -57,7 +57,7 @@ $(document).ready(function () {
       paging: true,
       lengthChange: true,
       searching: true,
-      ordering: true,
+      ordering: false,
       displayLength: 10,
       lengthMenu: [10, 25, 50, 100],
       pageLength: 10,
@@ -91,9 +91,14 @@ $(document).ready(function () {
         { data: "expense" },
         { data: "mont" },
         {
-          data: "id", render: (data, _, __, meta) =>
-            `<button id="b_edit_expense" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
-            <button id="b_trash_expense" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="bi bi-trash3"></i></button>`, className: "text-center"
+          data: null, render: (data, type, row) =>
+            row.type == 5 ?
+              `<button id="b_edit_expense" class="btn btn-outline-primary btn-sm" data-value="${row.id}"><i class="fa fa-edit" title="Editar Gasto"></i></button>
+              <button id="b_uptdate_expense" class="btn btn-outline-primary btn-sm" data-value="${row.id}"><i class="bi bi-arrow-repeat" title="Actualizar Gasto"></i></button>
+            <button id="b_trash_expense" class="btn btn-outline-danger btn-sm" data-value="${row.id}"><i class="bi bi-trash3" title="Eliminar Gasto"></i></button>`
+              :
+              `<button id="b_edit_expense" class="btn btn-outline-primary btn-sm" data-value="${row.id}"><i class="fa fa-edit" title="Editar Gasto"></i></button>
+            <button id="b_trash_expense" class="btn btn-outline-danger btn-sm" data-value="${row.id}"><i class="bi bi-trash3" title="Eliminar Gasto"></i></button>`
         }
       ]
     });
@@ -223,6 +228,37 @@ $(document).ready(function () {
         $('#suplierExpense').attr('disabled', true);
         $('#accountExpense').attr('disabled', true);
         $('#newExpenseModal').modal('show');
+      }
+    });
+  })
+  $(document).on('click', '#b_uptdate_expense', function (e) {
+    e.preventDefault();
+    var id = $(this).data('value');
+    $.ajax({
+      url: 'registrogasto_controller.php?op=get_sum_movement',
+      method: 'POST',
+      dataType: 'json',
+      data: { id: id },
+      success: function (response) {
+        if (response.status == true) {
+          $(".mr-auto").text("Procesos Exitoso");
+          $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+          $(".toast").css("color", "black");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+          $('.toast').toast('show');
+          $('#expense_table').DataTable().ajax.reload();
+        } else {
+          $(".mr-auto").text("Procesos Fallido");
+          $(".toast").css("background-color", "rgb(255 80 80 / 85%)");
+          $(".toast").css("color", "white");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+        }
+
+
       }
     });
   })

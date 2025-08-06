@@ -31,7 +31,7 @@ $(document).ready(function () {
       paging: true,
       lengthChange: true,
       searching: true,
-      ordering: true,
+      ordering: false,
       displayLength: 10,
       lengthMenu: [10, 25, 50, 100],
       pageLength: 10,

@@ -675,6 +675,7 @@ Modal Nueva Tasa de Cambio
             <div id="cont_amunt_cxc" class="form-row col-md-12">
               <div class="form-group col-md-4">
                 <label for="refercxc">Numero de Ref:</label>
+                <input type="hidden" id="idrefer">
                 <input type="text" class="form-control" id="refercxc" name="onlynumber" list="listrefer">
                 <datalist id="listrefer">
                   <!-- Se carga a Traves de Archivo JS con arrow function "loadDataSelectUnitLevel" -->

@@ -103,7 +103,7 @@ switch ($_GET['op']) {
       $amount = str_replace(",", ".", str_replace(".", "", $row['D']));
       $motion  = ($row['F'] == '') ? '' : (($row['F'] == 'Nota de Débito') ? 'ND' : 'NC');
       $i++;
-      $verify = $bankmov->verifyReferenceMovementDB($refenc);
+      $verify = $bankmov->verifyReferenceMovementDB($refenc, $motion);
       if ($verify == 0) {
         $data = $bankmov->createNewBankingMovementsDB($id, $date, $refenc, $descri, $amount, $motion);
         if ($data) {
@@ -131,18 +131,32 @@ switch ($_GET['op']) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-  case 'get_banking_movement':
+  case 'get_banking_movement_expenses':
     $dato = array();
-    $data = $bankmov->getDataBankingMovementDB($refer);
+    $data = $bankmov->getDataBankMovementsPaymentExpensesDB($refer);
     foreach ($data as $row) {
       $sub_array = array();
       $sub_array['id'] = $row['id'];
       $sub_array['refer'] = $row['referencemov'];
-      $sub_array['amount'] = number_format($row['amountmov'], 2, '.', '');
+      $sub_array['amount'] = number_format($row['balencemov'], 2, '.', '');
       $sub_array['date'] = $row['datemov'];
-      $rate = $exchange->getDataRateByDateDB($row['datemov']);
-      $sub_array['rate'] = $rate;
-      $sub_array['amountd'] = number_format(($row['balencemov'] / $rate), 2, '.', '');
+      $sub_array['rate'] = $row['exchRate'];
+      $sub_array['dollar'] = number_format(($row['dollar']), 2, '.', '');
+      $dato[] = $sub_array;
+    }
+    echo json_encode($dato, JSON_UNESCAPED_UNICODE);
+    break;
+  case 'get_banking_movement_incomes':
+    $dato = array();
+    $data = $bankmov->getDataBankMovementsPaymentIncomesDB($refer);
+    foreach ($data as $row) {
+      $sub_array = array();
+      $sub_array['id'] = $row['id'];
+      $sub_array['refer'] = $row['referencemov'];
+      $sub_array['amount'] = number_format($row['balencemov'], 2, '.', '');
+      $sub_array['date'] = $row['datemov'];
+      $sub_array['rate'] = $row['exchRate'];
+      $sub_array['dollar'] = number_format(($row['dollar']), 2, '.', '');
       $dato[] = $sub_array;
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
@@ -165,7 +179,8 @@ switch ($_GET['op']) {
     }
     echo json_encode($dato, JSON_UNESCAPED_UNICODE);
     break;
-  default:
 
+  default:
+    header("Location:" . URL_APP);
     break;
 }

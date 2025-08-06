@@ -1,6 +1,7 @@
 $(document).ready(function () {
   const DateNow = new Date();
   let remaining = 0;
+  const datalist = document.getElementById('listrefer');
   /* Arrow Function Que se Encarga de Cargar los Datos del Cliente en la Tabla */
   const loadDataTableAccountsPayable = async () => {
     const table = $('#cxp_table').DataTable({
@@ -75,14 +76,14 @@ $(document).ready(function () {
   $('#refercxc').keyup(function (e) {
     refer = $(this).val();
     $.ajax({
-      url: URI + 'banco/banco_controller.php?op=get_banking_movement',
+      url: URI + 'banco/banco_controller.php?op=get_banking_movement_expenses',
       method: 'POST',
       dataType: 'json',
       data: { refer: refer },
       success: function (response) {
         $("#listrefer").empty();
         $.each(response, function (idx, opt) {
-          $("#listrefer").append(`<option value="${opt.refer}">${opt.amount} - ${opt.date}`);
+          $("#listrefer").append(`<option value="${opt.refer}">`);
         });
       }
     });
@@ -117,19 +118,20 @@ $(document).ready(function () {
       return false;
     }
     $.ajax({
-      url: URI + 'banco/banco_controller.php?op=get_banking_movement',
+      url: URI + 'banco/banco_controller.php?op=get_banking_movement_expenses',
       method: 'POST',
       dataType: 'json',
       data: { refer: refer },
       success: function (response) {
         balance = $('#t_balance').val();
         $.each(response, function (idx, opt) {
+          $('#idrefer').val(opt.id);
           $('#refercxc').val(opt.refer);
           $('#datepaycxc').val(opt.date);
           $('#amountpaycxc').val(opt.amount);
           $('#ratepaycxc').val(opt.rate);
-          $('#amountpaycxcd').val(opt.amountd);
-          remaining = (balance - opt.amountd).toFixed(2)
+          $('#amountpaycxcd').val(opt.dollar);
+          remaining = (balance - opt.dollar).toFixed(2)
         });
         if (remaining > 0) {
           $('#notecxc').text('Despues Del Pago Quedara Un Saldo Pendiente de :' + remaining + '$ ');
@@ -155,6 +157,7 @@ $(document).ready(function () {
     e.preventDefault();
     account = $('#idcx').val();
     date = DateNow.getFullYear() + '-' + String(DateNow.getMonth() + 1).padStart(2, '0') + '-' + String(DateNow.getDate()).padStart(2, '0');
+    idrefer = $('#idrefer').val();
     refer = $('#refercxc').val();
     rate = $('#ratepaycxc').val();
     payd = $('#amountpaycxcd').val();
@@ -163,6 +166,7 @@ $(document).ready(function () {
     dato = new FormData();
     dato.append('account', account);
     dato.append('date', date);
+    dato.append('idrefer', idrefer);
     dato.append('refer', refer);
     dato.append('rate', rate);
     dato.append('payd', payd);
@@ -201,12 +205,6 @@ $(document).ready(function () {
     });
 
   });
-
-
-
-
-
-
 
 
 

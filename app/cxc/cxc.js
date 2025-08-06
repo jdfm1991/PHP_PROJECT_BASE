@@ -89,7 +89,7 @@ $(document).ready(function () {
   $('#refercxc').keyup(function (e) {
     refer = $(this).val();
     $.ajax({
-      url: URI + 'banco/banco_controller.php?op=get_banking_movement',
+      url: URI + 'banco/banco_controller.php?op=get_banking_movement_incomes',
       method: 'POST',
       dataType: 'json',
       data: { refer: refer },
@@ -154,19 +154,20 @@ $(document).ready(function () {
       return false;
     }
     $.ajax({
-      url: URI + 'banco/banco_controller.php?op=get_banking_movement',
+      url: URI + 'banco/banco_controller.php?op=get_banking_movement_incomes',
       method: 'POST',
       dataType: 'json',
       data: { refer: refer },
       success: function (response) {
         balance = $('#t_balance').val();
         $.each(response, function (idx, opt) {
+          $('#idrefer').val(opt.id);
           $('#refercxc').val(opt.refer);
           $('#datepaycxc').val(opt.date);
           $('#amountpaycxc').val(opt.amount);
           $('#ratepaycxc').val(opt.rate);
-          $('#amountpaycxcd').val(opt.amountd);
-          remaining = (balance - opt.amountd).toFixed(2)
+          $('#amountpaycxcd').val(opt.dollar);
+          remaining = (balance - opt.dollar).toFixed(2)
         });
         if (remaining > 0) {
           $('#notecxc').text('Despues Del Pago Quedara Un Saldo Pendiente de :' + remaining + '$ ');
@@ -191,26 +192,19 @@ $(document).ready(function () {
   /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
   $('#formExpensePay').submit(function (e) {
     e.preventDefault();
-
     account = $('#idcx').val();
     date = DateNow.getFullYear() + '-' + String(DateNow.getMonth() + 1).padStart(2, '0') + '-' + String(DateNow.getDate()).padStart(2, '0');
+    idrefer = $('#idrefer').val();
     refer = $('#refercxc').val();
     rate = $('#ratepaycxc').val();
     payd = $('#amountpaycxcd').val();
     balance = $('#t_balance').val();
     check = $('#dollarpay').is(':checked');
     check2 = $('#interes').is(':checked');
-    /* if (balance > payd) {
-      $(".mr-auto").text("Procesos Fallido");
-      $(".toast").css("background-color", "rgb(36 113 163 / 85%)");
-      $(".toast").css("color", "white");
-      $("#toastText").text('El Monto Pagado Es Menor que el monto a Pagar');
-      $('.toast').toast('show');
-      return false
-    } */
     dato = new FormData();
     dato.append('account', account);
     dato.append('date', date);
+    dato.append('idrefer', idrefer);
     dato.append('refer', refer);
     dato.append('rate', rate);
     dato.append('payd', payd);

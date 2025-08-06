@@ -71,8 +71,8 @@ $(document).ready(function () {
         { data: "expense" },
         {
           data: "id", render: (data, _, __, meta) =>
-            `<button id="b_edit_expense_account" class="btn btn-outline-primary btn-sm" data-value="${data}"><i class="fa fa-edit"></i></button>
-            <button id="b_trash_expense_account" class="btn btn-outline-danger btn-sm" data-value="${data}"><i class="bi bi-trash3"></i></button>`, className: "text-center"
+            `<button id="b_edit_expense_account" class="btn btn-outline-primary btn-sm" data-value="${data}" data-toggle="tooltip" data-placement="top" title="Editar Cuenta"><i class="fa fa-edit"></i></button>
+            <button id="b_trash_expense_account" class="btn btn-outline-danger btn-sm" data-value="${data}" data-toggle="tooltip" data-placement="top" title="Eliminar Cuenta"><i class="bi bi-trash3"></i></button>`, className: "text-center"
         }
       ]
     });
