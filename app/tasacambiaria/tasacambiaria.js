@@ -76,7 +76,7 @@ $(document).ready(function () {
   });
   /* Accion para Guardar o Actualizar Informacion del Cliente en la Base de Datos */
   $('#formNewRate').submit(function (e) {
-    e.preventDefault();   
+    e.preventDefault();
     id = $('#idRate').val();
     rate = $('#exchangeRate').val();
     date = $('#dateRate').val();
@@ -116,6 +116,32 @@ $(document).ready(function () {
     });
 
   });
+  $('#ratebcv').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      url: 'tasacambiaria_controller.php?op=web_scraping',
+      method: 'POST',
+      dataType: 'json',
+      success: function (response) {        
+        if (response.status == true) {
+          $(".mr-auto").text("Procesos Exitoso");
+          $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
+          $(".toast").css("color", "black");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+          $('#rate_table').DataTable().ajax.reload();
+        }else{
+          $(".mr-auto").text("Procesos Exitoso");
+          $(".toast").css("background-color", "rgba(201, 8, 8, 0.84)");
+          $(".toast").css("color", "black");
+          $(".toast").attr("background-color", "");
+          $("#toastText").text(response.message);
+          $('.toast').toast('show');
+        }
+      }
+    });
+  });
   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
   $(document).on('click', '#b_edit_rate', function () {
     var id = $(this).data('value');
@@ -138,6 +164,6 @@ $(document).ready(function () {
       }
     });
   })
- 
+
   loadDataTableRates();
 });

@@ -25,6 +25,7 @@ require_once(PATH_APP . "/head.php");
           <div class="card mb-2">
             <div class="card-body">
               <div class="row list-group-item d-flex justify-content-end lh-sm align-items-center">
+                <button id="ratebcv" type="button" class="btn btn-outline-info btn-group-sm"> Cargar Tasa BCV </button>
                 <button id="newRate" type="button" class="btn btn-outline-success btn-group-sm" data-toggle="modal" data-target="#newRateModal"> Nuevo Tasa </button>
               </div>
             </div>

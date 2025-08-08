@@ -108,11 +108,23 @@ switch ($_GET["op"]) {
       $rate = $rate[0];
       $datevalidate = $exchange->validateDateRateDB($date, 1);
       if ($datevalidate > 0) {
-        $exchange->updateRateDataDB($date, $rate, 1);
+        $dato['status'] = true;
+        $dato['error'] = '200';
+        $dato['message'] = "La Tasa Cambiaria del Dia  " . $date . " ya fue registrada previamente \n";
       } else {
-        $exchange->createDataRateDB($date, $rate, 1);
+        $data = $exchange->createDataRateDB($date, $rate, 1);
+        if ($data) {
+          $dato['status'] = true;
+          $dato['error'] = '200';
+          $dato['message'] = "La Tasa Cambiaria del Dia " . $date . " Fue Creada Satisfactoriamente \n";
+        } else {
+          $dato['status'] = false;
+          $dato['error'] = '500';
+          $dato['message'] = "Error Al Registrar La Tasa Cambiaria del Dia " . $date . ", Por Favor Intente Nuevamente \n";
+        }
       }
     } else {
+      fclose($conectado);
       $dato['status'] = false;
       $dato['error'] = '500';
       $dato['message'] = "No Existe Conexion a Internet \n";
