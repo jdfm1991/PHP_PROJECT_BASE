@@ -1,6 +1,10 @@
 const URI = 'http://localhost/vistasegura/app/';
 const URL_ASSETS = 'http://localhost/vistasegura/assets/';
 
+document.addEventListener('contextmenu', function(event) {
+  event.preventDefault();
+});
+
 const loadSidebarMenu = async () => {
   const response = await fetch(URI + 'manager/man_controller.php?op=list_modules_by_depart');
   const data = await response.json();

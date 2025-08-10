@@ -212,14 +212,14 @@ Modal para Iniciar Sesion
           <div class="row">
             <div class="col-lg-6 d-none d-lg-block bg-login-image">
               <div class="text-center">
-                <img class="img-fluid mt-5 mb-5 ml-5" style="width: 25rem;"
-                  src="<?php echo  URL_ASSETS; ?>/img/undraw_posting_photo.svg" alt="...">
+                <img class="img-fluid mt-5 mb-5 ml-5" style="width: 20rem;"
+                  src="<?php echo  URL_ASSETS; ?>/img/logo.webp" alt="...">
               </div>
             </div>
             <div class="col-lg-6">
               <div class="p-5">
                 <div class="text-center">
-                  <h1 class="h4 text-gray-900 mb-4">¡Bienvenido de nuevo!</h1>
+                  <h1 class="h4 text-gray-900 mb-4">¡Nuevamente Bienvenido!</h1>
                 </div>
                 <form class="user" id="formLogin">
                   <div class="form-group">
