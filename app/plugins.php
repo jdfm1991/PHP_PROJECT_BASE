@@ -1,3 +1,6 @@
+<?php
+require_once(PATH_ASSETS . '/components/modal.php');
+?>
 <!-- Bootstrap core JavaScript-->
 <script src="<?php echo  URL_ASSETS; ?>/vendor/jquery/jquery.min.js"></script>
 <script src="<?php echo  URL_ASSETS; ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -23,7 +26,3 @@
 
 <script src="<?php echo  URL_APP; ?>/index.js"></script>
 
-<?php
-require_once(PATH_ASSETS . '/components/modal.php');
-
-?>

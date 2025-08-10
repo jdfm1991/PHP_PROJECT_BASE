@@ -8,8 +8,8 @@ class AccountsReceivable extends Conectar
     $conectar = parent::conexion();
     parent::set_names();
     $stmt = $conectar->prepare("SELECT id, daterec, unitdep, numrec, nametenant, 
-    (SELECT B.amount FROM income_penalty_data_table AS B WHERE b.receipt=A.id AND B.namepenalty='mora' LIMIT 1) AS mora,
-    (SELECT B.amount FROM income_penalty_data_table AS B WHERE b.receipt=A.id AND B.namepenalty LIKE '%gastos ad%' LIMIT 1) AS gastos, A.balencereceipt  
+    (SELECT B.amount FROM income_penalty_data_table AS B WHERE B.receipt=A.id AND B.namepenalty='mora' LIMIT 1) AS mora,
+    (SELECT B.amount FROM income_penalty_data_table AS B WHERE B.receipt=A.id AND B.namepenalty LIKE '%gastos ad%' LIMIT 1) AS gastos, A.balencereceipt  
     FROM receipts_data_table AS A 
     WHERE A.statusrec = 1 AND A.balencereceipt > 0");
     $stmt->execute();

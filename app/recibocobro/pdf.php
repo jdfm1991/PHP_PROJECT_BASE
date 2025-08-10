@@ -35,7 +35,7 @@ function sendMail($email, $subject, $body, $name, $document)
     $mail->Body    = $body;
     $mail->addStringAttachment($document, '' . $name . '.pdf', 'base64', 'application/pdf');
 
-    $mail->send();
+    //$mail->send();
     if ($mail->send()) {
       return true;
     }
@@ -51,42 +51,43 @@ class Generatepdf
 {
   public function getNameReceipt($data)
   {
-    $name = '';
-    foreach ($data as $row) {
-      $name =  $row['numrec'] . ' - ' . $row['unitdep'] . ' - ' . $row['nametenant'];
-    }
+    $name = $data[0]['numrec']. ' - ' .$data[0]['unitdep'] . ' - ' . $data[0]['nametenant'];
     return $name;
   }
 
   public function getTypeReceipt($data)
   {
-    $type = '';
-    foreach ($data as $row) {
-      $type =  $row['typerec'];
-    }
+    $type = $data[0]['typerec'];
     return $type;
   }
   public function getInfoHeadCondominium($logo, $type)
   {
     $condominium = '';
     $condominium .= '
-	<div class="img-head-box">
-		<img class="img-head" src="' . $logo . '" alt="">
+	<div style="width: 16%; margin: 0; float: left">
+		<img style="width: 100px" src="' . $logo . '" alt="">
 	</div>
-	<div class="text-head-box">
-		<h3 class="text-head">CONDOMINIO RESIDENCIAS "TU CONDOMINIO"</h3>
-		<small class="text-head2">J-00000000-0 </small>
+	<div style="width: 65%; margin: 0; float: left; text-align: center;">
+		<div style="color: #000; font-size: large; font-family: "Courier New", Courier, monospace; font-weight: bold; font-style: italic; margin-bottom: -20px">CONDOMINIO RESIDENCIAS "TU CONDOMINIO"</div>
+		<div style="color: #464646; font-size: small; font-family: "Times New Roman", Times, serif; font-weight: bold; text-align: end;">J-00000000-0 </div>
 	</div>
-	<h3 class="time-head">Fecha de Impresion: {DATE j-m-Y}</h3>
-	<br>
-  <div class="text-head"> RECIBO DE COBRO </div>';
+	<div style="width: 17%; margin: 0; float: left; text-align: center;">
+	    <div style="color: #000; font-size: small; font-family: "Times New Roman", Times, serif; font-weight: bold" >Fecha de Impresion: {DATE j-m-Y}</div>	
+	</div>
+	<div style="width: 100%; margin-top: -60px; text-align: center;">
+        <div style="color: #000; font-size: medium; font-family: "Courier New", Courier, monospace; font-weight: bold; font-style: italic"> RECIBO DE COBRO </div>
+    </div>';
     if ($type == 'COBRO') {
       $condominium .= '
-  <div class="text-head"> RELACION DE COBROS </div>';
+      <div style="width: 100%; margin-top: -40px; text-align: center;">
+        <div style="color: #000; font-size: medium; font-family: "Courier New", Courier, monospace; font-weight: bold; font-style: italic"> RELACION DE COBROS </div>
+      </div>';
     }
     if ($type == 'PENAL') {
       $condominium .= '
-  <div class="text-head"> RELACION DE PENALIZACIONES </div>';
+      <div style="width: 100%; margin-top: -40px; text-align: center;">
+        <div style="color: #000; font-size: medium; font-family: "Courier New", Courier, monospace; font-weight: bold; font-style: italic"> RELACION DE PENALIZACIONES </div>
+      </div>';
     }
     return $condominium;
   }
@@ -96,17 +97,17 @@ class Generatepdf
     $headreceipt = '';
     foreach ($data as $row) {
       $headreceipt = '
-	<div class="content-info">
-		<div class="info-head-box">
-			<br><br> 
-			<p class="info-text-1">' . $row['conceptreceipt'] . '</p>
+	<div style="background-color: #dde3f1da; padding: 10px; border-radius: 2%; border: #747474 1px solid">
+		<div style="width: 50%; margin: 0; float: left; text-align: start;">
+		<br><br>
+			<div style="font-size: medium; font-family: "Courier New", Courier, monospace; font-weight: bold; color: #000">' . $row['conceptreceipt'] . '</div>
 		</div>
-		<div class="info-head-box"> 
-			<p class="info-text-2">N° RECIBO: ' . $row['numrec'] . '</p>
-			<p class="info-text-2">FEC. DE VENC.: ' . $row['expirationdate'] . '</p>
-			<p class="info-text-2">N° DEPARTAMENTO: ' . $row['unitdep'] . '</p>
-			<p class="info-text-2">NIVEL: ' . $row['levelrec'] . '</p>
-			<p class="info-text-2">ALICUOTA: ' . $row['aliquotrec'] . '</p>
+		<div style="width: 50%; margin: 0; float: left"> 
+			<div style="font-size: small; font-family: "Courier New", Courier, monospace; font-weight: bold; color: #000; margin: 0">N° RECIBO: ' . $row['numrec'] . '</div>
+			<div style="font-size: small; font-family: "Courier New", Courier, monospace; font-weight: bold; color: #000; margin: 0">FEC. DE VENC.: ' . $row['expirationdate'] . '</div>
+			<div style="font-size: small; font-family: "Courier New", Courier, monospace; font-weight: bold; color: #000; margin: 0">N° DEPARTAMENTO: ' . $row['unitdep'] . '</div>
+			<div style="font-size: small; font-family: "Courier New", Courier, monospace; font-weight: bold; color: #000; margin: 0">NIVEL: ' . $row['levelrec'] . '</div>
+			<div style="font-size: small; font-family: "Courier New", Courier, monospace; font-weight: bold; color: #000; margin: 0">ALICUOTA: ' . $row['aliquotrec'] . '</div>
 		</div>
 	</div>';
     }
@@ -176,7 +177,7 @@ class Generatepdf
 						<td style="text-align:center; font-weight: bold; padding-top: 30px;">' . number_format($totalaliquota, 2) . '</td>
 					</tr>
       </table>
-      <hr>';
+      <br>';
     return $infobody;
   }
 
@@ -185,7 +186,7 @@ class Generatepdf
     $infobody = '';
     if ($type == 'COBRO') {
       $infobody .= '
-    <table style="width:100%">
+    <table style="width:100%; margin-top: -30px">
       <tr>
         <td colspan="3" style="text-align:right; font-weight: bold;"> Total Gastos Fijos </td>
         <td style="text-align:right; font-weight: bold;"> ' . number_format($data[0]['aumontgf'], 2) . ' </td>
@@ -222,7 +223,7 @@ class Generatepdf
     }
     if ($type == 'PENAL') {
       $infobody .= '
-    <table style="width:100%">
+    <table style="width:100%; margin-top: -30px">
       <tr>
         <td colspan="3" style="text-align:right; font-weight: bold;"> Total a pagar </td>
         <td style="text-align:right; font-weight: bold;"> ' . number_format($data[0]['aumontp'], 2) . ' </td>
@@ -236,7 +237,7 @@ class Generatepdf
   {
     $infobody = '';
     $infobody .= '
-      <div style="background-color: hsla(181, 46%, 64%, 0.40); border: 1px solid #747474; border-radius: 5px; margin: 30px; padding: 10px">';
+      <div style="background-color: hsla(181, 46%, 64%, 0.40); border: 1px solid #747474; border-radius: 5px; margin: 0px; padding: 10px">';
     if ($type == 'COBRO') {
       $infobody .= '<p style="text-align: center; font-weight: bold; font-size: 10px;">ESTE RECIBO VENCE A LOS 15 DIAS DE SU EMISION, A PARTIR DE ALLI GENERA GASTOS POR MORA, COBRANZA Y BLOQUEO DE LLAVES DE ACCESO</p>';
     }

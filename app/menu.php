@@ -15,13 +15,13 @@
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span>Dashboard</span></a>
   </li>
-  <!-- Divider -->
-  <hr class="sidebar-divider">
-  <!-- Heading -->
+  <!-- Divider 
+  <hr class="sidebar-divider">-->
+  <!-- Heading
   <div class="sidebar-heading">
     Desarrollo de Sistema
-  </div>
-  <!-- Nav Item - Pages Collapse Menu -->
+  </div> -->
+  <!-- Nav Item - Pages Collapse Menu
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#development"
       aria-expanded="true" aria-controls="collapseTwo">
@@ -35,7 +35,7 @@
         <a class="collapse-item" href="<?php echo  URL_APP; ?>/manager/">Fase Configuracion</a>
       </div>
     </div>
-  </li>
+  </li> -->
   <!-- Divider -->
   <hr class="sidebar-divider">
   <!-- Heading -->

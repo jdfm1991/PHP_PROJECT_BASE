@@ -739,20 +739,7 @@ $(document).ready(function () {
   /* Accion para Eliminar Usuario de la Lista de usuario Visibles */
   $(document).on('click', '#b_view_receipt', function () {
     var id = $(this).data('value');
-    $.ajax({
-      url: 'recibocobro_controller.php?op=generate_pdf_receipt',
-      method: 'POST',
-      dataType: 'json',
-      data: { id: id },
-      success: function (response) {
-        $(".mr-auto").text("Procesos Exitoso");
-        $(".toast").css("background-color", "rgba(8, 140, 201, 0.842)");
-        $(".toast").css("color", "black");
-        $(".toast").attr("background-color", "");
-        $("#toastText").text('El Recibo se genero de manera exitosa');
-        $('.toast').toast('show');
-      }
-    });
+    window.open("recibocobro_controller.php?op=generate_pdf_receipt&id=" + id , "_blank");
   })
 
   $(document).on('click', '#b_send_receipt', function () {

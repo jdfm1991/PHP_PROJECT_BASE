@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-require_once("../../config/const.php");
-require_once(PATH_APP . "/head.php");
+require_once("../head.php");
 ?>
 <body id="page-top">
   <!-- Page Wrapper -->

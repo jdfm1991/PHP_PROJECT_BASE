@@ -21,14 +21,8 @@ $incomes = new Incomes();
 $receivable = new AccountsReceivable();
 $generatepdf = new Generatepdf();
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
-require_once(PATH_VENDOR . "/phpmailer/phpmailer/src/Exception.php");
-require_once(PATH_VENDOR . "/phpmailer/phpmailer/src/PHPMailer.php");
-require_once(PATH_VENDOR . "/phpmailer/phpmailer/src/SMTP.php");
-
-$id = (isset($_POST['id'])) ? $_POST['id'] : '6840b778d8798';
+$id = (isset($_POST['id'])) ? $_POST['id'] : $_GET['id'];
 $cid = (isset($_POST['cid'])) ? $_POST['cid'] : '';
 $uid = (isset($_POST['uid'])) ? $_POST['uid'] : '';
 $typerec = (isset($_POST['typerec'])) ? $_POST['typerec'] : '';
@@ -48,12 +42,14 @@ $amout_a = (isset($_POST['amout_a'])) ? $_POST['amout_a'] : 0;
 $amout_m = (isset($_POST['amout_m'])) ? $_POST['amout_m'] : 0;
 $amout_g = (isset($_POST['amout_g'])) ? $_POST['amout_g'] : 0;
 $monto_tg = (isset($_POST['monto_tg'])) ? $_POST['monto_tg'] : 0;
+
 $receipt = (isset($_POST['receipt'])) ? $_POST['receipt'] : null;
 $itemreceipt = (isset($_POST['dataexpense'])) ? $_POST['dataexpense'] : '';
 $now = new DateTime(date('Y-m-d'));
 $year = date('Y');
 $month = date('n');
-$daysxmonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+$daysxmonth = date("t");
 
 switch ($_GET["op"]) {
   case 'get_new_number':
@@ -306,7 +302,7 @@ switch ($_GET["op"]) {
       $expiredate = new DateTime($row['expirationdate']);
       $difference = $now->diff($expiredate);
       if ($difference->days > 0) {
-        $vence = '0000-00-00';
+        $vence = '0001-01-01';
         $typerec = 'PENAL';
         $items = $incomes->getDataIncomeWithoutInterestDB($penalty);
         $nreceipts = count($data) * count($items);
@@ -443,10 +439,10 @@ switch ($_GET["op"]) {
     $head = '';
     $body = '';
     $foot = '';
-    $stylesheet = file_get_contents(URL_ASSETS . '/css/style-custom.css');
-    $logo = URL_ASSETS . '/img/logo.png';
+    $stylesheet = file_get_contents('/css/style-custom.css');
+    $logo = URL_ASSETS . '/img/logo-180.png';
     $name = '';
-    $type = '';
+    
     $data = $colrec->getDataHeaderReceiptDB($id);
     $name = $generatepdf->getNameReceipt($data);
     $type = $generatepdf->getTypeReceipt($data);
@@ -471,11 +467,11 @@ switch ($_GET["op"]) {
       'mode' => 'utf-8',
       'format' => 'letter',
       'margin_header' => 10,
-      'margin_footer' => 10,
+      'margin_footer' => 15,
       'margin_left' => 10,
       'margin_right' => 10,
-      'margin_top' => 70,
-      'margin_bottom' => 10
+      'margin_top' => 65,
+      'margin_bottom' => 15
     ]);
     $mpdf->SetHeader($head);
     $mpdf->SetFooter('Numero de Pagina: {PAGENO}| Fecha de impresion: {DATE j-m-Y}');
@@ -489,8 +485,8 @@ switch ($_GET["op"]) {
     $head = '';
     $body = '';
     $foot = '';
-    $stylesheet = file_get_contents(URL_ASSETS . '/css/style-custom.css');
-    $logo = URL_ASSETS . '/img/logo.png';
+    $stylesheet = file_get_contents('https://jumpdaedalus.com/demonstratives/condominio/assets/css/style-custom.css');
+    $logo = 'https://jumpdaedalus.com/demonstratives/condominio/assets/img/logo-180.png';
     $name = '';
     $type = '';
     $data = $colrec->getDataHeaderReceiptDB($id);
@@ -517,11 +513,11 @@ switch ($_GET["op"]) {
       'mode' => 'utf-8',
       'format' => 'letter',
       'margin_header' => 10,
-      'margin_footer' => 10,
+      'margin_footer' => 15,
       'margin_left' => 10,
       'margin_right' => 10,
-      'margin_top' => 70,
-      'margin_bottom' => 10
+      'margin_top' => 65,
+      'margin_bottom' => 15
     ]);
     $mpdf->SetHeader($head);
     $mpdf->SetFooter('Numero de Pagina: {PAGENO}| Fecha de impresion: {DATE j-m-Y}');
@@ -530,7 +526,7 @@ switch ($_GET["op"]) {
     $document = $mpdf->Output('', \Mpdf\Output\Destination::STRING_RETURN);
     $content = "Recibo de Cobro";
     $subject = "Recibo de Cobro";
-    $mail = sendMail("jovannifranco@gmail.com", $subject, $body, $name, $document);
+    $mail = sendMail("jovannifranco@gmail.com", $subject, $content, $name, $document);
     if (!$mail['error']) {
       $dato['status'] = true;
       $dato['httpstatus'] = '200';

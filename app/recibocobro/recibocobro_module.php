@@ -105,7 +105,7 @@ class Receipts extends Conectar
   {
     $conectar = parent::conexion();
     parent::set_names();
-    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE balencereceipt > 0 AND expirationdate < NOW() AND expirationdate != '0000-00-00' AND statusrec = 1 ORDER BY daterec DESC");
+    $stmt = $conectar->prepare("SELECT * FROM receipts_data_table WHERE balencereceipt > 0 AND expirationdate < NOW() AND expirationdate != '0001-01-01' AND statusrec = 1 ORDER BY daterec DESC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }

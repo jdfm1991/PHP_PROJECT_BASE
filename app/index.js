@@ -1,10 +1,11 @@
+//const URI = 'https://jumpdaedalus.com/demonstratives/condominio/app/';
 const URI = 'http://localhost/vistasegura/app/';
-const URL_ASSETS = 'http://localhost/vistasegura/assets/';
-
+//const URL_ASSETS = 'http://localhost/vistasegura/assets/';
+/*
 document.addEventListener('contextmenu', function(event) {
   event.preventDefault();
 });
-
+*/
 const loadSidebarMenu = async () => {
   const response = await fetch(URI + 'manager/man_controller.php?op=list_modules_by_depart');
   const data = await response.json();
@@ -78,6 +79,7 @@ const loadPenaltiesWhithInterest = async () => {
   });
   const response = await fetch(URI + 'recibocobro/recibocobro_controller.php?op=get_interest_whith_penalties');
   const data = await response.json();
+  console.log(data)
   if (data) {
     Swal.close();
     $(".mr-auto").text("Procesos Exitoso");
